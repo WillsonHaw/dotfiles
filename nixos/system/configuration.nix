@@ -11,11 +11,9 @@
       ./applications.nix
       ./audio.nix
       ./boot.nix
-      ./disk-config.nix
       ./display.nix
       ./gaming.nix
       ./hardware-configuration.nix
-      # ./home-manager.nix
       ./networking.nix
       ./security.nix
       ./shell/zsh.nix
@@ -26,7 +24,7 @@
   time.timeZone = "America/Vancouver";
 
   # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "en_US.UTF-8";
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
@@ -86,4 +84,6 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.variables.EDITOR = "vim";
+
+  services.printing.enable = true;
 }
