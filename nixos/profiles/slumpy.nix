@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  users.mutableUsers = false;
   users.users.slumpy = {
     isNormalUser = true;
     shell = pkgs.zsh;
@@ -13,6 +12,4 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXtwwCwAQNOW6YZuMpUoOzEGmDKK5W4WQpKd21jKtvw willsonhaw@gmail.com"
     ];
   };
-
-  #age.secrets.luk2.file = ../secrets/luk2.age;
 }

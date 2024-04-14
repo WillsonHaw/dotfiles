@@ -1,22 +1,6 @@
 { config, lib, pkgs, ... }:
 
-let
-  vscode-server = {
-    url = "https://github.com/msteen/nixos-vscode-server/tarball/master";
-    sha256 = "1mrc6a1qjixaqkv1zqphgnjjcz9jpsdfs1vq45l1pszs9lbiqfvd";
-  };
-in
 {
-  imports = [
-    "${fetchTarball vscode-server}/modules/vscode-server/home.nix"
-  ];
-  
-  services.vscode-server.enable = true;
-
-  programs.vscode = {
-    enable = true;
-  };
-
   programs.git = {
     enable = true;
     userName = "WillsonHaw";

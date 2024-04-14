@@ -1,10 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    curl
-  ];
-
   xdg.mime.enable = true;
   xdg.mime.defaultApplications = {
     "text/html" = "brave-browser.desktop";
