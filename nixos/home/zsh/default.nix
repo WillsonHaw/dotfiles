@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   home.file.".p10k.zsh" = {
@@ -32,7 +37,7 @@
     envExtra = ''
       export XDG_DATA_HOME="$HOME/.local/share";
     '';
-    
+
     antidote = {
       enable = true;
       plugins = [

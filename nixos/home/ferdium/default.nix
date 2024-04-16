@@ -1,7 +1,10 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  home.packages = [
-    pkgs.ferdium
-  ];
+  home.packages = [ pkgs.ferdium ];
 }

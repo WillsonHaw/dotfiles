@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Enable the X11 windowing system.
@@ -6,15 +11,13 @@
     xserver = {
       enable = true;
 
-      excludePackages = [
-        pkgs.xterm
-      ];
+      excludePackages = [ pkgs.xterm ];
 
       displayManager.sddm.enable = true;
       displayManager.sddm.wayland.enable = true;
       displayManager.defaultSession = "plasma";
     };
-  
+
     desktopManager.plasma6.enable = true;
   };
 }

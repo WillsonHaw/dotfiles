@@ -1,9 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
     ../common.nix
     ./hardware-configuration.nix
+    ./nvidia.nix
     ../../system/audio
     ../../system/development/vscode
     ../../system/display/kde

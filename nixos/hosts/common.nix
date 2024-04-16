@@ -1,8 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   environment.systemPackages = with pkgs; [
     curl
+    killall
+    nixfmt-rfc-style
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -25,9 +32,27 @@
 
   system.stateVersion = "23.11"; # Did you read the comment?
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   environment.variables.EDITOR = "vim";
 
   services.printing.enable = true;
+
+  fonts = {
+    enableDefaultPackages = true;
+    fontDir.enable = true;
+
+    packages = with pkgs; [
+      (nerdfonts.override {
+        fonts = [
+          "SpaceMono"
+          "JetBrainsMono"
+          "DejaVuSansMono"
+        ];
+      })
+    ];
+  };
 }

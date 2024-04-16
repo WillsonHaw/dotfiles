@@ -1,22 +1,27 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  imports = [ 
-    ./common.nix
-  ];
+  imports = [ ./common.nix ];
 
   home = {
     username = "slumpy";
     homeDirectory = "/home/slumpy";
     stateVersion = "23.11";
-    
+
     packages = with pkgs; [
-      waybar
-      mako
       libnotify
-      swww
-      rofi-wayland
+      mako
       networkmanagerapplet
+      nvd
+      font-awesome
+      rofi-wayland
+      swww
+      waybar
     ];
   };
 }

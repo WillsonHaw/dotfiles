@@ -1,11 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   programs.chromium = {
     enable = true;
     package = pkgs.brave;
     extensions = [
-        { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # ublock origin
+      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # ublock origin
     ];
   };
 }

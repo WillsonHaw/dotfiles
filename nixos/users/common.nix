@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  # xdg.configFile."./.config".source = ../../config;
-
   imports = [
     ../home/brave
     ../home/ferdium
@@ -11,6 +14,7 @@
     ../home/kitty
     ../home/vim
     ../home/vscode
+    ../home/waybar
     ../home/zsh
   ];
 
