@@ -14,12 +14,16 @@
     stateVersion = "23.11";
 
     packages = with pkgs; [
-      libnotify
+      ags
+      font-awesome
+      fontconfig
       mako
       networkmanagerapplet
       nvd
-      font-awesome
-      rofi-wayland
+      python312Packages.pywayland
+      python312Packages.psutil
+      rubik
+      qt5ct
       swww
       waybar
     ];

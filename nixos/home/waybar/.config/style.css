@@ -269,8 +269,9 @@ window#waybar.hidden {
 
 #custom-wallpaper {
   color: #8a909e;
-  padding-right: 7;
-  padding-left: 7;
+  margin-right: 12px;
+  border-radius: 0 8px 8px 0;
+  padding-right: 7px;
 }
 
 #custom-wallpaper,

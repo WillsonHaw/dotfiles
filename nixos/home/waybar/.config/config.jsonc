@@ -17,8 +17,7 @@
     "clock",
     "tray",
     "hyprland/language",
-    "custom/wallpaper",
-    "custom/power-menu"
+    "custom/wallpaper"
   ],
   "hyprland/workspaces": {
     "format": "{name}",
@@ -129,8 +128,8 @@
     "tooltip-format": "Volume {volume}%"
   },
   "battery": {
-    "bat": "BAT0",
-    "adapter": "ADP0",
+    "bat": "BAT1",
+    "adapter": "ADP1",
     "interval": 60,
     "states": {
       "warning": 20,
@@ -190,7 +189,7 @@
   // },
   "custom/launcher": {
     "format": "󱄅",
-    "on-click": "rofi -show drun &"
+    "on-click": "bash ~/.config/rofi/launchers/type-6/launcher.sh"
   },
   "custom/wallpaper": {
     "format": "󰸉",

@@ -22,8 +22,14 @@
 			"",
 			"{",
 			"  $1",
-			"}"
+			"}",
 			"",
+		]
+	},
+	"System Packages": {
+		"prefix": "sp",
+		"body": [
+			"  environment.systemPackages = with pkgs; [ $1 ];"
 		]
 	}
 }

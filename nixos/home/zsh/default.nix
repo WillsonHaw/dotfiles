@@ -49,6 +49,7 @@
 
     shellAliases = {
       ll = "ls -l";
+      hyprlog = "code /tmp/hypr/$(ls -t /tmp/hypr/ | head -n 2 | tail -n 1)/hyprland.log";
     };
   };
 }

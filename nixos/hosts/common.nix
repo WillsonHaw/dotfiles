@@ -7,10 +7,16 @@
 
 {
   environment.systemPackages = with pkgs; [
+    brightnessctl
     curl
+    gnome.seahorse
+    libdbusmenu-gtk3
+    libnotify
     killall
     nixfmt-rfc-style
   ];
+
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_8;
 
   nixpkgs.config.allowUnfree = true;
 
@@ -48,6 +54,7 @@
     packages = with pkgs; [
       (nerdfonts.override {
         fonts = [
+          "FiraCode"
           "SpaceMono"
           "JetBrainsMono"
           "DejaVuSansMono"

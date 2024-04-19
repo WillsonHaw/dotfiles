@@ -5,75 +5,38 @@
   ...
 }:
 
-# let
-#   # Returns all files from specified path
-#   getFiles = (dir:
-#     builtins.attrNames(
-#       builtins.listToAttrs(
-#         builtins.filter (x: x.value == "regular") (
-#           builtins.attrValues (
-#             builtins.mapAttrs (k: v: { name = k; value = v; }) (
-#               builtins.readDir dir
-#             )
-#           )
-#         )
-#       )
-#     )
-#   );
-
-#   # Creates an attrset for `home.file`
-#   toFile = (f: {
-#     name = ".config/hypr/" + f;
-#     value = {
-#       enable = true;
-#       source = ../../config/hypr + ("/" + f);
-#     };
-#   });
-
-#   files = builtins.listToAttrs(
-#     builtins.map (f: toFile(f)) (
-#       getFiles ../../config/hypr
-#     )
-#   );
-# in
 {
-  home.file."${config.xdg.configHome}/hypr/scripts" = {
-    source = ./.config/scripts;
-    executable = true;
-  };
+  home.file."${config.xdg.configHome}/hypr/custom".source = ./.config/custom;
+  home.file."${config.xdg.configHome}/hypr/hyprland".source = ./.config/hyprland;
+  home.file."${config.xdg.configHome}/hypr/hyprlock".source = ./.config/hyprlock;
+  home.file."${config.xdg.configHome}/hypr/shaders".source = ./.config/shaders;
 
-  home.file."${config.xdg.configHome}/hypr/keybind" = {
-    source = ./.config/keybind;
-    executable = true;
-  };
+  home.file."${config.xdg.configHome}/hypr/hypridle.conf".source = ./.config/hypridle.conf;
+  home.file."${config.xdg.configHome}/hypr/hyprlock.conf".source = ./.config/hyprlock.conf;
 
-  home.file."${config.xdg.configHome}/hypr/start.sh" = {
-    source = ./.config/start.sh;
-    executable = true;
-  };
-
-  home.file."${config.xdg.configHome}/hypr/xdg-portal-hyprland" = {
-    source = ./.config/xdg-portal-hyprland;
-    executable = true;
-  };
+  # Use intel GPU for hyprland
+  home.file."${config.xdg.configHome}/hypr/card".source = config.lib.file.mkOutOfStoreSymlink "/dev/dri/by-path/pci-0000:00:02.0-card";
 
   wayland.windowManager.hyprland = {
     enable = true;
 
-    settings = {
-      monitor = "eDP-1,2560x1440@59.96,0x0,1";
-
-      "$mod" = "SUPER";
-
-      bind = [
-        "$mod, grave, exec, kitty"
-        "$mod, o, exec, hyprctl reload" # Reload Hyprland
-        "$mod, p, exec, killall -SIGUSR2 waybar" # Reload waybar
-      ];
-    };
-
     extraConfig = ''
-      exec-once = ~/.config/hypr/start.sh
+      # Defaults
+      source=~/.config/hypr/hyprland/env.conf
+      source=~/.config/hypr/hyprland/execs.conf
+      source=~/.config/hypr/hyprland/general.conf
+      source=~/.config/hypr/hyprland/rules.conf
+      source=~/.config/hypr/hyprland/colors.conf
+      source=~/.config/hypr/hyprland/keybinds.conf
+
+      # Custom 
+      source=~/.config/hypr/custom/env.conf
+      source=~/.config/hypr/custom/execs.conf
+      source=~/.config/hypr/custom/general.conf
+      source=~/.config/hypr/custom/rules.conf
+      source=~/.config/hypr/custom/keybinds.conf
     '';
+
+    systemd.variables = [ "--all" ];
   };
 }

@@ -8,16 +8,20 @@
 {
   # Enable the X11 windowing system.
   services = {
-    xserver = {
-      enable = true;
+    displayManager = {
+      sddm = {
+        enable = true;
+        wayland.enable = true;
+      };
 
-      excludePackages = [ pkgs.xterm ];
-
-      displayManager.sddm.enable = true;
-      displayManager.sddm.wayland.enable = true;
-      displayManager.defaultSession = "plasma";
+      # defaultSession = "plasma";
     };
 
-    desktopManager.plasma6.enable = true;
+    # xserver = {
+    #   enable = true;
+    #   excludePackages = [ pkgs.xterm ];
+    # };
+
+    # desktopManager.plasma6.enable = true;
   };
 }
