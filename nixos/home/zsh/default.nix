@@ -32,6 +32,10 @@
       function rebuild() {
         sudo nixos-rebuild switch --flake ~/.dotfiles/nixos$@
       }
+
+      function volume() {
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ $@%
+      }
     '';
 
     envExtra = ''
@@ -50,6 +54,8 @@
     shellAliases = {
       ll = "ls -l";
       hyprlog = "code /tmp/hypr/$(ls -t /tmp/hypr/ | head -n 2 | tail -n 1)/hyprland.log";
+      bright-up = "brillo -q -A 5";
+      bright-down = "brillo -q -U 5";
     };
   };
 }

@@ -5,8 +5,8 @@ dir="~/.config/waybar/scripts/power-menu/"
 theme='style'
 
 # CMDs
-uptime="`uptime -p | sed -e 's/up //g'`"
-host=`hostname`
+uptime="$(uptime)"
+host=$(hostname)
 
 # Options
 shutdown=''
@@ -61,18 +61,18 @@ run_cmd() {
 			amixer set Master mute
 			systemctl suspend
 		elif [[ $1 == '--logout' ]]; then
-            if [[ "$DESKTOP_SESSION" == 'openbox' ]]; then
-                openbox --exit
-            elif [[ "$DESKTOP_SESSION" == 'bspwm' ]]; then
-                bspc quit
-            elif [[ "$DESKTOP_SESSION" == 'i3' ]]; then
-                i3-msg exit
-            elif [[ "$DESKTOP_SESSION" == 'plasma' ]]; then
-                qdbus org.kde.ksmserver /KSMServer logout 0 0 0
-            elif [[ "$DESKTOP_SESSION" == 'hyprland' ]]; then
-                hyprctl dispatch exit 1
-            fi
-        fi
+			if [[ "$DESKTOP_SESSION" == 'openbox' ]]; then
+				openbox --exit
+			elif [[ "$DESKTOP_SESSION" == 'bspwm' ]]; then
+				bspc quit
+			elif [[ "$DESKTOP_SESSION" == 'i3' ]]; then
+				i3-msg exit
+			elif [[ "$DESKTOP_SESSION" == 'plasma' ]]; then
+				qdbus org.kde.ksmserver /KSMServer logout 0 0 0
+			elif [[ "$DESKTOP_SESSION" == 'hyprland' ]]; then
+				hyprctl dispatch exit 1
+			fi
+		fi
 	else
 		exit 0
 	fi
@@ -81,24 +81,23 @@ run_cmd() {
 # Actions
 chosen="$(run_rofi)"
 case ${chosen} in
-    $shutdown)
-		run_cmd --shutdown
-        ;;
-    $reboot)
-		run_cmd --reboot
-        ;;
-    $lock)
-		if [[ -x '/usr/bin/betterlockscreen' ]]; then
-			betterlockscreen -l
-		elif [[ -x '/usr/bin/i3lock' ]]; then
-			i3lock
-		fi
-        ;;
-    $suspend)
-		run_cmd --suspend
-        ;;
-    $logout)
-		run_cmd --logout
-        ;;
+$shutdown)
+	run_cmd --shutdown
+	;;
+$reboot)
+	run_cmd --reboot
+	;;
+$lock)
+	if [[ -x '/usr/bin/betterlockscreen' ]]; then
+		betterlockscreen -l
+	elif [[ -x '/usr/bin/i3lock' ]]; then
+		i3lock
+	fi
+	;;
+$suspend)
+	run_cmd --suspend
+	;;
+$logout)
+	run_cmd --logout
+	;;
 esac
-

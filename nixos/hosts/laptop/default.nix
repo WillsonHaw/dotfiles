@@ -10,8 +10,6 @@
     ../common.nix
     ./hardware-configuration.nix
     ./nvidia.nix
-    ../../system/ags
-    ../../system/anyrun
     ../../system/audio
     ../../system/development/vscode
     ../../system/display/kde
@@ -45,7 +43,20 @@
   #   '';
   # };
 
-  services.printing.enable = true;
+  services = {
+    printing.enable = true;
+    blueman.enable = true;
+  };
+
+  hardware = {
+    brillo.enable = true;
+
+    bluetooth = {
+      enable = true; # enables support for Bluetooth
+      powerOnBoot = true; # powers up the default Bluetooth controller on boot
+    };
+  };
+
   programs.light.enable = true;
 
   networking.hostName = "slumpy-laptop"; # Define your hostname.

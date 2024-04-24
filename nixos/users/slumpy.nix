@@ -14,9 +14,9 @@
     stateVersion = "23.11";
 
     packages = with pkgs; [
-      ags
       font-awesome
       fontconfig
+      grimblast
       mako
       networkmanagerapplet
       nvd
@@ -25,7 +25,6 @@
       rubik
       qt5ct
       swww
-      waybar
     ];
   };
 }

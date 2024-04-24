@@ -8,7 +8,6 @@
 {
   imports = [
     ../home/ags
-    ../home/anyrun
     ../home/brave
     ../home/ferdium
     ../home/flameshot

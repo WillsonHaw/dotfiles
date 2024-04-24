@@ -9,6 +9,7 @@
   environment.systemPackages = with pkgs; [
     brightnessctl
     curl
+    evtest
     gnome.seahorse
     libdbusmenu-gtk3
     libnotify

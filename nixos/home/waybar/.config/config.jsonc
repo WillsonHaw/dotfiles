@@ -17,7 +17,8 @@
     "clock",
     "tray",
     "hyprland/language",
-    "custom/wallpaper"
+    "custom/wallpaper",
+    "custom/power-menu"
   ],
   "hyprland/workspaces": {
     "format": "{name}",
@@ -179,14 +180,10 @@
     "on-double-click-right": "playerctl next",
     "on-scroll-down": "playerctl previous"
   },
-  // "custom/power-menu": {
-  //   "format": "{percentage}Hz",
-  //   "on-click": "~/.config/hypr/scripts/screenHz.sh",
-  //   "return-type": "json",
-  //   "exec": "cat ~/.config/hypr/scripts/hz.json",
-  //   "interval": 1,
-  //   "tooltip": false
-  // },
+  "custom/power-menu": {
+    "format": "",
+    "on-click": "bash ~/.config/waybar/scripts/power-menu/powermenu.sh"
+  },
   "custom/launcher": {
     "format": "󱄅",
     "on-click": "bash ~/.config/rofi/launchers/type-6/launcher.sh"

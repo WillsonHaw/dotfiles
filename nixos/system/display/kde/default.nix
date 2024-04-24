@@ -22,6 +22,6 @@
     #   excludePackages = [ pkgs.xterm ];
     # };
 
-    # desktopManager.plasma6.enable = true;
+    desktopManager.plasma6.enable = true;
   };
 }
