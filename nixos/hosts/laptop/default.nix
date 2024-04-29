@@ -11,6 +11,7 @@
     ./hardware-configuration.nix
     ./nvidia.nix
     ../../system/audio
+    ../../system/development/node
     ../../system/development/vscode
     ../../system/display/kde
     ../../system/display/nvidia

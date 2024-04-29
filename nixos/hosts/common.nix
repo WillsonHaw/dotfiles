@@ -15,6 +15,7 @@
     libnotify
     killall
     nixfmt-rfc-style
+    unrar
   ];
 
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_8;

@@ -56,6 +56,7 @@
       hyprlog = "code /tmp/hypr/$(ls -t /tmp/hypr/ | head -n 2 | tail -n 1)/hyprland.log";
       bright-up = "brillo -q -A 5";
       bright-down = "brillo -q -U 5";
+      pp = "pnpm";
     };
   };
 }
