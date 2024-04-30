@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+sleep 1
+pkill xdg-desktop-portal-hyprland
+pkill xdg-desktop-portal-wlr
+pkill xdg-desktop-portal-gtk
+pkill xdg-desktop-portal
+/nix/store/1l0g5rxa04ispic0d15yky4mg1f5cz4i-xdg-desktop-portal-hyprland-1.2.5+date=2023-11-20_eb120ff/libexec/xdg-desktop-portal-hyprland &
+sleep 2
+/nix/store/g7rkw5q2rjhm7l9pss89ald1gm180517-xdg-desktop-portal-1.18.2/libexec/xdg-desktop-portal &

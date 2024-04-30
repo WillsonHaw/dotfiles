@@ -41,5 +41,24 @@
           ./hosts/laptop
         ];
       };
+
+      nixosConfigurations.slumpy-desktop = nixpkgs.lib.nixosSystem {
+        system = system;
+        specialArgs = {
+          inherit inputs;
+        };
+        modules = [
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.slumpy = import ./users/slumpy.nix;
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+            };
+          }
+          ./hosts/desktop
+        ];
+      };
     };
 }

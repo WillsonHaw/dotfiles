@@ -31,5 +31,13 @@
 		"body": [
 			"  environment.systemPackages = with pkgs; [ $1 ];"
 		]
+	},
+	"Home Module": {
+		"prefix": "hm",
+		"body": [
+			"home-manager.users.slumpy = {",
+			"  $1",
+			"};"
+		]
 	}
 }
