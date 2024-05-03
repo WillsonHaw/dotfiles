@@ -16,7 +16,7 @@
 
   # Enable OpenGL
   hardware = {
-    # enableAllFirmware = true;
+    enableAllFirmware = true;
 
     opengl = {
       enable = true;
@@ -42,26 +42,14 @@
       nvidiaSettings = true;
 
       powerManagement.enable = true;
-      powerManagement.finegrained = false;
-      open = false;
+      #   powerManagement.finegrained = false;
+      #   open = false;
 
-      # vaapi = {
-      #   enable = true;
-      #   firefox.enable = true;
-      # };
+      #   # vaapi = {
+      #   #   enable = true;
+      #   #   firefox.enable = true;
+      #   # };
     };
-  };
-
-  environment = {
-    # Packages related to NVIDIA graphics
-    systemPackages = with pkgs; [
-      clinfo
-      gwe
-      nvtopPackages.nvidia
-      virtualglLib
-      vulkan-loader
-      vulkan-tools
-    ];
   };
 
   # config = lib.mkIf config.noodles.system.nvidia.laptop.enable {
@@ -88,47 +76,47 @@
   #  }
   #'';
 
-  #   # environment = {
-  #   #   # Set environment variables related to NVIDIA graphics
-  #   #   variables = {
-  #   #     # Required to run the correct GBM backend for nvidia GPUs on wayland
-  #   #     GBM_BACKEND = "nvidia-drm";
-  #   #     # Apparently, without this nouveau may attempt to be used instead
-  #   #     # (despite it being blacklisted)
-  #   #     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  #   #     # Hardware cursors are currently broken on nvidia
-  #   #     LIBVA_DRIVER_NAME = "nvidia";
-  #   #     WLR_NO_HARDWARE_CURSORS = "1";
-  #   #     NIXOS_OZONE_WL = "1";
-  #   #     __GL_THREADED_OPTIMIZATION = "1";
-  #   #     __GL_SHADER_CACHE = "1";
-  #   #   };
+  environment = {
+    # Set environment variables related to NVIDIA graphics
+    variables = {
+      # Required to run the correct GBM backend for nvidia GPUs on wayland
+      GBM_BACKEND = "nvidia-drm";
+      # Apparently, without this nouveau may attempt to be used instead
+      # (despite it being blacklisted)
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      # Hardware cursors are currently broken on nvidia
+      LIBVA_DRIVER_NAME = "nvidia";
+      WLR_NO_HARDWARE_CURSORS = "1";
+      NIXOS_OZONE_WL = "1";
+      __GL_THREADED_OPTIMIZATION = "1";
+      __GL_SHADER_CACHE = "1";
+    };
 
-  #   #   # Packages related to NVIDIA graphics
-  #   #   systemPackages = with pkgs; [
-  #   #     clinfo
-  #   #     gwe
-  #   #     nvtopPackages.nvidia
-  #   #     virtualglLib
-  #   #     vulkan-loader
-  #   #     vulkan-tools
-  #   #   ];
-  #   # };
+    # Packages related to NVIDIA graphics
+    systemPackages = with pkgs; [
+      clinfo
+      gwe
+      nvtopPackages.nvidia
+      virtualglLib
+      vulkan-loader
+      vulkan-tools
+    ];
+  };
 
-  #   # Replace a glFlush() with a glFinish() - this prevents stuttering
-  #   # and glitching in all kinds of circumstances for the moment.
-  #   #
-  #   # Apparently I'm waiting for "explicit sync" support, which needs to
-  #   # land as a wayland thing. I've seen this work reasonably with VRR
-  #   # before, but emacs continued to stutter, so for now this is
-  #   # staying.
-  #   # nixpkgs.overlays = [
-  #   #   (_: final: {
-  #   #     wlroots_0_16 = final.wlroots_0_16.overrideAttrs (_: {
-  #   #       patches = [ ./wlroots-nvidia.patch ];
-  #   #     });
-  #   #   })
-  #   # ];
+  # Replace a glFlush() with a glFinish() - this prevents stuttering
+  # and glitching in all kinds of circumstances for the moment.
+  #
+  # Apparently I'm waiting for "explicit sync" support, which needs to
+  # land as a wayland thing. I've seen this work reasonably with VRR
+  # before, but emacs continued to stutter, so for now this is
+  # staying.
+  # nixpkgs.overlays = [
+  #   (_: final: {
+  #     wlroots_0_16 = final.wlroots_0_16.overrideAttrs (_: {
+  #       patches = [ ./wlroots-nvidia.patch ];
+  #     });
+  #   })
+  # ];
 
   #   # options.hardware.nvidia.vaapi = with lib.types; {
   #   #   enable = lib.mkEnableOption "vaapi";

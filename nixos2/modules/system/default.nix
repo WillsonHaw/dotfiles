@@ -10,6 +10,7 @@
     ./audio
     ./bluetooth
     ./brightness
+    ./disk
     ./fonts
     ./networking
     ./nvidia

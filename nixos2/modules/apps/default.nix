@@ -11,6 +11,8 @@
     ./capture
     ./curl
     ./ferdium
+    ./gparted
+    ./guitar
     ./steam
     ./vim
     ./vscode

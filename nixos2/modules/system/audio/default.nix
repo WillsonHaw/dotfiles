@@ -61,6 +61,4 @@
       };
     };
   };
-
-  environment.systemPackages = [ pkgs.carla ];
 }
