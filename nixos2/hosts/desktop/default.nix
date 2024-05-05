@@ -21,6 +21,8 @@
 
   networking.hostName = "slumpy-desktop";
 
+  zramSwap.enable = true;
+
   noodles = {
     #desktops.sway.enable = true;
     # desktops.hyprland.enable = true;
