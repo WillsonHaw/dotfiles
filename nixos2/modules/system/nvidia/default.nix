@@ -11,12 +11,12 @@
 {
   # Specify the Nvidia video driver for Xorg 
   services.xserver.videoDrivers = [ "nvidia" ];
-  boot.initrd.kernelModules = [ "nvidia" ];
-  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+  # boot.initrd.kernelModules = [ "nvidia" ];
+  # boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
   # Enable OpenGL
   hardware = {
-    enableAllFirmware = true;
+    # enableAllFirmware = true;
 
     opengl = {
       enable = true;
@@ -26,14 +26,14 @@
       #---------------------------------------------------------------------
       # Install additional packages that improve graphics performance and compatibility.
       #---------------------------------------------------------------------
-      extraPackages = with pkgs; [
-        #   intel-media-driver # LIBVA_DRIVER_NAME=iHD
-        libvdpau-va-gl
-        nvidia-vaapi-driver
-        #   vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
-        vaapiVdpau
-        vulkan-validation-layers
-      ];
+      # extraPackages = with pkgs; [
+      #   #   intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      #   libvdpau-va-gl
+      #   nvidia-vaapi-driver
+      #   #   vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      #   vaapiVdpau
+      #   vulkan-validation-layers
+      # ];
     };
 
     nvidia = {
@@ -42,7 +42,7 @@
       nvidiaSettings = true;
 
       powerManagement.enable = true;
-      #   powerManagement.finegrained = false;
+      powerManagement.finegrained = false;
       #   open = false;
 
       #   # vaapi = {
@@ -76,32 +76,32 @@
   #  }
   #'';
 
-  environment = {
-    # Set environment variables related to NVIDIA graphics
-    variables = {
-      # Required to run the correct GBM backend for nvidia GPUs on wayland
-      GBM_BACKEND = "nvidia-drm";
-      # Apparently, without this nouveau may attempt to be used instead
-      # (despite it being blacklisted)
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      # Hardware cursors are currently broken on nvidia
-      LIBVA_DRIVER_NAME = "nvidia";
-      WLR_NO_HARDWARE_CURSORS = "1";
-      NIXOS_OZONE_WL = "1";
-      __GL_THREADED_OPTIMIZATION = "1";
-      __GL_SHADER_CACHE = "1";
-    };
+  # environment = {
+  #   # Set environment variables related to NVIDIA graphics
+  #   variables = {
+  #     # Required to run the correct GBM backend for nvidia GPUs on wayland
+  #     GBM_BACKEND = "nvidia-drm";
+  #     # Apparently, without this nouveau may attempt to be used instead
+  #     # (despite it being blacklisted)
+  #     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  #     # Hardware cursors are currently broken on nvidia
+  #     LIBVA_DRIVER_NAME = "nvidia";
+  #     WLR_NO_HARDWARE_CURSORS = "1";
+  #     NIXOS_OZONE_WL = "1";
+  #     __GL_THREADED_OPTIMIZATION = "1";
+  #     __GL_SHADER_CACHE = "1";
+  #   };
 
-    # Packages related to NVIDIA graphics
-    systemPackages = with pkgs; [
-      clinfo
-      gwe
-      nvtopPackages.nvidia
-      virtualglLib
-      vulkan-loader
-      vulkan-tools
-    ];
-  };
+  #   # Packages related to NVIDIA graphics
+  #   systemPackages = with pkgs; [
+  #     clinfo
+  #     gwe
+  #     nvtopPackages.nvidia
+  #     virtualglLib
+  #     vulkan-loader
+  #     vulkan-tools
+  #   ];
+  # };
 
   # Replace a glFlush() with a glFinish() - this prevents stuttering
   # and glitching in all kinds of circumstances for the moment.

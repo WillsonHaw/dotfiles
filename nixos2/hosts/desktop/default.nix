@@ -24,8 +24,11 @@
   zramSwap.enable = true;
 
   noodles = {
-    #desktops.sway.enable = true;
+    device.is-laptop = false;
+
+    # desktops.sway.enable = true;
     # desktops.hyprland.enable = true;
-    desktops.kde.enable = true;
+    # desktops.kde.enable = true;
+    desktops.gnome.enable = true;
   };
 }

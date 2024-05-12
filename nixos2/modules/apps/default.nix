@@ -10,6 +10,7 @@
     ./browsers
     ./capture
     ./curl
+    ./dconf2nix
     ./ferdium
     ./gparted
     ./guitar

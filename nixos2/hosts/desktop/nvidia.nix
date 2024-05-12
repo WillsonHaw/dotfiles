@@ -21,6 +21,7 @@
     package = config.boot.kernelPackages.nvidiaPackages.beta;
     # package = config.boot.kernelPackages.nvidiaPackages.production; # (installs 550)
     # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+    # package = config.boot.kernelPackages.nvidiaPackages.dc_535;
     # package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
     # package = config.boot.kernelPackages.nvidiaPackages.legacy_390;
     # package = config.boot.kernelPackages.nvidiaPackages.legacy_340;

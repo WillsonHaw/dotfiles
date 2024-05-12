@@ -21,6 +21,8 @@
   networking.hostName = "slumpy-laptop";
 
   noodles = {
+    device.is-laptop = true;
+
     services.power.enable = true;
     desktops.hyprland.enable = true;
   };

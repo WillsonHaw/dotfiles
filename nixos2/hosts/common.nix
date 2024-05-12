@@ -7,11 +7,11 @@
 
 {
   environment.systemPackages = with pkgs; [
-  #   libdbusmenu-gtk3
-  #   libnotify
-  #   killall
+    #   libdbusmenu-gtk3
+    #   libnotify
+    #   killall
     nixfmt-rfc-style
-  #   unrar
+    #   unrar
   ];
 
   imports = [ ../modules ];
