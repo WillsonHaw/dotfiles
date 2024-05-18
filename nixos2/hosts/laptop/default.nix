@@ -24,6 +24,7 @@
     device.is-laptop = true;
 
     services.power.enable = true;
-    desktops.hyprland.enable = true;
+    desktops.gnome.enable = true;
+    # desktops.hyprland.enable = true;
   };
 }
