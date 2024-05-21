@@ -28,6 +28,8 @@
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.4.1";
   };
 
   outputs =
@@ -35,6 +37,7 @@
       nixpkgs,
       home-manager,
       nixos-hardware,
+      nix-flatpak,
       ...
     }:
     {
@@ -55,6 +58,7 @@
             #   };
             # }
             nixos-hardware.nixosModules.msi-gs60
+            nix-flatpak.nixosModules.nix-flatpak
             ./hosts/laptop
           ];
         };
@@ -87,6 +91,7 @@
               }
             )
             home-manager.nixosModules.home-manager
+            nix-flatpak.nixosModules.nix-flatpak
             ./hosts/desktop
           ];
         };

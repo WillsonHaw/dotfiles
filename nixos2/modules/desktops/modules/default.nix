@@ -7,7 +7,9 @@
 
 {
   imports = [
-    ./flameshot
-    # ./grimblast
+    ./mako
+    ./rofi
+    ./waybar
+    ./wlogout
   ];
 }

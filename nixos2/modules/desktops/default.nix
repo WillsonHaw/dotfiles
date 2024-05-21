@@ -9,10 +9,8 @@
   imports = [
     ./gnome
     ./hyprland
+    ./modules
     ./kde
-    ./rofi
     ./sway
-    ./waybar
-    ./wlogout
   ];
 }

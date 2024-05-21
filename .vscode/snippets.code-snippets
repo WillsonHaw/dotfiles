@@ -39,5 +39,17 @@
 			"  $1",
 			"};"
 		]
+	},
+	"Module Enabler": {
+		"prefix": "cm",
+		"body": [
+			"options = {",
+			"  noodles.$1.enable = lib.mkEnableOption \"Enable $2.\";",
+			"};",
+		  "",
+			"config = lib.mkIf config.noodles.$1.enable {",
+			"  $3",
+			"};"
+		]
 	}
 }

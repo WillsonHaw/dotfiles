@@ -12,6 +12,7 @@
     ./curl
     ./dconf2nix
     ./ferdium
+    ./flatpak
     ./gparted
     ./guitar
     ./steam
