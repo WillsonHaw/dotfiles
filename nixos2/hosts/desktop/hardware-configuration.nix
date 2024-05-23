@@ -29,6 +29,20 @@
     fsType = "ext4";
   };
 
+  #  fileSystems."/run/media/slumpy/Data" = {
+  #    device = "/dev/sda2";
+  #    fsType = "ntfs3";
+  #  };
+
+  fileSystems."/run/media/slumpy/Games" = {
+    device = "/dev/sdb4";
+    fsType = "ext4";
+    options = [
+      "users"
+      "nofail"
+    ];
+  };
+
   swapDevices = [
     {
       device = "/var/lib/swapfile";

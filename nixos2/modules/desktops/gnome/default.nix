@@ -134,6 +134,7 @@
                 "tactile@lundal.io"
                 "user-theme@gnome-shell-extensions.gcampax.github.com"
                 "Vitals@CoreCoding.com"
+                "launch-new-instance@gnome-shell-extensions.gcampax.github.com"
               ];
             };
 
@@ -268,6 +269,10 @@
               toggle-tiled-right = [ ];
               switch-group = [ ];
               switch-group-backward = [ ];
+              switch-applications = [ ];
+              switch-applications-backward = [ ];
+              switch-windows = [ "<Alt>Tab" ];
+              switch-windows-backward = [ "<Shift><Alt>Tab" ];
             };
 
             "wm/preferences" = {
