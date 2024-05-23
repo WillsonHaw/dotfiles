@@ -35,7 +35,7 @@
   #  };
 
   fileSystems."/run/media/slumpy/Games" = {
-    device = "/dev/sdb4";
+    device = "/dev/disk/by-uuid/3598cf9f-cb34-42f1-9fe7-d0a50e3cb6de";
     fsType = "ext4";
     options = [
       "users"
