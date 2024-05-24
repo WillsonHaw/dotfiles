@@ -7,6 +7,7 @@
 
 {
   imports = [
+    ./ags
     ./mako
     ./rofi
     ./waybar

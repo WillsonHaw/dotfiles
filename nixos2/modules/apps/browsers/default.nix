@@ -6,5 +6,8 @@
 }:
 
 {
-  imports = [ ./chromium ];
+  imports = [
+    ./floorp
+    ./vivaldi
+  ];
 }

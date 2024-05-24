@@ -30,5 +30,7 @@
     # desktops.hyprland.enable = true;
     # desktops.kde.enable = true;
     desktops.gnome.enable = true;
+
+    browsers.vivaldi.enable = true;
   };
 }

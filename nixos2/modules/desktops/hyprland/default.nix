@@ -21,6 +21,7 @@
     in
     lib.mkIf config.noodles.desktops.hyprland.enable {
       noodles.desktops.module = {
+        ags.enable = true;
         mako.enable = true;
         rofi.enable = true;
         waybar.enable = true;
