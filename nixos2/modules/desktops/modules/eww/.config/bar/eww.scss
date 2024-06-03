@@ -196,3 +196,15 @@ $border-radius: 5px;
     color: $blue;
   }
 }
+
+// Tooltip
+tooltip.background {
+  background-color: $gray;
+  font-size: 1rem;
+  border-radius: 10px;
+  color: $white;
+}
+
+tooltip label {
+  margin: .25rem;
+}

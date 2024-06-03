@@ -1,6 +1,6 @@
 #!/bin/sh
 
-bat=/sys/class/power_supply/BAT0/
+bat=/sys/class/power_supply/BAT1/
 per="$(cat "$bat/capacity")"
 
 icon() {
@@ -37,9 +37,9 @@ icon() {
 
 percent() {
   if [ -f "$bat" ]; then
-    echo $per
-  else
     echo ""
+  else
+    echo $per
   fi
 }
 

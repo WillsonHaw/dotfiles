@@ -24,9 +24,10 @@
     device.is-laptop = true;
 
     services.power.enable = true;
-    #    desktops.gnome.enable = true;
-    desktops.hyprland.enable = true;
-    desktops.hyprland.card = "/dev/dri/by-path/pci-0000:00:02.0-card";
+    # desktops.gnome.enable = true;
+    # desktops.hyprland.enable = true;
+    desktops.hyprland_new.enable = true;
+    desktops.hyprland_new.card = "/dev/dri/by-path/pci-0000:00:02.0-card";
 
     browsers.vivaldi.enable = true;
     browsers.floorp.enable = true;

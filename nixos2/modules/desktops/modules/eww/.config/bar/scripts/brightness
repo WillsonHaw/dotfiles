@@ -1,12 +1,14 @@
 #!/bin/sh
 
 setBrightness() {
-  percent="0.$1"
-  xrandr --output $(xrandr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1) --brightness $percent
+  percent="$1%"
+  # xrandr --output $(xrandr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1) --brightness $percent
+  brightnessctl set $percent
 }
 
 getBrightness() {
-  xrandr --verbose | grep -i brightness | cut -f2 -d ' ' | head -n1 | awk '{print $1 * 100}'
+  # xrandr --verbose | grep -i brightness | cut -f2 -d ' ' | head -n1 | awk '{print $1 * 100}'
+  brightnessctl -m | cut -f4 -d ',' | cut -f1 -d '%'
 }
 
 [ "$1" = "set" ] && setBrightness $2 && exit
