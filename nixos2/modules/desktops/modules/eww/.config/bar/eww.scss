@@ -1,0 +1,198 @@
+// Variable Color
+$background: #1a1b26;
+$foreground: #a9b1d6;
+
+$black: #24283b;
+$gray: #565f89;
+$red: #f7768e;
+$green: #73daca;
+$yellow: #e0af68;
+$blue: #7aa2f7;
+$magenta: #bb9af7;
+$cyan: #7dcfff;
+$white: $foreground;
+
+$bar-spacing: 0.5rem;
+$v-padding: $bar-spacing;
+$h-padding: $bar-spacing/2;
+$border-radius: 5px;
+
+// Global
+* {
+  all: unset;
+}
+
+// EWW BAR
+.eww_bar {
+  background-color: $background;
+  padding: $bar-spacing;
+  font-family: "JetbrainsMono Nerd Font Mono";
+}
+
+.group {
+  border-radius: $border-radius;
+  background-color: $black;
+  padding: $v-padding $h-padding;
+}
+
+.section {
+  &.top .group {
+    margin-bottom: $bar-spacing;
+  }
+
+  &.bottom .group {
+    margin-top: $bar-spacing;
+  }
+}
+
+// Launcher
+.launcher .widget {
+  color: $cyan;
+  font-family: "Font Awesome 6 Free";
+  font-size: 1.6em;
+}
+
+// Workspaces
+.workspaces {
+  color: $gray;
+  font-family: "JetbrainsMono Nerd Font Mono";
+
+  .workspace {
+    font-size: 3rem;
+    margin: -2rem 0;
+  }
+
+  .occupied {
+    color: $white;
+  }
+
+  .empty {
+    color: $background;
+  }
+
+  .current {
+    color: $yellow;
+  }
+}
+
+// System Tray
+.systray {
+  padding: $v-padding 0;
+}
+
+// Control Panel
+.controls {
+  .widget {
+    font-size: 2.5rem;
+  }
+
+  .battery {
+    color: $blue;
+  }
+  .wifi {
+    color: $magenta;
+  }
+  .brightness {
+    color: $yellow;
+  }
+  .volume {
+    color: $green;
+  }
+
+  .bar {
+    trough {
+      all: unset;
+      background-color: $background;
+      border-radius: $border-radius;
+      min-height: 80px;
+      min-width: 10px;
+      margin: 0.3rem 0 0.3rem 0;
+
+      highlight {
+        border-radius: $border-radius;
+      }
+    }
+
+    &.brightness highlight {
+      background-color: $yellow;
+    }
+
+    &.volume highlight {
+      background-color: $green;
+    }
+  }
+}
+
+// Clock
+.clock {
+  font-family: Comic Mono;
+  font-weight: bold;
+  font-size: 1.2em;
+  color: $white;
+  padding: ($v-padding * 1.4) 0 $v-padding 0;
+}
+
+// Calendar
+.calendar {
+  background-color: $black;
+  font-family: Hack;
+  font-size: 1em;
+  font-weight: bold;
+
+  .cal-inner-box {
+    padding: 1rem 1rem 0.2rem;
+
+    .cal {
+      &.highlight {
+        padding: 10rem;
+      }
+
+      padding: 0.8rem 0.25rem 0rem;
+      margin-left: 10px;
+    }
+  }
+
+  calendar:selected {
+    color: $blue;
+  }
+
+  calendar.header {
+    color: $blue;
+    font-weight: bold;
+  }
+
+  calendar.button {
+    color: $magenta;
+  }
+
+  calendar.highlight {
+    color: $magenta;
+    font-weight: bold;
+  }
+
+  calendar:indeterminate {
+    color: $background;
+  }
+}
+
+// Powermenu
+.power-menu {
+  font-size: 2.5em;
+  font-weight: bold;
+
+  .shutdown {
+    color: $red;
+  }
+  .hyprland {
+    color: $green;
+  }
+  .reboot {
+    color: $yellow;
+  }
+  .logout {
+    color: $magenta;
+  }
+  .lock {
+    color: $blue;
+  }
+}

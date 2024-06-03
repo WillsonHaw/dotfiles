@@ -8,6 +8,13 @@
 {
   sound.enable = true;
   hardware.pulseaudio.enable = false;
+
+  environment.systemPackages = with pkgs; [
+    pwvucontrol
+    pavucontrol
+    helvum
+  ];
+
   services.pipewire = {
     enable = true;
     alsa.enable = true;

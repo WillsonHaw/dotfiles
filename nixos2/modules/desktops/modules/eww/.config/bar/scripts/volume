@@ -1,0 +1,30 @@
+#!/bin/sh
+
+setVolume() {
+  wpctl set-volume @DEFAULT_AUDIO_SINK@ $1%
+}
+
+getVolume() {
+  amixer -D pipewire sget Master | grep 'Left:' | awk -F'[][]' '{ print $2 }' | tr -d '%'
+}
+
+icon() {
+  vol=$(getVolume)
+
+  if [ "$vol" -gt "70" ]; then
+    icon=""
+  elif [ "$vol" -gt "10" ]; then
+    icon=""
+  elif [ "$vol" -gt "1" ]; then
+    icon=""
+  else
+    echo "" && exit
+  fi
+
+  echo "$icon"
+}
+
+[ "$1" = "icon" ] && icon && exit
+[ "$1" = "set" ] && setVolume $2 && exit
+[ "$1" = "get" ] && getVolume && exit
+exit

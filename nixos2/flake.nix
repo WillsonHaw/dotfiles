@@ -11,13 +11,30 @@
 
     # Latest Hyprland
     hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
+      type = "git";
+      url = "https://github.com/hyprwm/Hyprland?submodules=1";
+      rev = "cba1ade848feac44b2eda677503900639581c3f4";
+      submodules = true;
+#       url = "github:hyprwm/Hyprland?ref=v0.40.0&submodules=1";
+#       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland-contrib = {
       url = "github:hyprwm/contrib";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland";
+    };
+
+    hy3 = {
+      type = "git";
+      url = "https://github.com/outfoxxed/hy3";
+      rev = "ca420ab45df8d5579c1306c3845f12f0d9738ac1";
+      # url = "github:outfoxxed/hy3?ref=hl0.40.0";
+      # inputs.hyprland.follows = "hyprland";
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -49,14 +66,6 @@
           };
           modules = [
             home-manager.nixosModules.home-manager
-            # {
-            #   home-manager.useGlobalPkgs = true;
-            #   home-manager.useUserPackages = true;
-            #   home-manager.users.slumpy = import ./users/slumpy.nix;
-            #   home-manager.extraSpecialArgs = {
-            #     inherit inputs;
-            #   };
-            # }
             nixos-hardware.nixosModules.msi-gs60
             nix-flatpak.nixosModules.nix-flatpak
             ./hosts/laptop

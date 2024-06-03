@@ -2,11 +2,12 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
 {
   home-manager.users.slumpy = {
-    home.packages = [ pkgs.grimblast ];
+    home.packages = [ inputs.hyprland-contrib.packages.${pkgs.system}.grimblast ];
   };
 }

@@ -10,6 +10,7 @@
     home.packages = with pkgs; [
       font-awesome
       fontconfig
+      comic-mono
     ];
 
     fonts.fontconfig = {
@@ -24,9 +25,9 @@
     packages = with pkgs; [
       (nerdfonts.override {
         fonts = [
+          "JetBrainsMono"
           "FiraCode"
           "SpaceMono"
-          "JetBrainsMono"
           "DejaVuSansMono"
         ];
       })

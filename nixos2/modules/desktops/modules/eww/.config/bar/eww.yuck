@@ -1,0 +1,386 @@
+;; Created   by https://github.com/rxyhn
+;; Designed  by https://github.com/rxyhn
+;; Maintaned by https://github.com/rxyhn
+
+;; put path to aesthetic bar config files here ;;
+(defvar eww "eww -c $HOME/.config/eww/bar")
+(defvar rofi "$HOME/.config/rofi/launchers/type-6/launcher.sh")
+
+;; Also defined in the scss, make sure they match
+(defvar widgetWidth 32)
+(defvar widgetHeight 32)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;       Groups        ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Launcher ;;
+(defwidget launcher-group []
+  (box
+    :class "group launcher"
+    :orientation "v"
+    (launcher-widget)
+  )
+)
+
+;; Workspaces ;;
+(defwidget workspaces-group []
+  (box
+    :class "group workspaces"
+    :orientation "v"
+    (for workspace in workspaces
+      (workspace-widget
+        :id {workspace.id}
+        :active {workspace.id == current_workspace}
+        :occupied {workspace.windows > 0}
+        :icon {workspace.id == current_workspace ? "" : ""}
+        ; :icon {
+        ; workspace.id == "1" ? "󰚺" :
+        ; workspace.id == "2" ? "" :
+        ; workspace.id == "3" ? "" :
+        ; "${workspace.id}"
+        ; }
+      )
+    )
+  )
+)
+(deflisten workspaces :initial "[]" "bash $HOME/.config/eww/bar/scripts/get-workspaces")
+(deflisten current_workspace :initial "1" "bash $HOME/.config/eww/bar/scripts/get-active-workspace")
+
+;; Control Panel ;;
+(defwidget controls-group []
+  (box
+    :orientation "v"
+    :space-evenly false
+    :class "group controls"
+    (battery-widget)
+    (wifi-widget)
+    (brightness-widget)
+    (volume-widget)
+  )
+)
+
+;; Clock ;;
+(defwidget clock-group []
+  (box
+    :orientation "v"
+    :class "group clock"
+    :valign "end"
+    (button :onclick "scripts/popup calendar"
+    :class "time-hour" hour)
+    (button :onclick "scripts/popup calendar"
+    :class "time-min" min)
+  )
+)
+(defpoll hour :interval "1s" "date '+%H'")
+(defpoll min :interval "1s" "date '+%M'")
+
+;; Systray ;;
+(defwidget systray-group []
+  (box
+    :class "group"
+    :orientation "v"
+    (systray
+      :class "systray"
+      :orientation "v"
+    )
+  )
+)
+
+;; Power ;;
+(defwidget power-group []
+  (box
+    :class "group power"
+    :orientation "v"
+    (power-widget)
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;       Widgets       ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Widget ;;
+(defwidget widget [?class icon ?onclick ?tooltip]
+  (button
+    :class "widget ${class}"
+    :onclick onclick
+    :width widgetWidth
+    :height widgetHeight
+    :tooltip tooltip
+    icon
+  )
+)
+
+;; Launcher ;;
+(defwidget launcher-widget []
+  (widget
+    :onclick "${rofi}"
+    :icon ""
+  )
+)
+
+;; Workspaces ;;
+(defwidget workspace-widget [id icon active occupied]
+  (widget
+    :class "workspace ws-${id} ${active ? "current" : ""} ${occupied ? "occupied" : "empty"}"
+    :onclick "hyprctl dispatch workspace ${id}"
+    :icon icon
+  )
+)
+
+;; Battery Widgets ;;
+(defwidget battery-widget []
+  (widget
+    :class "battery"
+    :tooltip {battery-capacity == "" ? "Battery: ${battery-capacity}%" : ""}
+    :icon battery
+  )
+)
+(defpoll battery :interval "1s" "scripts/battery icon")
+(defpoll battery-capacity :interval "1s" "scripts/battery percent")
+
+;; Wifi Widgets ;;
+(defwidget wifi-widget []
+  (widget
+    :class "wifi"
+    :onclick "scripts/popup wifi"
+    :tooltip wifi-name
+    :icon wifi-icon
+  )
+)
+(defpoll wifi-icon :interval "1s" "scripts/wifi icon")
+(defpoll wifi-name :interval "1s" "scripts/wifi name")
+
+;; Brightness Widgets ;;
+(defwidget brightness-widget []
+  (eventbox
+    :onhover "${eww} update show-brightness-widget=true"
+    :onhoverlost "${eww} update show-brightness-widget=false"
+    (box
+      :orientation "v"
+      :space-evenly "false"
+      (revealer
+        :transition "slideup"
+        :reveal show-brightness-widget
+        :duration "250ms"
+        (scale
+          :class "bar brightness"
+          :value current-brightness
+          :tooltip "Brightness: ${current-brightness}%"
+          :onchange "scripts/brightness set {}"
+          :orientation "v"
+          :flipped true
+          :max 101
+          :min 0
+        )
+      )
+      (widget
+        :class "brightness"
+        :icon "󰃠"
+      )
+    )
+  )
+)
+(defpoll current-brightness
+  :initial "0"
+  :interval "1s" "scripts/brightness get"
+)
+(defvar show-brightness-widget false)
+
+;; Volume Widgets ;;
+(defwidget volume-widget []
+  (eventbox
+    :onhover "${eww} update show-volume-widget=true"
+    :onhoverlost "${eww} update show-volume-widget=false"
+    (box
+      :orientation "v"
+      :space-evenly "false"
+      :vexpand "false"
+      (revealer
+        :transition "slideup"
+        :reveal show-volume-widget
+        :duration "250ms"
+        (scale
+          :class "bar volume"
+          :value current-volume
+          :tooltip "Volume: ${current-volume}%"
+          :onchange "scripts/volume set {}"
+          :orientation "v"
+          :flipped true
+          :max 101
+          :min 0
+        )
+      )
+      (widget
+        :class "volume"
+        :onclick "scripts/popup audio"
+        :icon volume-icon
+      )
+    )
+  )
+)
+(defpoll volume-icon :interval "1s" "scripts/volume icon")
+(defpoll current-volume
+  :initial "0"
+  :interval "1s" "scripts/volume get"
+)
+(defvar show-volume-widget false)
+
+;; Calendar Widget ;;
+(defwidget calendar-widget []
+  (box
+    :class "calendar"
+    :orientation "v"
+    (box
+      :class "cal-inner-box"
+      (calendar
+        :class "cal"
+        :day calendar_day
+        :month calendar_month
+        :year calendar_year
+      )
+    )
+  )
+)
+(defpoll calendar_day :interval "10h"
+"date '+%d'")
+(defpoll calendar_month :interval "10h"
+"date '+%m'")
+(defpoll calendar_year :interval "10h"
+"date '+%Y'")
+
+;; Powermenu Widgets ;;
+(defwidget power-widget []
+  (eventbox
+    :onhover "${eww} update show-power-widget=true"
+    :onhoverlost "${eww} update show-power-widget=false"
+    (box
+      :class "power-menu"
+      :orientation "v"
+      :space-evenly "false"
+      :vexpand "false"
+      (revealer
+        :transition "slideup"
+        :reveal show-power-widget
+        :duration "550ms"
+        (box
+          :orientation "v"
+          :space-evenly "false"
+          
+          (widget
+            :class "hyprland"
+            :tooltip "Reload Hyprland"
+            :onclick "hyprctl reload"
+            :icon ""
+          )
+          
+          (widget
+            :class "reboot"
+            :tooltip "Reboot"
+            :onclick "reboot"
+            :icon ""
+          )
+          
+          (widget
+            :class "logout"
+            :tooltip "Logout"
+            :onclick "killall bspwm"
+            :icon "󰍃"
+          )
+          
+          (widget
+            :class "lock"
+            :tooltip "Lock Screen"
+            :onclick "betterlockscreen -l"
+            :icon ""
+          )
+        )
+      )
+      
+      (widget
+        :class "shutdown"
+        :tooltip "Shutdown"
+        :onclick "shutdown now"
+        :icon "⏻"
+      )
+    )
+  )
+)
+(defvar show-power-widget false)
+
+;;;;;;;; Containers ;;;;;;;;
+(defwidget top-section []
+  (box
+    :class "section top"
+    :orientation "v"
+    :space-evenly "false"
+    :valign "start"
+    (launcher-group)
+    (workspaces-group)
+  )
+)
+
+(defwidget bottom-section []
+  (box
+    :class "section bottom"
+    :orientation "v"
+    :space-evenly "false"
+    :valign "end"
+    (systray-group)
+    (controls-group)
+    (clock-group)
+    (power-group)
+  )
+)
+
+(defwidget bar []
+  (box
+    :class "eww_bar"
+    :orientation "v"
+    :vexpand "false"
+    :hexpand "false"
+    (top-section)
+    (bottom-section)
+  )
+)
+
+;;;;;;;; Windows ;;;;;;;;;
+
+(defwindow bar
+  :geometry (
+    geometry
+    :x "0"
+    :y "0"
+    :height "100%"
+    :width "48px"
+  )
+  :monitor 0
+  :reserve (
+    struts
+    :distance "35px"
+    :side "left"
+  )
+  :wm-ignore false
+  :hexpand "false"
+  :vexpand "false"
+  (bar)
+)
+
+;; Calendar Windows ;;
+(defwindow calendar
+  :geometry (
+    geometry
+    :x "70px"
+    :y "81%"
+    :width "270px"
+    :height "60px"
+  )
+  :monitor 0
+  (calendar-widget)
+)
+
+
+
+
+

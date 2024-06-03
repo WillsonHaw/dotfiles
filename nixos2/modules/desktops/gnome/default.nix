@@ -11,6 +11,8 @@
   };
 
   config = lib.mkIf config.noodles.desktops.gnome.enable {
+    noodles.desktops.module = { };
+
     services.xserver = {
       enable = true;
       displayManager.gdm.enable = true;
@@ -232,6 +234,7 @@
             "org/gnome/settings-daemon/plugins/media-keys" = {
               custom-keybindings = [
                 "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+                "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
               ];
               help = [ ];
               home = [ "<Super>e" ];
@@ -245,6 +248,12 @@
               binding = "<Super>grave";
               command = "kitty";
               name = "Launch Terminal";
+            };
+
+            "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+              binding = "<Shift><Super>s";
+              command = "flameshot gui";
+              name = "Snippet";
             };
 
             "org/gnome/desktop/wm/keybindings" = {

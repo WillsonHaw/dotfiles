@@ -9,7 +9,9 @@
   imports = [
     ./browsers
     ./capture
+    ./chiaki
     ./curl
+    ./davinci
     ./dconf2nix
     ./ferdium
     ./flatpak
@@ -17,6 +19,7 @@
     ./guitar
     ./steam
     ./vim
+    ./vlc
     ./vscode
     ./waydroid
   ];

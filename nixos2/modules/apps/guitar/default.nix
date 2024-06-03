@@ -6,5 +6,9 @@
 }:
 
 {
-  imports = [ ./carla ];
+  imports = [
+    ./carla
+    # ./guitarix
+    ./qjackctl
+  ];
 }

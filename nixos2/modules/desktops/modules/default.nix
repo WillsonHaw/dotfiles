@@ -8,8 +8,10 @@
 {
   imports = [
     ./ags
+    ./eww
     ./mako
     ./rofi
+    ./thunar
     ./waybar
     ./wlogout
   ];
