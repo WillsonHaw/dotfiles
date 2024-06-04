@@ -59,7 +59,7 @@ $border-radius: 5px;
 
   .workspace {
     font-size: 3rem;
-    margin: -2rem 0;
+    // margin: -2rem 0;
   }
 
   .occupied {
@@ -206,5 +206,5 @@ tooltip.background {
 }
 
 tooltip label {
-  margin: .25rem;
+  margin: 0.25rem;
 }

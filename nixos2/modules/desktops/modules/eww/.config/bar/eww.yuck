@@ -4,6 +4,7 @@
 
 ;; put path to aesthetic bar config files here ;;
 (defvar eww "eww -c $HOME/.config/eww/bar")
+; (defvar eww "eww -c $HOME/.dotfiles/nixos2/modules/desktops/modules/eww/.config/bar")
 (defvar rofi "$HOME/.config/rofi/launchers/type-6/launcher.sh")
 
 ;; Also defined in the scss, make sure they match
@@ -24,6 +25,7 @@
 )
 
 ;; Workspaces ;;
+(deflisten workspaces :initial "[]" "scripts/get-workspaces")
 (defwidget workspaces-group []
   (box
     :class "group workspaces"
@@ -31,9 +33,9 @@
     (for workspace in workspaces
       (workspace-widget
         :id {workspace.id}
-        :active {workspace.id == current_workspace}
+        :active {workspace.active}
         :occupied {workspace.windows > 0}
-        :icon {workspace.id == current_workspace ? "" : ""}
+        :icon {workspace.active ? "" : ""}
         ; :icon {
         ; workspace.id == "1" ? "󰚺" :
         ; workspace.id == "2" ? "" :
@@ -44,8 +46,6 @@
     )
   )
 )
-(deflisten workspaces :initial "[]" "bash $HOME/.config/eww/bar/scripts/get-workspaces")
-(deflisten current_workspace :initial "1" "bash $HOME/.config/eww/bar/scripts/get-active-workspace")
 
 ;; Control Panel ;;
 (defwidget controls-group []
@@ -125,8 +125,8 @@
 (defwidget workspace-widget [id icon active occupied]
   (widget
     :class "workspace ws-${id} ${active ? "current" : ""} ${occupied ? "occupied" : "empty"}"
-    :onclick "hyprctl dispatch workspace ${id}"
-    :icon icon
+    :onclick "echo 'hyprctl dispatch workspace ${id}' && hyprctl dispatch workspace ${id}"
+    :icon {icon}
   )
 )
 

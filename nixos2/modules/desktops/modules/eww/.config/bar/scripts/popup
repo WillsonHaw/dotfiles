@@ -3,6 +3,7 @@
 calendar() {
     LOCK_FILE="$HOME/.cache/eww-calendar.lock"
     EWW_BAR="$HOME/.config/eww/bar"
+    # EWW_BAR="$HOME/.dotfiles/nixos2/modules/desktops/modules/eww/.config/bar"
 
     run() {
         eww -c $EWW_BAR open calendar
