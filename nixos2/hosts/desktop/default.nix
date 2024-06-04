@@ -32,7 +32,7 @@
     desktops.kde.enable = true;
     # desktops.gnome.enable = true;
 
-    # browsers.floorp.enable = true;
+    browsers.floorp.enable = true;
     browsers.vivaldi.enable = true;
   };
 }

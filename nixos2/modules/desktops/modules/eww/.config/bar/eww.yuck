@@ -3,7 +3,7 @@
 ;; Maintaned by https://github.com/rxyhn
 
 ;; put path to aesthetic bar config files here ;;
-(defvar eww "eww -c $HOME/.dotfiles/nixos2/modules/desktops/modules/eww/.config/bar")
+(defvar eww "eww -c $HOME/.config/eww/bar")
 (defvar rofi "$HOME/.config/rofi/launchers/type-6/launcher.sh")
 
 ;; Also defined in the scss, make sure they match

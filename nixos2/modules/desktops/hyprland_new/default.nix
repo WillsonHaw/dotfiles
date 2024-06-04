@@ -40,6 +40,8 @@
         {
           home.file."/.config/hypr/hyprland".source = ./.config/hyprland;
 
+          services.kdeconnect.enable = true;
+
           wayland.windowManager.hyprland = {
             enable = true;
 
