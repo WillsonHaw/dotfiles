@@ -29,7 +29,7 @@
     # desktops.sway.enable = true;
     desktops.hyprland_new.enable = true;
     desktops.hyprland_new.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
-    desktops.kde.enable = true;
+    # desktops.kde.enable = true;
     # desktops.gnome.enable = true;
 
     browsers.floorp.enable = true;

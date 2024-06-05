@@ -25,7 +25,7 @@
 )
 
 ;; Workspaces ;;
-(deflisten workspaces :initial "[]" "scripts/get-workspaces")
+(deflisten workspaces :initial "[]" "scripts/workspaces")
 (defwidget workspaces-group []
   (box
     :class "group workspaces"

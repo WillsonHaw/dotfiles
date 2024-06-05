@@ -27,7 +27,7 @@
         rofi.enable = true;
         thunar.enable = true;
         # waybar.enable = true;
-        # wlogout.enable = true;
+        wlogout.enable = true;
       };
 
       home-manager.users.slumpy =
@@ -38,7 +38,10 @@
           ...
         }:
         {
-          home.file."/.config/hypr/hyprland".source = ./.config/hyprland;
+          home.file."${config.xdg.configHome}/hypr/hyprland".source = ./.config/hyprland;
+          home.file."${config.xdg.configHome}/hypr/hyprlock".source = ./.config/hyprlock;
+
+          home.file."${config.xdg.configHome}/hypr/hyprlock.conf".source = ./.config/hyprlock.conf;
 
           services.kdeconnect.enable = true;
 

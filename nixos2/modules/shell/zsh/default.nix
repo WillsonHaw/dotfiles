@@ -37,6 +37,10 @@
         function volume() {
           wpctl set-volume @DEFAULT_AUDIO_SINK@ $@%
         }
+
+        if [[ $(tty) == /dev/tty1 ]] then
+          Hyprland 2>&1 > /dev/null;
+        fi
       '';
 
       envExtra = ''
