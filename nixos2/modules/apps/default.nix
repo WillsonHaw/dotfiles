@@ -15,6 +15,7 @@
     ./dconf2nix
     ./ferdium
     ./flatpak
+    ./gimp
     ./gparted
     ./guitar
     ./steam
