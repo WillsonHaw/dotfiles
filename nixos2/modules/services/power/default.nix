@@ -11,4 +11,6 @@
   };
 
   imports = [ ./tlp ];
+
+  config.services.upower.enable = true;
 }

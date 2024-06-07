@@ -7,19 +7,14 @@
 
 {
   environment.systemPackages = with pkgs; [
-    #   libdbusmenu-gtk3
-    #   libnotify
-    #   killall
     inotify-tools
     nixfmt-rfc-style
     jq
     socat
-    #   unrar
   ];
 
   imports = [ ../modules ];
 
-  # boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_8;
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   nixpkgs.config.allowUnfree = true;

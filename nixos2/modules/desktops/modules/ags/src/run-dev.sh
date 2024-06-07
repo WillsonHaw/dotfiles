@@ -16,7 +16,7 @@ function compileTypeScript() {
 
 function compileSass() {
   echo 'Compiling SASS'
-  sassc $SRC_DIR/styles/styles.scss $SRC_DIR/../.config/styles.css
+  nix run nixpkgs#sassc $SRC_DIR/styles/styles.scss $SRC_DIR/../.config/styles.css
 }
 
 function runAgs() {

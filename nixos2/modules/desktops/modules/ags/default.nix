@@ -12,7 +12,7 @@
   };
 
   config = lib.mkIf config.noodles.desktops.module.ags.enable {
-    environment.systemPackages = with pkgs; [ sassc ];
+    environment.systemPackages = with pkgs; [ gnome.adwaita-icon-theme ];
 
     home-manager.users.slumpy = {
       imports = [ inputs.ags.homeManagerModules.default ];

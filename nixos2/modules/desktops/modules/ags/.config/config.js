@@ -73,6 +73,20 @@ var TopSection = Widget.Box({
 });
 var TopSection_default = TopSection;
 
+// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Battery.ts
+var battery = await Service.import("battery");
+var Battery = Widget.CircularProgress({
+  className: `widget circular-progress battery`,
+  visible: battery.bind("available"),
+  rounded: true,
+  child: Widget.Icon({
+    className: "icon",
+    icon: battery.bind("icon_name")
+  }),
+  value: battery.bind("percent").as((p) => p / 100)
+});
+var Battery_default = Battery;
+
 // nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Clock.ts
 var SECOND = 1e3;
 var MINUTE = 60 * SECOND;
@@ -92,6 +106,26 @@ var Clock = BarGroup_default({
 });
 var Clock_default = Clock;
 
+// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Network.ts
+var network = await Service.import("network");
+var WifiIndicator = Widget.Icon({
+  className: "icon",
+  icon: network.wifi.bind("icon_name")
+});
+var WiredIndicator = Widget.Icon({
+  className: "icon",
+  icon: network.wired.bind("icon_name")
+});
+var Network = Widget.Stack({
+  className: "widget network",
+  children: {
+    wifi: WifiIndicator,
+    wired: WiredIndicator
+  },
+  shown: network.bind("primary").as((p) => p || "wifi")
+});
+var Network_default = Network;
+
 // nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/SystemTray.ts
 var systemtray = await Service.import("systemtray");
 var SystemTrayItem = (item) => Widget.Button({
@@ -107,13 +141,45 @@ var SystemTray = BarGroup_default({
 });
 var SystemTray_default = SystemTray;
 
+// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Volume.ts
+var audio = await Service.import("audio");
+function getIcon(volume, isMuted) {
+  let icon = "\uEEE8";
+  if (isMuted) {
+    return icon;
+  } else if (volume > 0.66) {
+    icon = "\uF028";
+  } else if (volume > 0.2) {
+    icon = "\uF027";
+  } else if (volume > 0.01) {
+    icon = "\uF026";
+  }
+  return icon;
+}
+var Volume = Widget.CircularProgress({
+  className: `widget circular-progress volume`,
+  rounded: true,
+  child: Widget.Label({
+    className: "icon large",
+    label: "\uF026"
+  }),
+  value: audio.speaker.bind("volume")
+  // @ts-expect-error
+}).hook(audio, (self) => {
+  self.child.label = getIcon(audio.speaker.volume, audio.speaker.is_muted);
+});
+var Volume_default = Volume;
+
 // nixos2/modules/desktops/modules/ags/src/windows/bar/BottomSection.ts
+var ControlsGroup = BarGroup_default({
+  className: "controls",
+  children: [Network_default, Battery_default, Volume_default]
+});
 var BottomSection = Widget.Box({
   className: "section bottom",
   vertical: true,
   vpack: "end",
-  // children: [SystrayGroup, ControlsGroup, ClockGroup, PowerGroup],
-  children: [SystemTray_default, Clock_default]
+  children: [SystemTray_default, ControlsGroup, Clock_default]
 });
 var BottomSection_default = BottomSection;
 

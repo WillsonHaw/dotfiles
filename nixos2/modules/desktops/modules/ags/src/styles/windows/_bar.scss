@@ -53,8 +53,46 @@
 
 // System Tray
 .system-tray {
+}
+
+// Controls
+.controls {
+  .widget {
+    &.battery {
+      color: $blue;
+    }
+
+    &.network {
+      color: $green;
+    }
+
+    &.volume {
+      color: $yellow;
+    }
+  }
+
   .icon {
-    font-size: 1.8em;
+    font-size: 14px;
+  }
+
+  .icon.large {
+    font-size: 30px;
+  }
+
+  .icon.x-large {
+    font-size: 48px;
+  }
+
+  .icon.small {
+    font-size: 8px;
+  }
+
+  .circular-progress {
+    color: $red;
+    min-width: 28px;
+    min-height: 28px;
+    font-size: 2px;
+    background-color: $background; // #131313;
   }
 }
 

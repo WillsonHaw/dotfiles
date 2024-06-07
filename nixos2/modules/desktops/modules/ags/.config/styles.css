@@ -46,8 +46,33 @@ tooltip label {
   .workspaces .active {
     color: #e0af68; }
 
-.system-tray .icon {
-  font-size: 1.8em; }
+.controls .widget.battery {
+  color: #7aa2f7; }
+
+.controls .widget.network {
+  color: #73daca; }
+
+.controls .widget.volume {
+  color: #e0af68; }
+
+.controls .icon {
+  font-size: 14px; }
+
+.controls .icon.large {
+  font-size: 30px; }
+
+.controls .icon.x-large {
+  font-size: 48px; }
+
+.controls .icon.small {
+  font-size: 8px; }
+
+.controls .circular-progress {
+  color: #f7768e;
+  min-width: 28px;
+  min-height: 28px;
+  font-size: 2px;
+  background-color: #1a1b26; }
 
 .clock {
   font-family: Comic Mono;
