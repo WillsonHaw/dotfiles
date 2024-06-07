@@ -66,14 +66,36 @@
     :orientation "v"
     :class "group clock"
     :valign "end"
-    (button :onclick "scripts/popup calendar"
-    :class "time-hour" hour)
-    (button :onclick "scripts/popup calendar"
-    :class "time-min" min)
+    (button
+      :onclick "scripts/popup calendar"
+      :class "clock-hour"
+      clock-hour
+    )
+    (button
+      :onclick "scripts/popup calendar"
+      :class "clock-min"
+      clock-min
+    )
+    (label
+      :class "clock-separator"
+      :text "•••"
+    )
+    (button
+      :onclick "scripts/popup calendar"
+      :class "clock-month"
+      clock-month
+    )
+    (button
+      :onclick "scripts/popup calendar"
+      :class "clock-day"
+      clock-day
+    )
   )
 )
-(defpoll hour :interval "1s" "date '+%H'")
-(defpoll min :interval "1s" "date '+%M'")
+(defpoll clock-hour :interval "1m" "date '+%H'")
+(defpoll clock-min :interval "1s" "date '+%M'")
+(defpoll clock-month :interval "1m" "date '+%a'")
+(defpoll clock-day :interval "1m" "date '+%d'")
 
 ;; Systray ;;
 (defwidget systray-group []

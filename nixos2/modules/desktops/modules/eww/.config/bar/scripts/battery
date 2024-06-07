@@ -1,12 +1,16 @@
 #!/bin/sh
 
-bat=/sys/class/power_supply/BAT1/
+bat=/sys/class/power_supply/$(ls /sys/class/power_supply | grep BAT | head -n 1)/
 per="$(cat "$bat/capacity")"
 
 icon() {
-  [ $(cat "$bat/status") = Charging ] && echo "" && exit
+  status="$(cat "$bat/status")"
 
-  if [ "$per" -gt "90" ]; then
+  if [ status = "Charging" ]; then
+    icon=""
+  elif [ "$per" -gt "98" ]; then
+    icon="󰁹"
+  elif [ "$per" -gt "90" ]; then
     icon="󰂂"
   elif [ "$per" -gt "80" ]; then
     icon="󰂁"
@@ -24,10 +28,10 @@ icon() {
     icon="󰁻"
   elif [ "$per" -gt "10" ]; then
     icon="󰁺"
-    # notify-send -u critical "Battery Low" "Connect Charger"
+    hyprctl notify 3 5000 "Battery Low.\n Connect Charger\!"
   elif [ "$per" -gt "0" ]; then
     icon="󰂃"
-    # notify-send -u critical "Battery Low" "Connect Charger"
+    hyprctl notify 3 5000 "Low Battery.\n Connect Char\!"
   else
     icon=""
   fi
