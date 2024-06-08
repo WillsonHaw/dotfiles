@@ -1,0 +1,121 @@
+// Global
+* {
+  all: unset;
+}
+
+@import '_variables.scss';
+@import '_tooltips.scss';
+@import 'windows/_bar';
+
+// // System Tray
+// .systray {
+//   padding: $v-padding 0;
+// }
+
+// // Control Panel
+// .controls {
+//   .widget {
+//     font-size: 2.5rem;
+//   }
+
+//   .battery {
+//     color: $blue;
+//   }
+//   .wifi {
+//     color: $magenta;
+//   }
+//   .brightness {
+//     color: $yellow;
+//   }
+//   .volume {
+//     color: $green;
+//   }
+
+//   .bar {
+//     trough {
+//       all: unset;
+//       background-color: $background;
+//       border-radius: $border-radius;
+//       min-height: 80px;
+//       min-width: 10px;
+//       margin: 0.3rem 0 0.3rem 0;
+
+//       highlight {
+//         border-radius: $border-radius;
+//       }
+//     }
+
+//     &.brightness highlight {
+//       background-color: $yellow;
+//     }
+
+//     &.volume highlight {
+//       background-color: $green;
+//     }
+//   }
+// }
+
+// // Calendar
+// .calendar {
+//   background-color: $black;
+//   font-family: Hack;
+//   font-size: 1em;
+//   font-weight: bold;
+
+//   .cal-inner-box {
+//     padding: 1rem 1rem 0.2rem;
+
+//     .cal {
+//       &.highlight {
+//         padding: 10rem;
+//       }
+
+//       padding: 0.8rem 0.25rem 0rem;
+//       margin-left: 10px;
+//     }
+//   }
+
+//   calendar:selected {
+//     color: $blue;
+//   }
+
+//   calendar.header {
+//     color: $blue;
+//     font-weight: bold;
+//   }
+
+//   calendar.button {
+//     color: $magenta;
+//   }
+
+//   calendar.highlight {
+//     color: $magenta;
+//     font-weight: bold;
+//   }
+
+//   calendar:indeterminate {
+//     color: $background;
+//   }
+// }
+
+// // Powermenu
+// .power-menu {
+//   font-size: 2.5em;
+//   font-weight: bold;
+
+//   .shutdown {
+//     color: $red;
+//   }
+//   .hyprland {
+//     color: $green;
+//   }
+//   .reboot {
+//     color: $yellow;
+//   }
+//   .logout {
+//     color: $magenta;
+//   }
+//   .lock {
+//     color: $blue;
+//   }
+// }

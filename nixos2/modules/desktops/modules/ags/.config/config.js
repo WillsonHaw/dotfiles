@@ -1,93 +1,142 @@
-"use strict";
-// Import
-import Gdk from "gi://Gdk";
-import GLib from "gi://GLib";
-import App from "resource:///com/github/Aylur/ags/app.js";
-import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
-// Stuff
-import userOptions from "./modules/.configuration/user_options.js";
-import { firstRunWelcome } from "./services/messages.js";
-// Widgets
-import {
-  Bar,
-  BarCornerTopleft,
-  BarCornerTopright,
-} from "./modules/bar/main.js";
-import Cheatsheet from "./modules/cheatsheet/main.js";
-// import DesktopBackground from './modules/desktopbackground/main.js';
-// import Dock from './modules/dock/main.js';
-import Corner from "./modules/screencorners/main.js";
-import Indicator from "./modules/indicators/main.js";
-import Osk from "./modules/onscreenkeyboard/main.js";
-import Overview from "./modules/overview/main.js";
-import Session from "./modules/session/main.js";
-import SideLeft from "./modules/sideleft/main.js";
-import SideRight from "./modules/sideright/main.js";
-import Click2Close from "./modules/click2close/main.js";
-
-const COMPILED_STYLE_DIR = `${GLib.get_user_cache_dir()}/ags/user/generated`;
-const range = (length, start = 1) =>
-  Array.from({ length }, (_, i) => i + start);
-function forMonitors(widget) {
-  const n = Gdk.Display.get_default()?.get_n_monitors() || 1;
-  return range(n, 0).map(widget).flat(1);
-}
-function forMonitorsAsync(widget) {
-  const n = Gdk.Display.get_default()?.get_n_monitors() || 1;
-  return range(n, 0).forEach((n) => widget(n).catch(print));
-}
-
-// SCSS compilation
-Utils.exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicwal.scss'`); // reset music styles
-Utils.exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicmaterial.scss'`); // reset music styles
-async function applyStyle() {
-  Utils.exec(`mkdir -p ${COMPILED_STYLE_DIR}`);
-  Utils.exec(
-    `sass ${App.configDir}/scss/main.scss ${COMPILED_STYLE_DIR}/style.css`
-  );
-  App.resetCss();
-  App.applyCss(`${COMPILED_STYLE_DIR}/style.css`);
-  console.log("[LOG] Styles loaded");
-}
-applyStyle().catch(print);
-
-const Windows = () => [
-  // forMonitors(DesktopBackground),
-  // Dock(),
-  Overview(),
-  forMonitors(Indicator),
-  forMonitors(Cheatsheet),
-  SideLeft(),
-  SideRight(),
-  forMonitors(Osk),
-  Session(),
-  forMonitors(Bar),
-  ...(userOptions.appearance.fakeScreenRounding
-    ? [
-        forMonitors((id) => Corner(id, "top left")),
-        forMonitors((id) => Corner(id, "top right")),
-        forMonitors((id) => Corner(id, "bottom left")),
-        forMonitors((id) => Corner(id, "bottom right")),
-        forMonitors(BarCornerTopleft),
-        forMonitors(BarCornerTopright),
-      ]
-    : []),
-  forMonitors(Click2Close),
-];
-
-const CLOSE_ANIM_TIME = 210; // Longer than actual anim time to make sure widgets animate fully
-const closeWindowDelays = {}; // For animations
-for (let i = 0; i < (Gdk.Display.get_default()?.get_n_monitors() || 1); i++) {
-  closeWindowDelays[`osk${i}`] = CLOSE_ANIM_TIME;
-}
-
-App.config({
-  css: `${COMPILED_STYLE_DIR}/style.css`,
-  stackTraceOnError: true,
-  closeWindowDelay: closeWindowDelays,
-  windows: Windows().flat(1),
+// nixos2/modules/desktops/modules/ags/src/windows/bar/BarGroup.ts
+var BarGroup = ({
+  className,
+  ...props
+}) => Widget.Box({
+  className: `group ${className}`,
+  vertical: true,
+  ...props
 });
+var BarGroup_default = BarGroup;
 
-// Stuff that don't need to be toggled. And they're async so ugh...
-forMonitorsAsync(Bar);
-// Bar().catch(print); // Use this to debug the bar. Single monitor only.
+// nixos2/modules/desktops/modules/ags/src/windows/bar/BarWidget.ts
+var BarWidget = ({
+  className,
+  ...props
+}) => Widget.Button({
+  className: `widget ${className}`,
+  ...props
+});
+var BarWidget_default = BarWidget;
+
+// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Launcher.ts
+var Launcher = BarGroup_default({
+  className: "launcher",
+  children: [
+    BarWidget_default({
+      onClicked: () => Utils.exec("/home/slumpy/.config/rofi/launchers/type-6/launcher.sh"),
+      child: Widget.Label({ label: "\uF135" })
+    })
+  ]
+});
+var Launcher_default = Launcher;
+
+// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Workspaces.ts
+var hyprland = await Service.import("hyprland");
+var dispatch = (ws) => hyprland.messageAsync(`dispatch workspace ${ws}`);
+var Workspaces = BarGroup_default({
+  className: "workspaces",
+  children: Array.from({ length: 5 }, (_, i) => i + 1).map(
+    (id) => BarWidget_default({
+      setup: (self) => {
+        self.hook(hyprland, () => {
+          self.toggleClassName("active", hyprland.active.workspace.id === id);
+          self.toggleClassName(
+            "occupied",
+            (hyprland.workspaces.find((w) => w.id === id)?.windows ?? 0) > 0
+          );
+        });
+      },
+      className: `workspace ws-${id}`,
+      onClicked: () => dispatch(id),
+      child: Widget.Label({
+        setup: (self) => {
+          self.bind(
+            "label",
+            hyprland.active.workspace,
+            "id",
+            (ws) => ws === id ? "\uF444" : "\uF4C3"
+          );
+        }
+      })
+    })
+  )
+});
+var Workspaces_default = Workspaces;
+
+// nixos2/modules/desktops/modules/ags/src/windows/bar/TopSection.ts
+var TopSection = Widget.Box({
+  className: "section top",
+  vertical: true,
+  vpack: "start",
+  children: [Launcher_default, Workspaces_default]
+});
+var TopSection_default = TopSection;
+
+// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Clock.ts
+var SECOND = 1e3;
+var MINUTE = 60 * SECOND;
+var clockHour = Variable("", { poll: [MINUTE, "date '+%H'"] });
+var clockMin = Variable("", { poll: [SECOND, "date '+%M'"] });
+var clockMonth = Variable("", { poll: [MINUTE, "date '+%a'"] });
+var clockDay = Variable("", { poll: [MINUTE, "date '+%d'"] });
+var Clock = BarGroup_default({
+  className: "clock",
+  children: [
+    Widget.Label({ label: clockHour.bind() }),
+    Widget.Label({ label: clockMin.bind() }),
+    Widget.Label({ label: "\u2022\u2022" }),
+    Widget.Label({ label: clockMonth.bind() }),
+    Widget.Label({ label: clockDay.bind() })
+  ]
+});
+var Clock_default = Clock;
+
+// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/SystemTray.ts
+var systemtray = await Service.import("systemtray");
+var SystemTrayItem = (item) => Widget.Button({
+  // @ts-expect-error
+  child: Widget.Icon({ className: "icon" }).bind("icon", item, "icon"),
+  tooltipMarkup: item.bind("tooltip_markup"),
+  onPrimaryClick: (_, event) => item.activate(event),
+  onSecondaryClick: (_, event) => item.openMenu(event)
+});
+var SystemTray = BarGroup_default({
+  className: "system-tray",
+  children: systemtray.bind("items").as((i) => i.map(SystemTrayItem))
+});
+var SystemTray_default = SystemTray;
+
+// nixos2/modules/desktops/modules/ags/src/windows/bar/BottomSection.ts
+var BottomSection = Widget.Box({
+  className: "section bottom",
+  vertical: true,
+  vpack: "end",
+  // children: [SystrayGroup, ControlsGroup, ClockGroup, PowerGroup],
+  children: [SystemTray_default, Clock_default]
+});
+var BottomSection_default = BottomSection;
+
+// nixos2/modules/desktops/modules/ags/src/windows/bar/Bar.ts
+var root = Widget.CenterBox({
+  className: "bar-window",
+  vertical: true,
+  startWidget: TopSection_default,
+  endWidget: BottomSection_default
+});
+var Bar = Widget.Window({
+  name: "bar",
+  anchor: ["top", "left", "bottom"],
+  child: root,
+  visible: true
+});
+var Bar_default = Bar;
+
+// nixos2/modules/desktops/modules/ags/src/windows/index.ts
+var windows_default = [Bar_default];
+
+// nixos2/modules/desktops/modules/ags/src/config.ts
+App.config({
+  style: `${App.configDir}/styles.css`,
+  windows: windows_default
+});

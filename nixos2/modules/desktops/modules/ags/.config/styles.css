@@ -1,0 +1,57 @@
+* {
+  all: unset; }
+
+tooltip.background {
+  background-color: #565f89;
+  font-size: 1rem;
+  border-radius: 10px;
+  color: #a9b1d6; }
+
+tooltip label {
+  margin: 0.25rem; }
+
+.bar-window {
+  background-color: #1a1b26;
+  padding: 0.5rem;
+  font-family: 'JetbrainsMono Nerd Font Mono'; }
+
+.group {
+  border-radius: 5px;
+  background-color: #24283b;
+  padding: 0.5rem 0.25rem; }
+
+.widget {
+  min-width: 32px;
+  min-height: 32px; }
+
+.section.top .group {
+  margin-bottom: 0.5rem; }
+
+.section.bottom .group {
+  margin-top: 0.5rem; }
+
+.launcher .widget {
+  color: #7dcfff;
+  font-family: 'Font Awesome 6 Free';
+  font-size: 1.6em; }
+
+.workspaces {
+  color: #1a1b26;
+  font-family: 'JetbrainsMono Nerd Font Mono'; }
+  .workspaces .workspace {
+    font-size: 3rem;
+    margin: -0.5rem 0; }
+  .workspaces .occupied {
+    color: #a9b1d6; }
+  .workspaces .active {
+    color: #e0af68; }
+
+.system-tray .icon {
+  font-size: 1.8em; }
+
+.clock {
+  font-family: Comic Mono;
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #a9b1d6;
+  padding: 0.7rem 0 0.5rem 0; }

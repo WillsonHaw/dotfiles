@@ -1,0 +1,68 @@
+.bar-window {
+  background-color: $background;
+  padding: $bar-spacing;
+  font-family: 'JetbrainsMono Nerd Font Mono';
+}
+
+.group {
+  border-radius: $border-radius;
+  background-color: $black;
+  padding: $v-padding $h-padding;
+}
+
+.widget {
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.section {
+  &.top .group {
+    margin-bottom: $bar-spacing;
+  }
+
+  &.bottom .group {
+    margin-top: $bar-spacing;
+  }
+}
+
+// Launcher
+.launcher .widget {
+  color: $cyan;
+  font-family: 'Font Awesome 6 Free';
+  font-size: 1.6em;
+}
+
+// Workspaces
+.workspaces {
+  color: $background;
+  font-family: 'JetbrainsMono Nerd Font Mono';
+
+  .workspace {
+    font-size: 3rem;
+    margin: -0.5rem 0;
+  }
+
+  .occupied {
+    color: $white;
+  }
+
+  .active {
+    color: $yellow;
+  }
+}
+
+// System Tray
+.system-tray {
+  .icon {
+    font-size: 1.8em;
+  }
+}
+
+// Clock
+.clock {
+  font-family: Comic Mono;
+  font-weight: bold;
+  font-size: 1.2em;
+  color: $white;
+  padding: ($v-padding * 1.4) 0 $v-padding 0;
+}

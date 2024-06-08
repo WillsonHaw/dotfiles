@@ -21,7 +21,7 @@
     in
     lib.mkIf config.noodles.desktops.hyprland_new.enable {
       noodles.desktops.module = {
-        # ags.enable = true;
+        ags.enable = true;
         eww.enable = true;
         mako.enable = true;
         rofi.enable = true;

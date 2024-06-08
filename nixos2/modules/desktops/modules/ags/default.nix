@@ -12,6 +12,8 @@
   };
 
   config = lib.mkIf config.noodles.desktops.module.ags.enable {
+    environment.systemPackages = with pkgs; [ sassc ];
+
     home-manager.users.slumpy = {
       imports = [ inputs.ags.homeManagerModules.default ];
 
