@@ -5,8 +5,9 @@ const systemtray = await Service.import('systemtray');
 
 const SystemTrayItem = (item: TrayItem) =>
   Widget.Button({
+    className: 'widget',
     // @ts-expect-error
-    child: Widget.Icon({ className: 'icon' }).bind('icon', item, 'icon'),
+    child: Widget.Icon({ className: 'icon large' }).bind('icon', item, 'icon'),
     tooltipMarkup: item.bind('tooltip_markup'),
     onPrimaryClick: (_, event) => item.activate(event),
     onSecondaryClick: (_, event) => item.openMenu(event),

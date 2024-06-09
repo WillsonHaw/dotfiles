@@ -1,4 +1,4 @@
-// nixos2/modules/desktops/modules/ags/src/windows/bar/BarGroup.ts
+// modules/desktops/modules/ags/src/windows/bar/BarGroup.ts
 var BarGroup = ({
   className,
   ...props
@@ -9,7 +9,7 @@ var BarGroup = ({
 });
 var BarGroup_default = BarGroup;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/BarWidget.ts
+// modules/desktops/modules/ags/src/windows/bar/BarWidget.ts
 var BarWidget = ({
   className,
   ...props
@@ -19,7 +19,7 @@ var BarWidget = ({
 });
 var BarWidget_default = BarWidget;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Launcher.ts
+// modules/desktops/modules/ags/src/windows/bar/widgets/Launcher.ts
 var Launcher = BarGroup_default({
   className: "launcher",
   children: [
@@ -31,7 +31,7 @@ var Launcher = BarGroup_default({
 });
 var Launcher_default = Launcher;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Workspaces.ts
+// modules/desktops/modules/ags/src/windows/bar/widgets/Workspaces.ts
 var hyprland = await Service.import("hyprland");
 var dispatch = (ws) => hyprland.messageAsync(`dispatch workspace ${ws}`);
 var Workspaces = BarGroup_default({
@@ -64,7 +64,7 @@ var Workspaces = BarGroup_default({
 });
 var Workspaces_default = Workspaces;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/TopSection.ts
+// modules/desktops/modules/ags/src/windows/bar/TopSection.ts
 var TopSection = Widget.Box({
   className: "section top",
   vertical: true,
@@ -73,21 +73,117 @@ var TopSection = Widget.Box({
 });
 var TopSection_default = TopSection;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Battery.ts
+// modules/desktops/modules/ags/src/windows/bar/widgets/Battery.ts
 var battery = await Service.import("battery");
-var Battery = Widget.CircularProgress({
-  className: `widget circular-progress battery`,
-  visible: battery.bind("available"),
-  rounded: true,
-  child: Widget.Icon({
-    className: "icon",
-    icon: battery.bind("icon_name")
-  }),
-  value: battery.bind("percent").as((p) => p / 100)
+var Battery = BarWidget_default({
+  className: "battery",
+  child: Widget.CircularProgress({
+    className: `circular-progress`,
+    visible: battery.bind("available"),
+    rounded: true,
+    child: Widget.Icon({
+      className: "icon",
+      icon: battery.bind("icon_name")
+    }),
+    value: battery.bind("percent").as((p) => p / 100)
+  })
 });
 var Battery_default = Battery;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Clock.ts
+// modules/desktops/modules/ags/src/services/brightness.ts
+var BrightnessService = class extends Service {
+  static {
+    Service.register(
+      this,
+      {
+        // 'name-of-signal': [type as a string from GObject.TYPE_<type>],
+        "screen-changed": ["float"]
+      },
+      {
+        // 'kebab-cased-name': [type as a string from GObject.TYPE_<type>, 'r' | 'w' | 'rw']
+        // 'r' means readable
+        // 'w' means writable
+        // guess what 'rw' means
+        "screen-value": ["float", "rw"]
+      }
+    );
+  }
+  // this Service assumes only one device with backlight
+  #interface = Utils.exec("sh -c 'ls -w1 /sys/class/backlight | head -1'");
+  // # prefix means private in JS
+  #screenValue = 0;
+  #maxValue = Number(Utils.exec("brightnessctl max"));
+  // the getter has to be in snake_case
+  get screen_value() {
+    return this.#screenValue;
+  }
+  // the setter has to be in snake_case too
+  set screen_value(percent) {
+    if (percent < 0)
+      percent = 0;
+    if (percent > 1)
+      percent = 1;
+    Utils.execAsync(`brightnessctl set ${percent * 100}% -q`);
+  }
+  constructor() {
+    super();
+    const brightness = `/sys/class/backlight/${this.#interface}/brightness`;
+    Utils.monitorFile(brightness, () => this.#onChange());
+    this.#onChange();
+  }
+  #onChange() {
+    this.#screenValue = Number(Utils.exec("brightnessctl get")) / this.#maxValue;
+    this.emit("changed");
+    this.notify("screen-value");
+    this.emit("screen-changed", this.#screenValue);
+  }
+  // overwriting the connect method, let's you
+  // change the default event that widgets connect to
+  connect(event = "screen-changed", callback) {
+    return super.connect(event, callback);
+  }
+};
+var service = new BrightnessService();
+var brightness_default = service;
+
+// modules/desktops/modules/ags/src/windows/bar/widgets/Brightness.ts
+var showBar = Variable(false);
+var Brightness = Widget.EventBox({
+  className: "widget brightness",
+  onHover: () => showBar.setValue(true),
+  onHoverLost: () => showBar.setValue(false),
+  child: Widget.Box({
+    vertical: true,
+    children: [
+      Widget.Revealer({
+        className: "bar",
+        revealChild: showBar.bind(),
+        transition: "slide_up",
+        child: Widget.Slider({
+          onChange: ({ value }) => brightness_default.screen_value = value,
+          vertical: true,
+          inverted: true,
+          value: brightness_default.bind("screen_value"),
+          min: 0,
+          max: 1,
+          marks: []
+        })
+      }),
+      Widget.CircularProgress({
+        className: `circular-progress`,
+        rounded: true,
+        child: Widget.Label({
+          className: "icon large",
+          label: "\u{F00E0}"
+        }),
+        value: brightness_default.bind("screen_value")
+      })
+    ]
+  })
+});
+var Brightness_default = Brightness;
+
+// modules/desktops/modules/ags/src/windows/bar/widgets/Clock.ts
 var SECOND = 1e3;
 var MINUTE = 60 * SECOND;
 var clockHour = Variable("", { poll: [MINUTE, "date '+%H'"] });
@@ -106,15 +202,26 @@ var Clock = BarGroup_default({
 });
 var Clock_default = Clock;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Network.ts
+// modules/desktops/modules/ags/src/windows/bar/widgets/Network.ts
 var network = await Service.import("network");
-var WifiIndicator = Widget.Icon({
-  className: "icon",
-  icon: network.wifi.bind("icon_name")
+var WifiIndicator = Widget.CircularProgress({
+  className: `widget circular-progress network`,
+  rounded: true,
+  child: Widget.Icon({
+    className: "icon",
+    icon: network.wifi.bind("icon_name")
+  }),
+  value: network.wifi.bind("strength").as((v) => v / 100),
+  tooltipText: network.wifi.bind("ssid").as((v) => `Connected to ${v}`)
 });
-var WiredIndicator = Widget.Icon({
-  className: "icon",
-  icon: network.wired.bind("icon_name")
+var WiredIndicator = Widget.CircularProgress({
+  className: `circular-progress`,
+  rounded: true,
+  child: Widget.Icon({
+    className: "icon",
+    icon: network.wired.bind("icon_name")
+  }),
+  value: 1
 });
 var Network = Widget.Stack({
   className: "widget network",
@@ -126,11 +233,12 @@ var Network = Widget.Stack({
 });
 var Network_default = Network;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/SystemTray.ts
+// modules/desktops/modules/ags/src/windows/bar/widgets/SystemTray.ts
 var systemtray = await Service.import("systemtray");
 var SystemTrayItem = (item) => Widget.Button({
+  className: "widget",
   // @ts-expect-error
-  child: Widget.Icon({ className: "icon" }).bind("icon", item, "icon"),
+  child: Widget.Icon({ className: "icon large" }).bind("icon", item, "icon"),
   tooltipMarkup: item.bind("tooltip_markup"),
   onPrimaryClick: (_, event) => item.activate(event),
   onSecondaryClick: (_, event) => item.openMenu(event)
@@ -141,8 +249,9 @@ var SystemTray = BarGroup_default({
 });
 var SystemTray_default = SystemTray;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/widgets/Volume.ts
+// modules/desktops/modules/ags/src/windows/bar/widgets/Volume.ts
 var audio = await Service.import("audio");
+var showBar2 = Variable(false);
 function getIcon(volume, isMuted) {
   let icon = "\uEEE8";
   if (isMuted) {
@@ -156,24 +265,47 @@ function getIcon(volume, isMuted) {
   }
   return icon;
 }
-var Volume = Widget.CircularProgress({
-  className: `widget circular-progress volume`,
-  rounded: true,
-  child: Widget.Label({
-    className: "icon large",
-    label: "\uF026"
-  }),
-  value: audio.speaker.bind("volume")
-  // @ts-expect-error
-}).hook(audio, (self) => {
-  self.child.label = getIcon(audio.speaker.volume, audio.speaker.is_muted);
+var Volume = Widget.EventBox({
+  className: "widget volume",
+  onHover: () => showBar2.setValue(true),
+  onHoverLost: () => showBar2.setValue(false),
+  child: Widget.Box({
+    vertical: true,
+    children: [
+      Widget.Revealer({
+        className: "bar",
+        revealChild: showBar2.bind(),
+        transition: "slide_up",
+        child: Widget.Slider({
+          onChange: ({ value }) => audio.speaker.volume = value,
+          vertical: true,
+          inverted: true,
+          value: audio.speaker.bind("volume"),
+          min: 0,
+          max: 1,
+          marks: []
+        })
+      }),
+      Widget.CircularProgress({
+        className: `circular-progress`,
+        rounded: true,
+        child: Widget.Label({
+          className: "icon large",
+          label: "\uF026"
+        }),
+        value: audio.speaker.bind("volume")
+      }).hook(audio, (self) => {
+        self.child.label = getIcon(audio.speaker.volume, audio.speaker.is_muted);
+      })
+    ]
+  })
 });
 var Volume_default = Volume;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/BottomSection.ts
+// modules/desktops/modules/ags/src/windows/bar/BottomSection.ts
 var ControlsGroup = BarGroup_default({
   className: "controls",
-  children: [Network_default, Battery_default, Volume_default]
+  children: [Network_default, Battery_default, Brightness_default, Volume_default]
 });
 var BottomSection = Widget.Box({
   className: "section bottom",
@@ -183,7 +315,7 @@ var BottomSection = Widget.Box({
 });
 var BottomSection_default = BottomSection;
 
-// nixos2/modules/desktops/modules/ags/src/windows/bar/Bar.ts
+// modules/desktops/modules/ags/src/windows/bar/Bar.ts
 var root = Widget.CenterBox({
   className: "bar-window",
   vertical: true,
@@ -198,10 +330,10 @@ var Bar = Widget.Window({
 });
 var Bar_default = Bar;
 
-// nixos2/modules/desktops/modules/ags/src/windows/index.ts
+// modules/desktops/modules/ags/src/windows/index.ts
 var windows_default = [Bar_default];
 
-// nixos2/modules/desktops/modules/ags/src/config.ts
+// modules/desktops/modules/ags/src/config.ts
 App.config({
   style: `${App.configDir}/styles.css`,
   windows: windows_default

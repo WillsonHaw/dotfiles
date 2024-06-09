@@ -7,54 +7,6 @@
 @import '_tooltips.scss';
 @import 'windows/_bar';
 
-// // System Tray
-// .systray {
-//   padding: $v-padding 0;
-// }
-
-// // Control Panel
-// .controls {
-//   .widget {
-//     font-size: 2.5rem;
-//   }
-
-//   .battery {
-//     color: $blue;
-//   }
-//   .wifi {
-//     color: $magenta;
-//   }
-//   .brightness {
-//     color: $yellow;
-//   }
-//   .volume {
-//     color: $green;
-//   }
-
-//   .bar {
-//     trough {
-//       all: unset;
-//       background-color: $background;
-//       border-radius: $border-radius;
-//       min-height: 80px;
-//       min-width: 10px;
-//       margin: 0.3rem 0 0.3rem 0;
-
-//       highlight {
-//         border-radius: $border-radius;
-//       }
-//     }
-
-//     &.brightness highlight {
-//       background-color: $yellow;
-//     }
-
-//     &.volume highlight {
-//       background-color: $green;
-//     }
-//   }
-// }
-
 // // Calendar
 // .calendar {
 //   background-color: $black;

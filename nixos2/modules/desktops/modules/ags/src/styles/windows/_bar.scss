@@ -11,8 +11,24 @@
 }
 
 .widget {
-  min-width: 32px;
-  min-height: 32px;
+  min-width: 2rem;
+  min-height: 2rem;
+
+  .icon {
+    font-size: 1rem;
+  }
+
+  .icon.large {
+    font-size: 2rem;
+  }
+
+  .icon.x-large {
+    font-size: 3rem;
+  }
+
+  .icon.small {
+    font-size: 0.5rem;
+  }
 }
 
 .section {
@@ -29,7 +45,7 @@
 .launcher .widget {
   color: $cyan;
   font-family: 'Font Awesome 6 Free';
-  font-size: 1.6em;
+  font-size: 1.5rem;
 }
 
 // Workspaces
@@ -51,56 +67,59 @@
   }
 }
 
-// System Tray
-.system-tray {
-}
-
 // Controls
 .controls {
-  .widget {
-    &.battery {
-      color: $blue;
+  @mixin controlWidget($color) {
+    $darkColor: darken($color, 45);
+
+    .circular-progress {
+      background-color: $darkColor;
+      color: $color;
+      min-width: 28px;
+      min-height: 44px;
+      font-size: 2px;
     }
 
+    .bar {
+      trough {
+        background-color: $darkColor;
+        border-radius: $border-radius;
+        min-height: 6rem;
+        min-width: 0.75rem;
+        margin: 0.3rem 0 0.3rem 0;
+
+        highlight {
+          background-color: $color;
+          border-radius: $border-radius;
+        }
+      }
+    }
+  }
+
+  .widget {
     &.network {
-      color: $green;
+      @include controlWidget($green);
+    }
+
+    &.battery {
+      @include controlWidget($blue);
+    }
+
+    &.brightness {
+      @include controlWidget($magenta);
     }
 
     &.volume {
-      color: $yellow;
+      @include controlWidget($yellow);
     }
-  }
-
-  .icon {
-    font-size: 14px;
-  }
-
-  .icon.large {
-    font-size: 30px;
-  }
-
-  .icon.x-large {
-    font-size: 48px;
-  }
-
-  .icon.small {
-    font-size: 8px;
-  }
-
-  .circular-progress {
-    color: $red;
-    min-width: 28px;
-    min-height: 28px;
-    font-size: 2px;
-    background-color: $background; // #131313;
   }
 }
 
 // Clock
 .clock {
   font-family: Comic Mono;
-  font-weight: bold;
-  font-size: 1.2em;
+  font-weight: normal;
+  font-size: 1.2rem;
   color: $white;
   padding: ($v-padding * 1.4) 0 $v-padding 0;
 }

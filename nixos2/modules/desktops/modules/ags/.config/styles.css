@@ -16,13 +16,21 @@ tooltip label {
   font-family: 'JetbrainsMono Nerd Font Mono'; }
 
 .group {
-  border-radius: 5px;
+  border-radius: 0.5rem;
   background-color: #24283b;
   padding: 0.5rem 0.25rem; }
 
 .widget {
-  min-width: 32px;
-  min-height: 32px; }
+  min-width: 2rem;
+  min-height: 2rem; }
+  .widget .icon {
+    font-size: 1rem; }
+  .widget .icon.large {
+    font-size: 2rem; }
+  .widget .icon.x-large {
+    font-size: 3rem; }
+  .widget .icon.small {
+    font-size: 0.5rem; }
 
 .section.top .group {
   margin-bottom: 0.5rem; }
@@ -33,7 +41,7 @@ tooltip label {
 .launcher .widget {
   color: #7dcfff;
   font-family: 'Font Awesome 6 Free';
-  font-size: 1.6em; }
+  font-size: 1.5rem; }
 
 .workspaces {
   color: #1a1b26;
@@ -46,37 +54,77 @@ tooltip label {
   .workspaces .active {
     color: #e0af68; }
 
-.controls .widget.battery {
-  color: #7aa2f7; }
-
-.controls .widget.network {
-  color: #73daca; }
-
-.controls .widget.volume {
-  color: #e0af68; }
-
-.controls .icon {
-  font-size: 14px; }
-
-.controls .icon.large {
-  font-size: 30px; }
-
-.controls .icon.x-large {
-  font-size: 48px; }
-
-.controls .icon.small {
-  font-size: 8px; }
-
-.controls .circular-progress {
-  color: #f7768e;
+.controls .widget.network .circular-progress {
+  background-color: #165249;
+  color: #73daca;
   min-width: 28px;
-  min-height: 28px;
-  font-size: 2px;
-  background-color: #1a1b26; }
+  min-height: 44px;
+  font-size: 2px; }
+
+.controls .widget.network .bar trough {
+  background-color: #165249;
+  border-radius: 0.5rem;
+  min-height: 6rem;
+  min-width: 0.75rem;
+  margin: 0.3rem 0 0.3rem 0; }
+  .controls .widget.network .bar trough highlight {
+    background-color: #73daca;
+    border-radius: 0.5rem; }
+
+.controls .widget.battery .circular-progress {
+  background-color: #082f84;
+  color: #7aa2f7;
+  min-width: 28px;
+  min-height: 44px;
+  font-size: 2px; }
+
+.controls .widget.battery .bar trough {
+  background-color: #082f84;
+  border-radius: 0.5rem;
+  min-height: 6rem;
+  min-width: 0.75rem;
+  margin: 0.3rem 0 0.3rem 0; }
+  .controls .widget.battery .bar trough highlight {
+    background-color: #7aa2f7;
+    border-radius: 0.5rem; }
+
+.controls .widget.brightness .circular-progress {
+  background-color: #410d9f;
+  color: #bb9af7;
+  min-width: 28px;
+  min-height: 44px;
+  font-size: 2px; }
+
+.controls .widget.brightness .bar trough {
+  background-color: #410d9f;
+  border-radius: 0.5rem;
+  min-height: 6rem;
+  min-width: 0.75rem;
+  margin: 0.3rem 0 0.3rem 0; }
+  .controls .widget.brightness .bar trough highlight {
+    background-color: #bb9af7;
+    border-radius: 0.5rem; }
+
+.controls .widget.volume .circular-progress {
+  background-color: #523711;
+  color: #e0af68;
+  min-width: 28px;
+  min-height: 44px;
+  font-size: 2px; }
+
+.controls .widget.volume .bar trough {
+  background-color: #523711;
+  border-radius: 0.5rem;
+  min-height: 6rem;
+  min-width: 0.75rem;
+  margin: 0.3rem 0 0.3rem 0; }
+  .controls .widget.volume .bar trough highlight {
+    background-color: #e0af68;
+    border-radius: 0.5rem; }
 
 .clock {
   font-family: Comic Mono;
-  font-weight: bold;
-  font-size: 1.2em;
+  font-weight: normal;
+  font-size: 1.2rem;
   color: #a9b1d6;
   padding: 0.7rem 0 0.5rem 0; }

@@ -6,7 +6,7 @@ const BarWidget = ({
   ...props
 }: {
   setup?: (self: ReturnType<typeof Widget.Button>) => void;
-  child: ReturnType<typeof Widget.Label>;
+  child: ReturnType<typeof Widget.Label | typeof Widget.CircularProgress>;
   className?: string;
   tooltipText?: string;
   onClicked?: () => void;
