@@ -7,18 +7,15 @@
 
 {
   environment.systemPackages = with pkgs; [
-    brightnessctl
-    curl
-    evtest
-    gnome.seahorse
-    libdbusmenu-gtk3
-    libnotify
-    killall
+    inotify-tools
     nixfmt-rfc-style
-    unrar
+    jq
+    unzip
   ];
 
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_8;
+  imports = [ ../modules ];
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   nixpkgs.config.allowUnfree = true;
 
@@ -32,11 +29,11 @@
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  programs.mtr.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
   system.stateVersion = "23.11"; # Did you read the comment?
 
@@ -44,24 +41,4 @@
     "nix-command"
     "flakes"
   ];
-
-  environment.variables.EDITOR = "vim";
-
-  services.printing.enable = true;
-
-  fonts = {
-    enableDefaultPackages = true;
-    fontDir.enable = true;
-
-    packages = with pkgs; [
-      (nerdfonts.override {
-        fonts = [
-          "FiraCode"
-          "SpaceMono"
-          "JetBrainsMono"
-          "DejaVuSansMono"
-        ];
-      })
-    ];
-  };
 }

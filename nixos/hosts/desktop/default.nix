@@ -10,23 +10,7 @@
     ../common.nix
     ./hardware-configuration.nix
     ./nvidia.nix
-    ../../system/audio
-    ../../system/development/node
-    ../../system/development/vscode
-    ../../system/display/kde
-    ../../system/display/nvidia
-    ../../system/gaming/steam
-    ../../system/hyprland
-    ../../system/keyring
-    ../../system/networking
-    ../../system/polkit
-    ../../system/power/tlp
-    ../../system/shell/zsh
-    ../../system/ssh
-    ../../system/tailscale
-    ../../system/wl-clipboard-rs
-    ../../system/xdg
-    ../../profiles/slumpy.nix
+    ../../users/slumpy.nix
   ];
 
   boot.loader.grub = {
@@ -35,21 +19,22 @@
     useOSProber = true;
   };
 
-  services = {
-    printing.enable = true;
-    blueman.enable = true;
+  networking.hostName = "slumpy-desktop";
+
+  zramSwap.enable = true;
+
+  noodles = {
+    device.is-laptop = false;
+
+    # desktops.sway.enable = true;
+    desktops.hyprland_new.enable = true;
+    desktops.hyprland_new.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
+    # desktops.kde.enable = true;
+    # desktops.gnome.enable = true;
+
+    browsers.floorp.enable = true;
+    browsers.vivaldi.enable = true;
+
+    services.razer.enable = true;
   };
-
-  hardware = {
-    brillo.enable = true;
-
-    bluetooth = {
-      enable = true; # enables support for Bluetooth
-      powerOnBoot = true; # powers up the default Bluetooth controller on boot
-    };
-  };
-
-  programs.light.enable = true;
-
-  networking.hostName = "slumpy-desktop"; # Define your hostname.
 }

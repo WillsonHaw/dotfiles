@@ -1,0 +1,40 @@
+// Powermenu
+.power-menu {
+  background-color: $background;
+  font-size: 2.5em;
+  font-weight: bold;
+  border-radius: 2rem;
+
+  .power-action {
+    padding: 3rem 2rem;
+    min-width: 8rem;
+
+    .icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .label {
+      font-size: 0.75rem;
+    }
+
+    &:nth-child(1) {
+      color: $blue;
+    }
+    &:nth-child(2) {
+      color: $red;
+    }
+    &:nth-child(3) {
+      color: $green;
+    }
+    &:nth-child(4) {
+      color: $yellow;
+    }
+    &:nth-child(5) {
+      color: $magenta;
+    }
+    &:nth-child(6) {
+      color: $red;
+    }
+  }
+}
