@@ -1,6 +1,10 @@
-const PowerAction = (icon: string, label: string) =>
+const PowerAction = (icon: string, label: string, action: () => void) =>
   Widget.Button({
     className: 'power-action',
+    onClicked: () => {
+      action();
+      App.toggleWindow('power-menu');
+    },
     child: Widget.Box({
       vertical: true,
       children: [
@@ -19,12 +23,14 @@ const PowerAction = (icon: string, label: string) =>
 const Root = Widget.Box({
   className: 'power-menu',
   children: [
-    PowerAction('', 'Reload Hyprland'),
-    PowerAction('󰤄', 'Suspend'),
-    PowerAction('', 'Reboot'),
-    PowerAction('', 'Lock'),
-    PowerAction('󰍃', 'Logout'),
-    PowerAction('⏻', 'Shutdown'),
+    PowerAction('', 'Reload Hyprland', () => Utils.exec('hyprctl reload')),
+    PowerAction('󰤄', 'Suspend', () =>
+      Utils.exec('sleep 0.1 && systemctl suspend || loginctl suspend'),
+    ),
+    PowerAction('', 'Reboot', () => Utils.exec('reboot')),
+    PowerAction('', 'Lock', () => Utils.exec('hyprlock')),
+    PowerAction('󰍃', 'Logout', () => Utils.exec('logout')),
+    PowerAction('⏻', 'Shutdown', () => Utils.exec('shutdown now')),
   ],
 });
 

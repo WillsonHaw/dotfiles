@@ -11,11 +11,12 @@
     ./capture
     ./chiaki
     ./curl
-    ./davinci
+    # ./davinci
     ./dconf2nix
     ./ferdium
     ./flatpak
     ./gimp
+    ./godot
     ./gparted
     ./guitar
     ./steam

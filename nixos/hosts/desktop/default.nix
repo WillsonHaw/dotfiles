@@ -26,15 +26,15 @@
   noodles = {
     device.is-laptop = false;
 
-    # desktops.sway.enable = true;
     desktops.hyprland_new.enable = true;
     desktops.hyprland_new.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
-    # desktops.kde.enable = true;
-    # desktops.gnome.enable = true;
+
+    apps.godot.enable = true;
 
     browsers.floorp.enable = true;
     browsers.vivaldi.enable = true;
 
     services.razer.enable = true;
+    services.wallpaperengine.enable = true;
   };
 }

@@ -11,12 +11,12 @@
 
     # Latest Hyprland
     hyprland = {
-      type = "git";
-      url = "https://github.com/hyprwm/Hyprland?submodules=1";
-      rev = "cba1ade848feac44b2eda677503900639581c3f4";
-      submodules = true;
-#       url = "github:hyprwm/Hyprland?ref=v0.40.0&submodules=1";
-#       inputs.nixpkgs.follows = "nixpkgs";
+      # type = "git";
+      # url = "https://github.com/hyprwm/Hyprland?submodules=1";
+      # rev = "cba1ade848feac44b2eda677503900639581c3f4";
+      # submodules = true;
+      url = "github:hyprwm/Hyprland?ref=v0.41.0&submodules=1";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland-contrib = {
@@ -30,11 +30,11 @@
     };
 
     hy3 = {
-      type = "git";
-      url = "https://github.com/outfoxxed/hy3";
-      rev = "ca420ab45df8d5579c1306c3845f12f0d9738ac1";
-      # url = "github:outfoxxed/hy3?ref=hl0.40.0";
-      # inputs.hyprland.follows = "hyprland";
+      # type = "git";
+      # url = "https://github.com/outfoxxed/hy3";
+      # rev = "ca420ab45df8d5579c1306c3845f12f0d9738ac1";
+      url = "github:outfoxxed/hy3?ref=hl0.41.0";
+      inputs.hyprland.follows = "hyprland";
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
