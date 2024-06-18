@@ -18,7 +18,6 @@
         sort = "+time";
 
         font = "liberation sans 10";
-        backgroundColor = "#28557788";
         maxIconSize = 32;
         maxVisible = 5;
       };

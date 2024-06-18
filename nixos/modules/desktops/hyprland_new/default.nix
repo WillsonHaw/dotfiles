@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -14,6 +15,8 @@
       type = lib.types.str;
     };
   };
+
+  imports = [ inputs.catppuccin.nixosModules.catppuccin ];
 
   config =
     let
@@ -38,12 +41,30 @@
           ...
         }:
         {
+          imports = [ inputs.catppuccin.homeManagerModules.catppuccin ];
+
           home.file."${config.xdg.configHome}/hypr/hyprland".source = ./.config/hyprland;
           home.file."${config.xdg.configHome}/hypr/hyprlock".source = ./.config/hyprlock;
 
           home.file."${config.xdg.configHome}/hypr/hyprlock.conf".source = ./.config/hyprlock.conf;
 
           services.kdeconnect.enable = true;
+
+          catppuccin = {
+            enable = true;
+            flavor = "mocha";
+          };
+
+          gtk.catppuccin = {
+            enable = true;
+            cursor.enable = true;
+            gnomeShellTheme = true;
+            icon.enable = true;
+          };
+
+          qt.style.catppuccin.enable = true;
+          services.mako.catppuccin.enable = true;
+          wayland.windowManager.hyprland.catppuccin.enable = true;
 
           wayland.windowManager.hyprland = {
             enable = true;
@@ -55,6 +76,7 @@
 
             extraConfig = ''
               # Defaults
+              source=~/.config/hypr/hyprland/theme-mocha.conf
               source=~/.config/hypr/hyprland/env.conf
               source=~/.config/hypr/hyprland/execs.conf
               source=~/.config/hypr/hyprland/general.conf

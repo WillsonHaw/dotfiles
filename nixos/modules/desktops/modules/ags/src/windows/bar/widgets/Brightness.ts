@@ -31,6 +31,9 @@ const Brightness = Widget.EventBox({
           label: brightness.has_interface ? '󰛨' : '󰹏',
         }),
         value: brightness.bind('screen_value').as((v) => (brightness.has_interface ? v : 1)),
+        tooltipText: brightness
+          .bind('screen_value')
+          .as((v) => (brightness.has_interface ? `Brightness: ${v}%` : `Brightness: N/A`)),
       }),
     ],
   }),

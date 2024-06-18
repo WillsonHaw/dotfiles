@@ -31,7 +31,7 @@
 
     apps.godot.enable = true;
 
-    browsers.floorp.enable = true;
+    browsers.floorp.enable = false;
     browsers.vivaldi.enable = true;
 
     services.razer.enable = true;

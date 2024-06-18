@@ -13,7 +13,7 @@ const Battery = BarWidget({
           className: 'icon',
           icon: battery.bind('icon_name'),
         }),
-        tooltipText: battery.bind('percent').as((p) => `${p}% Remaining`),
+        tooltipText: battery.bind('percent').as((p) => `Battery: ${p}% Remaining`),
         value: battery.bind('percent').as((p) => p / 100),
       })
     : Widget.CircularProgress({

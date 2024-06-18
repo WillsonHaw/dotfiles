@@ -2,22 +2,22 @@
   all: unset; }
 
 tooltip.background {
-  background-color: #565f89;
+  background-color: #313244;
   font-size: 1rem;
   border-radius: 10px;
-  color: #a9b1d6; }
+  color: #cdd6f4; }
 
 tooltip label {
   margin: 0.25rem; }
 
 .bar-window {
-  background-color: #1a1b26;
+  background-color: #1e1e2e;
   padding: 0.5rem;
   font-family: 'JetbrainsMono Nerd Font Mono'; }
 
 .group {
   border-radius: 0.5rem;
-  background-color: #24283b;
+  background-color: #313244;
   padding: 0.5rem 0.25rem; }
 
 .widget {
@@ -41,113 +41,125 @@ tooltip label {
   margin-top: 0.5rem; }
 
 .launcher .widget {
-  color: #7dcfff;
+  color: #74c7ec;
   font-family: 'Font Awesome 6 Free';
   font-size: 1.5rem; }
 
 .workspaces {
-  color: #1a1b26;
+  color: #1e1e2e;
   font-family: 'JetbrainsMono Nerd Font Mono'; }
   .workspaces .workspace {
     font-size: 3rem;
     margin: -0.5rem 0; }
   .workspaces .occupied {
-    color: #a9b1d6; }
+    color: #cdd6f4; }
   .workspaces .active {
-    color: #e0af68; }
+    color: #f9e2af; }
 
 .controls .widget.network .circular-progress {
-  background-color: #165249;
-  color: #73daca;
+  background-color: #1e1e2e;
+  color: #a6e3a1;
   min-width: 28px;
   min-height: 44px;
   font-size: 2px; }
+
+.controls .widget.network .disabled {
+  color: #1e1e2e; }
 
 .controls .widget.network .bar .top {
   font-size: 0; }
 
 .controls .widget.network .bar trough {
-  background-color: #165249;
+  background-color: #1e1e2e;
   border-radius: 0.5rem;
   min-height: 6rem;
   min-width: 0.75rem;
   margin: 0.3rem 0 0.3rem 0; }
   .controls .widget.network .bar trough highlight {
-    background-color: #73daca;
+    background-color: #a6e3a1;
     border-radius: 0.5rem; }
 
 .controls .widget.battery .circular-progress {
-  background-color: #082f84;
-  color: #7aa2f7;
+  background-color: #1e1e2e;
+  color: #f9e2af;
   min-width: 28px;
   min-height: 44px;
   font-size: 2px; }
+
+.controls .widget.battery .disabled {
+  color: #1e1e2e; }
 
 .controls .widget.battery .bar .top {
   font-size: 0; }
 
 .controls .widget.battery .bar trough {
-  background-color: #082f84;
+  background-color: #1e1e2e;
   border-radius: 0.5rem;
   min-height: 6rem;
   min-width: 0.75rem;
   margin: 0.3rem 0 0.3rem 0; }
   .controls .widget.battery .bar trough highlight {
-    background-color: #7aa2f7;
+    background-color: #f9e2af;
     border-radius: 0.5rem; }
 
 .controls .widget.brightness .circular-progress {
-  background-color: #410d9f;
-  color: #bb9af7;
+  background-color: #1e1e2e;
+  color: #89b4fa;
   min-width: 28px;
   min-height: 44px;
   font-size: 2px; }
+
+.controls .widget.brightness .disabled {
+  color: #1e1e2e; }
 
 .controls .widget.brightness .bar .top {
   font-size: 0; }
 
 .controls .widget.brightness .bar trough {
-  background-color: #410d9f;
+  background-color: #1e1e2e;
   border-radius: 0.5rem;
   min-height: 6rem;
   min-width: 0.75rem;
   margin: 0.3rem 0 0.3rem 0; }
   .controls .widget.brightness .bar trough highlight {
-    background-color: #bb9af7;
+    background-color: #89b4fa;
     border-radius: 0.5rem; }
 
 .controls .widget.volume .circular-progress {
-  background-color: #523711;
-  color: #e0af68;
+  background-color: #1e1e2e;
+  color: #cba6f7;
   min-width: 28px;
   min-height: 44px;
   font-size: 2px; }
+
+.controls .widget.volume .disabled {
+  color: #1e1e2e; }
 
 .controls .widget.volume .bar .top {
   font-size: 0; }
 
 .controls .widget.volume .bar trough {
-  background-color: #523711;
+  background-color: #1e1e2e;
   border-radius: 0.5rem;
   min-height: 6rem;
   min-width: 0.75rem;
   margin: 0.3rem 0 0.3rem 0; }
   .controls .widget.volume .bar trough highlight {
-    background-color: #e0af68;
+    background-color: #cba6f7;
     border-radius: 0.5rem; }
 
 .power {
-  color: #f7768e; }
+  color: #f38ba8; }
 
 .clock {
   font-family: Comic Mono;
   font-weight: normal;
   font-size: 1.2rem;
-  color: #a9b1d6;
+  color: #cdd6f4;
   padding: 0.7rem 0 0.5rem 0; }
 
 .power-menu {
-  background-color: #1a1b26;
+  background-color: #1e1e2e;
   font-size: 2.5em;
   font-weight: bold;
   border-radius: 2rem; }
@@ -160,14 +172,14 @@ tooltip label {
     .power-menu .power-action .label {
       font-size: 0.75rem; }
     .power-menu .power-action:nth-child(1) {
-      color: #7aa2f7; }
+      color: #89b4fa; }
     .power-menu .power-action:nth-child(2) {
-      color: #f7768e; }
+      color: #f38ba8; }
     .power-menu .power-action:nth-child(3) {
-      color: #73daca; }
+      color: #a6e3a1; }
     .power-menu .power-action:nth-child(4) {
-      color: #e0af68; }
+      color: #f9e2af; }
     .power-menu .power-action:nth-child(5) {
-      color: #bb9af7; }
+      color: #eba0ac; }
     .power-menu .power-action:nth-child(6) {
-      color: #f7768e; }
+      color: #f38ba8; }

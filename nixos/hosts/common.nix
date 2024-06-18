@@ -11,6 +11,7 @@
     nixfmt-rfc-style
     jq
     unzip
+    qdirstat
   ];
 
   imports = [ ../modules ];

@@ -1,4 +1,4 @@
-// modules/desktops/modules/ags/src/windows/bar/BarGroup.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/BarGroup.ts
 var BarGroup = ({
   className,
   ...props
@@ -9,14 +9,14 @@ var BarGroup = ({
 });
 var BarGroup_default = BarGroup;
 
-// modules/desktops/modules/ags/src/windows/bar/BarWidget.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/BarWidget.ts
 var BarWidget = ({ className, ...props }) => Widget.Button({
   className: `widget ${className}`,
   ...props
 });
 var BarWidget_default = BarWidget;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/Launcher.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Launcher.ts
 var Launcher = BarGroup_default({
   className: "launcher",
   children: [
@@ -28,7 +28,7 @@ var Launcher = BarGroup_default({
 });
 var Launcher_default = Launcher;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/Workspaces.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Workspaces.ts
 var hyprland = await Service.import("hyprland");
 var dispatch = (ws) => hyprland.messageAsync(`dispatch workspace ${ws}`);
 var Workspaces = BarGroup_default({
@@ -61,7 +61,7 @@ var Workspaces = BarGroup_default({
 });
 var Workspaces_default = Workspaces;
 
-// modules/desktops/modules/ags/src/windows/bar/TopSection.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/TopSection.ts
 var TopSection = Widget.Box({
   className: "section top",
   vertical: true,
@@ -70,7 +70,7 @@ var TopSection = Widget.Box({
 });
 var TopSection_default = TopSection;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/Battery.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Battery.ts
 var battery = await Service.import("battery");
 var Battery = BarWidget_default({
   className: "battery",
@@ -82,7 +82,7 @@ var Battery = BarWidget_default({
       className: "icon",
       icon: battery.bind("icon_name")
     }),
-    tooltipText: battery.bind("percent").as((p) => `${p}% Remaining`),
+    tooltipText: battery.bind("percent").as((p) => `Battery: ${p}% Remaining`),
     value: battery.bind("percent").as((p) => p / 100)
   }) : Widget.CircularProgress({
     className: `circular-progress`,
@@ -98,7 +98,7 @@ var Battery = BarWidget_default({
 });
 var Battery_default = Battery;
 
-// modules/desktops/modules/ags/src/services/brightness.ts
+// nixos/modules/desktops/modules/ags/src/services/brightness.ts
 var BrightnessService = class extends Service {
   static {
     Service.register(
@@ -128,10 +128,8 @@ var BrightnessService = class extends Service {
   }
   // the setter has to be in snake_case too
   set screen_value(percent) {
-    if (percent < 0)
-      percent = 0;
-    if (percent > 1)
-      percent = 1;
+    if (percent < 0) percent = 0;
+    if (percent > 1) percent = 1;
     Utils.execAsync(`brightnessctl set ${percent * 100}% -q`);
   }
   get has_interface() {
@@ -158,7 +156,7 @@ var BrightnessService = class extends Service {
 var service = new BrightnessService();
 var brightness_default = service;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/Brightness.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Brightness.ts
 var showBar = Variable(false);
 var Brightness = Widget.EventBox({
   className: "widget brightness",
@@ -188,14 +186,15 @@ var Brightness = Widget.EventBox({
           className: `icon ${brightness_default.has_interface ? "large" : "medium"}`,
           label: brightness_default.has_interface ? "\u{F06E8}" : "\u{F0E4F}"
         }),
-        value: brightness_default.bind("screen_value").as((v) => brightness_default.has_interface ? v : 1)
+        value: brightness_default.bind("screen_value").as((v) => brightness_default.has_interface ? v : 1),
+        tooltipText: brightness_default.bind("screen_value").as((v) => brightness_default.has_interface ? `Brightness: ${v}%` : `Brightness: N/A`)
       })
     ]
   })
 });
 var Brightness_default = Brightness;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/Clock.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Clock.ts
 var SECOND = 1e3;
 var MINUTE = 60 * SECOND;
 var clockHour = Variable("", { poll: [MINUTE, "date '+%H'"] });
@@ -214,7 +213,7 @@ var Clock = BarGroup_default({
 });
 var Clock_default = Clock;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/Network.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Network.ts
 var network = await Service.import("network");
 function getIcon() {
   return network.primary === "wired" ? network.wired.bind("icon_name") : network.wifi.bind("icon_name");
@@ -240,7 +239,7 @@ var Network = BarWidget_default({
 });
 var Network_default = Network;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/Power.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Power.ts
 var Power = BarGroup_default({
   className: "power",
   children: [
@@ -257,7 +256,7 @@ var Power = BarGroup_default({
 });
 var Power_default = Power;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/SystemTray.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/SystemTray.ts
 var systemtray = await Service.import("systemtray");
 var SystemTrayItem = (item) => Widget.Button({
   className: "widget",
@@ -275,7 +274,7 @@ var SystemTray = BarGroup_default({
 });
 var SystemTray_default = SystemTray;
 
-// modules/desktops/modules/ags/src/windows/bar/widgets/Volume.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Volume.ts
 var audio = await Service.import("audio");
 var showBar2 = Variable(false);
 function getIcon2(volume, isMuted) {
@@ -321,6 +320,7 @@ var Volume = Widget.EventBox({
             className: "icon large",
             label: "\uF026"
           }),
+          tooltipText: audio.speaker.bind("volume").as((v) => `Volume: ${Math.round(v * 100)}%`),
           value: audio.speaker.bind("volume")
         }).hook(audio, (self) => {
           self.child.label = getIcon2(audio.speaker.volume, audio.speaker.is_muted);
@@ -331,7 +331,7 @@ var Volume = Widget.EventBox({
 });
 var Volume_default = Volume;
 
-// modules/desktops/modules/ags/src/windows/bar/BottomSection.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/BottomSection.ts
 var ControlsGroup = BarGroup_default({
   className: "controls",
   children: [Network_default, Battery_default, Brightness_default, Volume_default]
@@ -344,7 +344,7 @@ var BottomSection = Widget.Box({
 });
 var BottomSection_default = BottomSection;
 
-// modules/desktops/modules/ags/src/windows/bar/Bar.ts
+// nixos/modules/desktops/modules/ags/src/windows/bar/Bar.ts
 var root = Widget.CenterBox({
   className: "bar-window",
   vertical: true,
@@ -359,9 +359,13 @@ var Bar = Widget.Window({
 });
 var Bar_default = Bar;
 
-// modules/desktops/modules/ags/src/windows/power-menu/PowerMenu.ts
-var PowerAction = (icon, label) => Widget.Button({
+// nixos/modules/desktops/modules/ags/src/windows/power-menu/PowerMenu.ts
+var PowerAction = (icon, label, action) => Widget.Button({
   className: "power-action",
+  onClicked: () => {
+    action();
+    App.toggleWindow("power-menu");
+  },
   child: Widget.Box({
     vertical: true,
     children: [
@@ -379,12 +383,16 @@ var PowerAction = (icon, label) => Widget.Button({
 var Root = Widget.Box({
   className: "power-menu",
   children: [
-    PowerAction("\uF359", "Reload Hyprland"),
-    PowerAction("\u{F0904}", "Suspend"),
-    PowerAction("\uF0E2", "Reboot"),
-    PowerAction("\uF023", "Lock"),
-    PowerAction("\u{F0343}", "Logout"),
-    PowerAction("\u23FB", "Shutdown")
+    PowerAction("\uF359", "Reload Hyprland", () => Utils.exec("hyprctl reload")),
+    PowerAction(
+      "\u{F0904}",
+      "Suspend",
+      () => Utils.exec("sleep 0.1 && systemctl suspend || loginctl suspend")
+    ),
+    PowerAction("\uF0E2", "Reboot", () => Utils.exec("reboot")),
+    PowerAction("\uF023", "Lock", () => Utils.exec("hyprlock")),
+    PowerAction("\u{F0343}", "Logout", () => Utils.exec("wlogout")),
+    PowerAction("\u23FB", "Shutdown", () => Utils.exec("shutdown now"))
   ]
 });
 var PowerMenu = Widget.Window({
@@ -399,10 +407,10 @@ var PowerMenu = Widget.Window({
 });
 var PowerMenu_default = PowerMenu;
 
-// modules/desktops/modules/ags/src/windows/index.ts
+// nixos/modules/desktops/modules/ags/src/windows/index.ts
 var windows_default = [Bar_default, PowerMenu_default];
 
-// modules/desktops/modules/ags/src/config.ts
+// nixos/modules/desktops/modules/ags/src/config.ts
 App.config({
   style: `${App.configDir}/styles.css`,
   windows: windows_default

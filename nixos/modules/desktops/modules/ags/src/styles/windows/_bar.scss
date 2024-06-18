@@ -6,7 +6,7 @@
 
 .group {
   border-radius: $border-radius;
-  background-color: $black;
+  background-color: $gray;
   padding: $v-padding $h-padding;
 }
 
@@ -74,7 +74,7 @@
 // Controls
 .controls {
   @mixin controlWidget($color) {
-    $darkColor: darken($color, 45);
+    $darkColor: $background; // darken($color, 60);
 
     .circular-progress {
       background-color: $darkColor;
@@ -82,6 +82,10 @@
       min-width: 28px;
       min-height: 44px;
       font-size: 2px;
+    }
+
+    .disabled {
+      color: $darkColor;
     }
 
     .bar {
@@ -111,15 +115,15 @@
     }
 
     &.battery {
-      @include controlWidget($blue);
+      @include controlWidget($yellow);
     }
 
     &.brightness {
-      @include controlWidget($magenta);
+      @include controlWidget($blue);
     }
 
     &.volume {
-      @include controlWidget($yellow);
+      @include controlWidget($mauve);
     }
   }
 }

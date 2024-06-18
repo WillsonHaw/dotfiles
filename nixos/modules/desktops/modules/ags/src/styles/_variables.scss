@@ -1,15 +1,18 @@
-// Variable Color
-$background: #1a1b26;
-$foreground: #a9b1d6;
+@import '_catppuccin.scss';
 
-$black: #24283b;
-$gray: #565f89;
-$red: #f7768e;
-$green: #73daca;
-$yellow: #e0af68;
-$blue: #7aa2f7;
-$magenta: #bb9af7;
-$cyan: #7dcfff;
+// Variable Color
+$background: $mocha-base;
+$foreground: $mocha-text;
+
+$black: $mocha-crust;
+$gray: $mocha-surface0;
+$red: $mocha-red;
+$green: $mocha-green;
+$yellow: $mocha-yellow;
+$blue: $mocha-blue;
+$magenta: $mocha-maroon;
+$mauve: $mocha-mauve;
+$cyan: $mocha-sapphire;
 $white: $foreground;
 
 $bar-spacing: 0.5rem;

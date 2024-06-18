@@ -29,7 +29,7 @@ const Root = Widget.Box({
     ),
     PowerAction('', 'Reboot', () => Utils.exec('reboot')),
     PowerAction('', 'Lock', () => Utils.exec('hyprlock')),
-    PowerAction('󰍃', 'Logout', () => Utils.exec('logout')),
+    PowerAction('󰍃', 'Logout', () => Utils.exec('wlogout')),
     PowerAction('⏻', 'Shutdown', () => Utils.exec('shutdown now')),
   ],
 });

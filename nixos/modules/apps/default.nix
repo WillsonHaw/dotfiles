@@ -23,6 +23,6 @@
     ./vim
     ./vlc
     ./vscode
-    ./waydroid
+    # ./waydroid
   ];
 }

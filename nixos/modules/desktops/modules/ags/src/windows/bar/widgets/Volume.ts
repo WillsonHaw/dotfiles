@@ -48,6 +48,7 @@ const Volume = Widget.EventBox({
             className: 'icon large',
             label: '',
           }),
+          tooltipText: audio.speaker.bind('volume').as((v) => `Volume: ${Math.round(v * 100)}%`),
           value: audio.speaker.bind('volume'),
         }) // @ts-expect-error
           .hook(audio, (self) => {

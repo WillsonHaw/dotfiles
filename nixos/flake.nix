@@ -15,7 +15,7 @@
       # url = "https://github.com/hyprwm/Hyprland?submodules=1";
       # rev = "cba1ade848feac44b2eda677503900639581c3f4";
       # submodules = true;
-      url = "github:hyprwm/Hyprland?ref=v0.41.0&submodules=1";
+      url = "git+https://github.com/hyprwm/Hyprland?ref=refs/tags/v0.41.1&submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -40,6 +40,8 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     ags.url = "github:Aylur/ags";
+
+    catppuccin.url = "github:catppuccin/nix";
 
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";

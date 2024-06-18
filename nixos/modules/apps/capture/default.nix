@@ -7,7 +7,7 @@
 
 {
   imports = [
-    # ./flameshot
+    ./flameshot
     ./grimblast
   ];
 }
