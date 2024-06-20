@@ -11,11 +11,19 @@ const clockDay = Variable('', { poll: [MINUTE, "date '+%d'"] });
 const Clock = BarGroup({
   className: 'clock',
   children: [
-    Widget.Label({ label: clockHour.bind() }),
-    Widget.Label({ label: clockMin.bind() }),
-    Widget.Label({ label: '••' }),
-    Widget.Label({ label: clockMonth.bind() }),
-    Widget.Label({ label: clockDay.bind() }),
+    Widget.Button({
+      onClicked: () => App.openWindow('calendar'),
+      child: Widget.Box({
+        vertical: true,
+        children: [
+          Widget.Label({ label: clockHour.bind() }),
+          Widget.Label({ label: clockMin.bind() }),
+          Widget.Label({ label: '••' }),
+          Widget.Label({ label: clockMonth.bind() }),
+          Widget.Label({ label: clockDay.bind() }),
+        ],
+      }),
+    }),
   ],
 });
 

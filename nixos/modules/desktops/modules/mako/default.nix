@@ -18,6 +18,9 @@
         sort = "+time";
 
         font = "liberation sans 10";
+        borderColor = "#cba6f7";
+        borderRadius = 8;
+        backgroundColor = "#1e1e2e";
         maxIconSize = 32;
         maxVisible = 5;
       };

@@ -1,0 +1,23 @@
+.calendar {
+  background-color: $mocha-base;
+  font-family: Hack;
+  font-size: 1em;
+  padding: 0.25rem;
+  border-radius: $border-radius;
+
+  calendar:selected,
+  calendar.header,
+  calendar.button {
+    color: $mauve;
+    font-weight: bold;
+  }
+
+  calendar.highlight {
+    color: $red;
+    font-weight: bold;
+  }
+
+  calendar:indeterminate {
+    color: $black;
+  }
+}

@@ -43,11 +43,13 @@ const PowerMenu = Widget.Window({
   visible: false,
 })
   // @ts-expect-error
-  .keybind([], 'Escape', () => App.toggleWindow('power-menu'))
+  .keybind([], 'Escape', () => App.closeWindow('power-menu'))
   // @ts-expect-error
-  .hook(App, (self, _, visible) => {
-    // @ts-expect-error
-    self.visible = visible;
+  .hook(App, (self, name, visible) => {
+    if (name === 'power-menu') {
+      // @ts-expect-error
+      self.visible = visible;
+    }
   });
 
 export default PowerMenu;

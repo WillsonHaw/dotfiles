@@ -28,6 +28,120 @@ var Launcher = BarGroup_default({
 });
 var Launcher_default = Launcher;
 
+// nixos/modules/desktops/modules/ags/src/services/wallpaper.ts
+var WallpaperService = class extends Service {
+  static {
+    Service.register(
+      this,
+      {},
+      {
+        folders: ["jsobject", "r"]
+      }
+    );
+  }
+  _wallpapers = /* @__PURE__ */ new Map();
+  _currentWallpaper = null;
+  _monitors = [];
+  get folders() {
+    return Array.from(this._wallpapers.values());
+  }
+  constructor(...wallpaperFolders) {
+    super();
+    wallpaperFolders.forEach((wallpaperFolder) => {
+      const getWallpapers = () => {
+        this._wallpapers.set(wallpaperFolder, {
+          path: wallpaperFolder,
+          enabled: true,
+          wallpapers: this.#loadFiles(wallpaperFolder)
+        });
+      };
+      this._monitors.push(
+        Utils.monitorFile(wallpaperFolder, () => {
+          print(`[Wallpaper] Wallpapers in ${wallpaperFolder} changed. Reloading folder.`);
+          getWallpapers();
+        })
+      );
+      getWallpapers();
+    });
+    this._currentWallpaper = Utils.exec(`swww query`).split(": ").pop() ?? null;
+    print("[Wallpaper] Current wallpaper:", this._currentWallpaper);
+  }
+  #loadFiles(folder) {
+    const files = Utils.exec(`ls -A1 ${folder}`);
+    return files.split("\n").map((file) => `${folder}/${file}`);
+  }
+  enableFolder(folderPath) {
+    print(`[Wallpaper] Enabling folder ${folderPath}`);
+    const folder = this._wallpapers.get(folderPath);
+    if (folder) {
+      folder.enabled = true;
+    }
+  }
+  disableFolder(folderPath) {
+    print(`[Wallpaper] Disabling folder ${folderPath}`);
+    const folder = this._wallpapers.get(folderPath);
+    if (folder) {
+      folder.enabled = false;
+      if (this._currentWallpaper?.startsWith(folderPath)) {
+        this.random();
+      }
+    }
+  }
+  random() {
+    const enabledFolders = Array.from(this._wallpapers.entries()).filter(
+      ([_, folder]) => folder.enabled
+    );
+    print(`[Wallpaper] Getting random wallpaper from one of: ${enabledFolders.join(", ")}`);
+    if (enabledFolders.length === 0) {
+      return;
+    }
+    const folderIndex = Math.floor(enabledFolders.length * Math.random());
+    const wallpapers = enabledFolders[folderIndex][1].wallpapers;
+    const fileIndex = Math.floor(wallpapers.length * Math.random());
+    const nextWallpaper = wallpapers[fileIndex];
+    print(`[Wallpaper] Requesting next wallpaper: ${nextWallpaper}`);
+    if (nextWallpaper === this._currentWallpaper && (this._wallpapers.size > 1 || wallpapers.length > 1)) {
+      print(`[Wallpaper] Wallpaper is the same as the current one. Getting a new one.`);
+      this.random();
+    } else {
+      this._currentWallpaper = nextWallpaper;
+      Utils.exec(`swww img --resize fit ${nextWallpaper}`);
+    }
+  }
+};
+var wallpaper = new WallpaperService(
+  "/home/slumpy/Wallpapers/sfw",
+  "/home/slumpy/Wallpapers/nsfw"
+);
+var wallpaper_default = wallpaper;
+
+// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Wallpaper.ts
+var RightClickMenu = Widget.Menu({
+  children: [
+    Widget.MenuItem({
+      onActivate: () => App.openWindow("wallpaper-settings-menu"),
+      child: Widget.Label("Settings")
+    })
+  ]
+});
+var Wallpaper = BarGroup_default({
+  className: "wallpaper",
+  children: [
+    BarWidget_default({
+      onClicked: () => wallpaper_default.random(),
+      // @ts-expect-error
+      onSecondaryClickRelease: (_, event) => RightClickMenu.popup_at_pointer(event),
+      child: Widget.Button({
+        child: Widget.Label({
+          className: "icon large",
+          label: "\u{F0E09}"
+        })
+      })
+    })
+  ]
+});
+var Wallpaper_default = Wallpaper;
+
 // nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Workspaces.ts
 var hyprland = await Service.import("hyprland");
 var dispatch = (ws) => hyprland.messageAsync(`dispatch workspace ${ws}`);
@@ -66,7 +180,7 @@ var TopSection = Widget.Box({
   className: "section top",
   vertical: true,
   vpack: "start",
-  children: [Launcher_default, Workspaces_default]
+  children: [Launcher_default, Wallpaper_default, Workspaces_default]
 });
 var TopSection_default = TopSection;
 
@@ -204,11 +318,19 @@ var clockDay = Variable("", { poll: [MINUTE, "date '+%d'"] });
 var Clock = BarGroup_default({
   className: "clock",
   children: [
-    Widget.Label({ label: clockHour.bind() }),
-    Widget.Label({ label: clockMin.bind() }),
-    Widget.Label({ label: "\u2022\u2022" }),
-    Widget.Label({ label: clockMonth.bind() }),
-    Widget.Label({ label: clockDay.bind() })
+    Widget.Button({
+      onClicked: () => App.openWindow("calendar"),
+      child: Widget.Box({
+        vertical: true,
+        children: [
+          Widget.Label({ label: clockHour.bind() }),
+          Widget.Label({ label: clockMin.bind() }),
+          Widget.Label({ label: "\u2022\u2022" }),
+          Widget.Label({ label: clockMonth.bind() }),
+          Widget.Label({ label: clockDay.bind() })
+        ]
+      })
+    })
   ]
 });
 var Clock_default = Clock;
@@ -244,7 +366,7 @@ var Power = BarGroup_default({
   className: "power",
   children: [
     BarWidget_default({
-      onClicked: () => App.toggleWindow("power-menu"),
+      onClicked: () => App.openWindow("power-menu"),
       child: Widget.Button({
         child: Widget.Label({
           className: "icon large",
@@ -268,8 +390,7 @@ var SystemTrayItem = (item) => Widget.Button({
 });
 var SystemTray = BarGroup_default({
   className: "system-tray",
-  visible: false,
-  // visible: systemtray.bind('items').as((i) => console.log(systemtray.items.length) || i.length > 0),
+  visible: systemtray.bind("items").as((i) => i.length > 0),
   children: systemtray.bind("items").as((i) => i.map(SystemTrayItem))
 });
 var SystemTray_default = SystemTray;
@@ -359,6 +480,36 @@ var Bar = Widget.Window({
 });
 var Bar_default = Bar;
 
+// nixos/modules/desktops/modules/ags/src/windows/calendar/Calendar.ts
+var Root = Widget.Calendar({
+  className: "calendar",
+  showDayNames: true,
+  showDetails: true,
+  showHeading: true,
+  showWeekNumbers: true,
+  // detail: (self, y, m, d) => {
+  //   return `<span color="white">${y}. ${m}. ${d}.</span>`;
+  // },
+  onDaySelected: ({ date: [y, m, d] }) => {
+    print(`${y}. ${m}. ${d}.`);
+  }
+});
+var Calendar = Widget.Window({
+  name: "calendar",
+  anchor: ["bottom", "left"],
+  margins: [30, 60],
+  child: Root,
+  layer: "overlay",
+  keymode: "exclusive",
+  // keymode: 'on-demand',
+  visible: false
+}).keybind([], "Escape", () => App.closeWindow("calendar")).hook(App, (self, name, visible) => {
+  if (name === "calendar") {
+    self.visible = visible;
+  }
+});
+var Calendar_default = Calendar;
+
 // nixos/modules/desktops/modules/ags/src/windows/power-menu/PowerMenu.ts
 var PowerAction = (icon, label, action) => Widget.Button({
   className: "power-action",
@@ -380,7 +531,7 @@ var PowerAction = (icon, label, action) => Widget.Button({
     ]
   })
 });
-var Root = Widget.Box({
+var Root2 = Widget.Box({
   className: "power-menu",
   children: [
     PowerAction("\uF359", "Reload Hyprland", () => Utils.exec("hyprctl reload")),
@@ -398,17 +549,63 @@ var Root = Widget.Box({
 var PowerMenu = Widget.Window({
   name: "power-menu",
   anchor: [],
-  child: Root,
+  child: Root2,
   layer: "overlay",
   keymode: "exclusive",
   visible: false
-}).keybind([], "Escape", () => App.toggleWindow("power-menu")).hook(App, (self, _, visible) => {
-  self.visible = visible;
+}).keybind([], "Escape", () => App.closeWindow("power-menu")).hook(App, (self, name, visible) => {
+  if (name === "power-menu") {
+    self.visible = visible;
+  }
 });
 var PowerMenu_default = PowerMenu;
 
+// nixos/modules/desktops/modules/ags/src/windows/wallpaper/WallpaperSettings.ts
+var Root3 = Widget.Box({
+  className: "wallpaper-settings",
+  vertical: true,
+  children: [
+    Widget.Label({
+      className: "title",
+      label: "Enable/Disable sources"
+    }),
+    ...wallpaper_default.folders.map(
+      (folder) => Widget.Box({
+        children: [
+          Widget.Switch({
+            className: folder.enabled ? "active" : "inactive",
+            active: folder.enabled,
+            onActivate: ({ active }) => active ? wallpaper_default.enableFolder(folder.path) : wallpaper_default.disableFolder(folder.path)
+          }),
+          Widget.Label({
+            label: folder.path
+          })
+        ]
+      })
+    ),
+    Widget.Button({
+      className: "button",
+      onClicked: () => App.closeWindow("wallpaper-settings-menu"),
+      child: Widget.Label("Close")
+    })
+  ]
+});
+var WallpaperSettings = Widget.Window({
+  name: "wallpaper-settings-menu",
+  anchor: [],
+  child: Root3,
+  layer: "overlay",
+  keymode: "exclusive",
+  visible: false
+}).keybind([], "Escape", () => App.closeWindow("wallpaper-settings-menu")).hook(App, (self, name, visible) => {
+  if (name === "wallpaper-settings-menu") {
+    self.visible = visible;
+  }
+});
+var WallpaperSettings_default = WallpaperSettings;
+
 // nixos/modules/desktops/modules/ags/src/windows/index.ts
-var windows_default = [Bar_default, PowerMenu_default];
+var windows_default = [Bar_default, Calendar_default, PowerMenu_default, WallpaperSettings_default];
 
 // nixos/modules/desktops/modules/ags/src/config.ts
 App.config({

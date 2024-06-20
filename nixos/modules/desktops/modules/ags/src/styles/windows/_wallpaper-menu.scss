@@ -1,0 +1,43 @@
+// Wallpaper menu
+.wallpaper-settings {
+  background-color: $background;
+  border-radius: $border-radius;
+  padding: 2rem;
+
+  > * {
+    margin-top: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .button {
+    background-color: $black;
+    color: $mauve;
+    border-radius: $border-radius;
+    padding: 0.5rem 0.25rem;
+    margin-top: 2rem;
+  }
+
+  switch {
+    background-color: $black;
+    border-radius: $border-radius;
+    margin-right: 1rem;
+
+    slider {
+      border-radius: $border-radius;
+      background-color: $mauve;
+    }
+
+    &.active slider {
+      background-color: $mauve;
+    }
+
+    &.inactive slider {
+      background-color: $gray;
+    }
+  }
+}

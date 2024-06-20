@@ -158,6 +158,23 @@ tooltip label {
   color: #cdd6f4;
   padding: 0.7rem 0 0.5rem 0; }
 
+.calendar {
+  background-color: #1e1e2e;
+  font-family: Hack;
+  font-size: 1em;
+  padding: 0.25rem;
+  border-radius: 0.5rem; }
+  .calendar calendar:selected,
+  .calendar calendar.header,
+  .calendar calendar.button {
+    color: #cba6f7;
+    font-weight: bold; }
+  .calendar calendar.highlight {
+    color: #f38ba8;
+    font-weight: bold; }
+  .calendar calendar:indeterminate {
+    color: #11111b; }
+
 .power-menu {
   background-color: #1e1e2e;
   font-size: 2.5em;
@@ -183,3 +200,40 @@ tooltip label {
       color: #eba0ac; }
     .power-menu .power-action:nth-child(6) {
       color: #f38ba8; }
+
+.wallpaper-settings {
+  background-color: #1e1e2e;
+  border-radius: 0.5rem;
+  padding: 2rem; }
+  .wallpaper-settings > * {
+    margin-top: 1rem; }
+  .wallpaper-settings .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem; }
+  .wallpaper-settings .button {
+    background-color: #11111b;
+    color: #cba6f7;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.25rem;
+    margin-top: 2rem; }
+  .wallpaper-settings switch {
+    background-color: #11111b;
+    border-radius: 0.5rem;
+    margin-right: 1rem; }
+    .wallpaper-settings switch slider {
+      border-radius: 0.5rem;
+      background-color: #cba6f7; }
+    .wallpaper-settings switch.active slider {
+      background-color: #cba6f7; }
+    .wallpaper-settings switch.inactive slider {
+      background-color: #313244; }
+
+menu {
+  background-color: #1e1e2e;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0; }
+  menu > * {
+    padding: 0.35rem 0.75rem; }
+    menu > *:hover {
+      background-color: #11111b; }

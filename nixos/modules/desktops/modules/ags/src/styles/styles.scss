@@ -6,47 +6,20 @@
 @import '_variables.scss';
 @import '_tooltips.scss';
 @import 'windows/_bar';
+@import 'windows/_calendar';
 @import 'windows/_power-menu';
+@import 'windows/_wallpaper-menu';
 
-// // Calendar
-// .calendar {
-//   background-color: $black;
-//   font-family: Hack;
-//   font-size: 1em;
-//   font-weight: bold;
+menu {
+  background-color: $mocha-base;
+  border-radius: $border-radius;
+  padding: 0.25rem 0;
 
-//   .cal-inner-box {
-//     padding: 1rem 1rem 0.2rem;
+  > * {
+    padding: 0.35rem 0.75rem;
 
-//     .cal {
-//       &.highlight {
-//         padding: 10rem;
-//       }
-
-//       padding: 0.8rem 0.25rem 0rem;
-//       margin-left: 10px;
-//     }
-//   }
-
-//   calendar:selected {
-//     color: $blue;
-//   }
-
-//   calendar.header {
-//     color: $blue;
-//     font-weight: bold;
-//   }
-
-//   calendar.button {
-//     color: $magenta;
-//   }
-
-//   calendar.highlight {
-//     color: $magenta;
-//     font-weight: bold;
-//   }
-
-//   calendar:indeterminate {
-//     color: $background;
-//   }
-// }
+    &:hover {
+      background-color: $mocha-crust;
+    }
+  }
+}
