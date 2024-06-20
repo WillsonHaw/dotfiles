@@ -29,6 +29,28 @@ const Root = Widget.Box({
         ],
       }),
     ),
+    Widget.Box({
+      className: 'input',
+      children: [
+        Widget.Entry({
+          className: 'entry',
+          text: wallpaper.bind('displayTime').as((t) => `${t / 1000 / 60}`),
+          hexpand: false,
+          visibility: true,
+          onChange: ({ text }) => {
+            const val = parseInt(text);
+
+            if (!isNaN(val) && val > 0) {
+              wallpaper.displayTime = val * 1000 * 60;
+            }
+          },
+        }),
+        Widget.Label({
+          className: 'label',
+          label: 'Duration of each wallpaper (in minutes)',
+        }),
+      ],
+    }),
     Widget.Button({
       className: 'button',
       onClicked: () => App.closeWindow('wallpaper-settings-menu'),

@@ -1,4 +1,8 @@
 import Gio from 'gi://Gio';
+import GLib from '../types/@girs/glib-2.0/glib-2.0';
+
+// change wallpaper every 5 minutes
+const DEFAULT_TRANSITION_TIME = 1000 * 60 * 5;
 
 interface WallpaperFolder {
   path: string;
@@ -19,6 +23,7 @@ class WallpaperService extends Service {
       {},
       {
         folders: ['jsobject', 'r'],
+        displayTime: ['int', 'rw'],
       },
     );
   }
@@ -26,9 +31,26 @@ class WallpaperService extends Service {
   private _wallpapers: Map<string, WallpaperFolder> = new Map();
   private _currentWallpaper: string | null = null;
   private _monitors: Gio.FileMonitor[] = [];
+  private _timer: GLib.Source | null = null;
+  private _displayTime = DEFAULT_TRANSITION_TIME;
 
   get folders() {
     return Array.from(this._wallpapers.values());
+  }
+
+  get displayTime() {
+    return this._displayTime;
+  }
+
+  set displayTime(v: number) {
+    if (v < 1000) {
+      print('[Wallpaper] Display time set too low!');
+      this._displayTime = 1000;
+    } else {
+      this._displayTime = v;
+    }
+
+    this.#startTimer();
   }
 
   constructor(...wallpaperFolders: string[]) {
@@ -56,12 +78,26 @@ class WallpaperService extends Service {
     this._currentWallpaper = Utils.exec(`swww query`).split(': ').pop() ?? null;
 
     print('[Wallpaper] Current wallpaper:', this._currentWallpaper);
+
+    print('[Wallpaper] Starting timer');
+
+    this._timer = setTimeout(() => {
+      this.random();
+    }, DEFAULT_TRANSITION_TIME);
   }
 
   #loadFiles(folder: string) {
     const files = Utils.exec(`ls -A1 ${folder}`);
 
     return files.split('\n').map((file) => `${folder}/${file}`);
+  }
+
+  #startTimer() {
+    if (this._timer) {
+      this._timer.destroy();
+    }
+
+    this._timer = setTimeout(() => this.random(), this._displayTime);
   }
 
   enableFolder(folderPath: string) {
@@ -91,7 +127,11 @@ class WallpaperService extends Service {
       ([_, folder]) => folder.enabled,
     );
 
-    print(`[Wallpaper] Getting random wallpaper from one of: ${enabledFolders.join(', ')}`);
+    print(
+      `[Wallpaper] Getting random wallpaper from one of: ${enabledFolders
+        .map(([f]) => f)
+        .join(', ')}`,
+    );
 
     if (enabledFolders.length === 0) {
       return;
@@ -113,7 +153,9 @@ class WallpaperService extends Service {
     } else {
       this._currentWallpaper = nextWallpaper;
 
-      Utils.exec(`swww img --resize fit ${nextWallpaper}`);
+      Utils.exec(`swww img --resize fit -t random ${nextWallpaper}`);
+
+      this.#startTimer();
     }
   }
 }

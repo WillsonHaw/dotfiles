@@ -217,6 +217,11 @@ tooltip label {
     border-radius: 0.5rem;
     padding: 0.5rem 0.25rem;
     margin-top: 2rem; }
+  .wallpaper-settings .input .entry {
+    background-color: #313244;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin: 0.5rem; }
   .wallpaper-settings switch {
     background-color: #11111b;
     border-radius: 0.5rem;

@@ -29,21 +29,37 @@ var Launcher = BarGroup_default({
 var Launcher_default = Launcher;
 
 // nixos/modules/desktops/modules/ags/src/services/wallpaper.ts
+var DEFAULT_TRANSITION_TIME = 1e3 * 60 * 5;
 var WallpaperService = class extends Service {
   static {
     Service.register(
       this,
       {},
       {
-        folders: ["jsobject", "r"]
+        folders: ["jsobject", "r"],
+        displayTime: ["int", "rw"]
       }
     );
   }
   _wallpapers = /* @__PURE__ */ new Map();
   _currentWallpaper = null;
   _monitors = [];
+  _timer = null;
+  _displayTime = DEFAULT_TRANSITION_TIME;
   get folders() {
     return Array.from(this._wallpapers.values());
+  }
+  get displayTime() {
+    return this._displayTime;
+  }
+  set displayTime(v) {
+    if (v < 1e3) {
+      print("[Wallpaper] Display time set too low!");
+      this._displayTime = 1e3;
+    } else {
+      this._displayTime = v;
+    }
+    this.#startTimer();
   }
   constructor(...wallpaperFolders) {
     super();
@@ -65,10 +81,20 @@ var WallpaperService = class extends Service {
     });
     this._currentWallpaper = Utils.exec(`swww query`).split(": ").pop() ?? null;
     print("[Wallpaper] Current wallpaper:", this._currentWallpaper);
+    print("[Wallpaper] Starting timer");
+    this._timer = setTimeout(() => {
+      this.random();
+    }, DEFAULT_TRANSITION_TIME);
   }
   #loadFiles(folder) {
     const files = Utils.exec(`ls -A1 ${folder}`);
     return files.split("\n").map((file) => `${folder}/${file}`);
+  }
+  #startTimer() {
+    if (this._timer) {
+      this._timer.destroy();
+    }
+    this._timer = setTimeout(() => this.random(), this._displayTime);
   }
   enableFolder(folderPath) {
     print(`[Wallpaper] Enabling folder ${folderPath}`);
@@ -91,7 +117,9 @@ var WallpaperService = class extends Service {
     const enabledFolders = Array.from(this._wallpapers.entries()).filter(
       ([_, folder]) => folder.enabled
     );
-    print(`[Wallpaper] Getting random wallpaper from one of: ${enabledFolders.join(", ")}`);
+    print(
+      `[Wallpaper] Getting random wallpaper from one of: ${enabledFolders.map(([f]) => f).join(", ")}`
+    );
     if (enabledFolders.length === 0) {
       return;
     }
@@ -105,7 +133,8 @@ var WallpaperService = class extends Service {
       this.random();
     } else {
       this._currentWallpaper = nextWallpaper;
-      Utils.exec(`swww img --resize fit ${nextWallpaper}`);
+      Utils.exec(`swww img --resize fit -t random ${nextWallpaper}`);
+      this.#startTimer();
     }
   }
 };
@@ -583,6 +612,27 @@ var Root3 = Widget.Box({
         ]
       })
     ),
+    Widget.Box({
+      className: "input",
+      children: [
+        Widget.Entry({
+          className: "entry",
+          text: wallpaper_default.bind("displayTime").as((t) => `${t / 1e3 / 60}`),
+          hexpand: false,
+          visibility: true,
+          onChange: ({ text }) => {
+            const val = parseInt(text);
+            if (!isNaN(val) && val > 0) {
+              wallpaper_default.displayTime = val * 1e3 * 60;
+            }
+          }
+        }),
+        Widget.Label({
+          className: "label",
+          label: "Duration of each wallpaper (in minutes)"
+        })
+      ]
+    }),
     Widget.Button({
       className: "button",
       onClicked: () => App.closeWindow("wallpaper-settings-menu"),
