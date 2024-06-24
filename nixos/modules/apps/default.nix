@@ -19,6 +19,7 @@
     ./godot
     ./gparted
     ./guitar
+    ./office
     ./steam
     ./vim
     ./vlc

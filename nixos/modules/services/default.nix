@@ -9,6 +9,7 @@
   imports = [
     ./git
     ./keyring
+    ./nextcloud
     ./node
     ./power
     ./razer

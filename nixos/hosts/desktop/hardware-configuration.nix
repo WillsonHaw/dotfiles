@@ -43,6 +43,16 @@
     ];
   };
 
+  fileSystems."/run/media/unraid" = {
+    device = "10.0.0.10:/mnt/user/unraid";
+    fsType = "nfs";
+    options = [
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=600"
+      "noauto"
+    ];
+  };
+
   swapDevices = [
     {
       device = "/var/lib/swapfile";

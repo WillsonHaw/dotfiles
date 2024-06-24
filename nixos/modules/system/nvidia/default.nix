@@ -17,23 +17,9 @@
   # Enable OpenGL
   hardware = {
     # enableAllFirmware = true;
-
-    opengl = {
+    graphics = {
+      enable32Bit = true;
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-
-      #---------------------------------------------------------------------
-      # Install additional packages that improve graphics performance and compatibility.
-      #---------------------------------------------------------------------
-      # extraPackages = with pkgs; [
-      #   #   intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      #   libvdpau-va-gl
-      #   nvidia-vaapi-driver
-      #   #   vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
-      #   vaapiVdpau
-      #   vulkan-validation-layers
-      # ];
     };
 
     nvidia = {

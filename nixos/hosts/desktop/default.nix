@@ -26,16 +26,18 @@
   noodles = {
     device.is-laptop = false;
 
-    desktops.hyprland_new.enable = true;
-    desktops.hyprland_new.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
+    desktops.hyprland.enable = true;
+    desktops.hyprland.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
 
     apps.godot.enable = true;
+    apps.office.enable = true;
 
-    browsers.floorp.enable = false;
+    browsers.floorp.enable = true;
     browsers.vivaldi.enable = true;
 
     services.razer.enable = true;
     services.swww.enable = true;
     services.wallpaperengine.enable = true;
+    services.nextcloud.enable = true;
   };
 }

@@ -38,6 +38,10 @@
           wpctl set-volume @DEFAULT_AUDIO_SINK@ $@%
         }
 
+        function mount-iso() {
+          sudo mount -o loop $@
+        }
+
         if [[ $(tty) == /dev/tty1 ]] then
           Hyprland 2>&1 > /dev/null;
         fi
