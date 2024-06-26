@@ -1,4 +1,47 @@
-import wallpaper from '../../services/wallpaper';
+import Entry from 'types/widgets/entry';
+import wallpaper, { WallpaperService } from '../../services/wallhaven';
+import { Binding } from 'types/service';
+
+type WallpaperProps = typeof WallpaperService.prototype;
+type PropsOfType<T, TType> = {
+  [K in keyof T]: T[K] extends TType ? K : never;
+}[keyof T];
+
+const Switch = (prop: PropsOfType<WallpaperProps, boolean>, label: string) =>
+  Widget.Box({
+    children: [
+      Widget.Switch({
+        className: wallpaper.bind(prop).as((v) => (v ? 'active' : '')),
+        active: wallpaper.bind(prop),
+        onActivate: ({ active }) => (wallpaper[prop] = active),
+      }),
+      Widget.Label(label),
+    ],
+  });
+
+const Input = (
+  label: string,
+  field: PropsOfType<WallpaperProps, string | number>,
+  changeAction?: (self: Entry<unknown>) => void,
+) =>
+  Widget.Box({
+    className: 'input',
+    children: [
+      Widget.Entry({
+        className: 'entry',
+        text: wallpaper.bind(field).as((v) => v.toString()),
+        hexpand: false,
+        visibility: true,
+      }).on('focus-out-event', (self) => {
+        // @ts-expect-error
+        changeAction ? changeAction(self) : (wallpaper[field] = self.text);
+      }),
+      Widget.Label({
+        className: 'label',
+        label,
+      }),
+    ],
+  });
 
 /**
  * engine commands:
@@ -12,44 +55,33 @@ const Root = Widget.Box({
   children: [
     Widget.Label({
       className: 'title',
-      label: 'Enable/Disable sources',
+      label: 'Settings',
     }),
-    ...wallpaper.folders.map((folder) =>
-      Widget.Box({
+    Widget.CenterBox({
+      startWidget: Widget.Box({
+        vertical: true,
         children: [
-          Widget.Switch({
-            className: folder.enabled ? 'active' : 'inactive',
-            active: folder.enabled,
-            onActivate: ({ active }) =>
-              active ? wallpaper.enableFolder(folder.path) : wallpaper.disableFolder(folder.path),
-          }),
-          Widget.Label({
-            label: folder.path,
-          }),
+          Switch('general', 'General'),
+          Switch('anime', 'Anime'),
+          Switch('people', 'People'),
         ],
       }),
-    ),
-    Widget.Box({
-      className: 'input',
-      children: [
-        Widget.Entry({
-          className: 'entry',
-          text: wallpaper.bind('displayTime').as((t) => `${t / 1000 / 60}`),
-          hexpand: false,
-          visibility: true,
-          onChange: ({ text }) => {
-            const val = parseInt(text);
+      endWidget: Widget.Box({
+        vertical: true,
+        children: [Switch('sfw', 'SFW'), Switch('sketchy', 'Sketchy'), Switch('nsfw', 'NSFW')],
+      }),
+    }),
+    Input('Search Term', 'search_term'),
+    Input('Wallhaven API Key', 'apikey'),
+    Input('Wallhaven Username', 'username'),
+    Input('Wallhaven Collection', 'collection'),
+    Input('Duration of each wallpaper (in minutes)', 'display_time', (self) => {
+      // @ts-expect-error
+      const val = parseInt(self.text);
 
-            if (!isNaN(val) && val > 0) {
-              wallpaper.displayTime = val * 1000 * 60;
-            }
-          },
-        }),
-        Widget.Label({
-          className: 'label',
-          label: 'Duration of each wallpaper (in minutes)',
-        }),
-      ],
+      if (!isNaN(val) && val > 0) {
+        wallpaper.display_time = val;
+      }
     }),
     Widget.Button({
       className: 'button',

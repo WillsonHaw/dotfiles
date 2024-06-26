@@ -201,38 +201,62 @@ tooltip label {
     .power-menu .power-action:nth-child(6) {
       color: #f38ba8; }
 
-.wallpaper-settings {
+.wallpaper-settings,
+.wallpaper-details {
   background-color: #1e1e2e;
   border-radius: 0.5rem;
   padding: 2rem; }
-  .wallpaper-settings > * {
+  .wallpaper-settings > *,
+  .wallpaper-details > * {
     margin-top: 1rem; }
-  .wallpaper-settings .title {
+  .wallpaper-settings .title,
+  .wallpaper-details .title {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1rem; }
-  .wallpaper-settings .button {
+  .wallpaper-settings .code,
+  .wallpaper-details .code {
+    font-family: monospace; }
+  .wallpaper-settings .tag,
+  .wallpaper-details .tag {
+    padding: 0.5rem;
+    margin: 0.25rem;
+    border-radius: 0.5rem;
+    color: #11111b; }
+    .wallpaper-settings .tag.nsfw,
+    .wallpaper-details .tag.nsfw {
+      background-color: #f5c2e7; }
+    .wallpaper-settings .tag.sfw,
+    .wallpaper-details .tag.sfw {
+      background-color: #74c7ec; }
+    .wallpaper-settings .tag.sketchy,
+    .wallpaper-details .tag.sketchy {
+      background-color: #fab387; }
+  .wallpaper-settings .button,
+  .wallpaper-details .button {
     background-color: #11111b;
     color: #cba6f7;
     border-radius: 0.5rem;
     padding: 0.5rem 0.25rem;
     margin-top: 2rem; }
-  .wallpaper-settings .input .entry {
+  .wallpaper-settings .input .entry,
+  .wallpaper-details .input .entry {
     background-color: #313244;
     border-radius: 0.5rem;
     padding: 0.5rem;
     margin: 0.5rem; }
-  .wallpaper-settings switch {
+  .wallpaper-settings switch,
+  .wallpaper-details switch {
     background-color: #11111b;
     border-radius: 0.5rem;
     margin-right: 1rem; }
-    .wallpaper-settings switch slider {
+    .wallpaper-settings switch slider,
+    .wallpaper-details switch slider {
       border-radius: 0.5rem;
-      background-color: #cba6f7; }
-    .wallpaper-settings switch.active slider {
-      background-color: #cba6f7; }
-    .wallpaper-settings switch.inactive slider {
       background-color: #313244; }
+    .wallpaper-settings switch.active slider,
+    .wallpaper-details switch.active slider {
+      background-color: #cba6f7; }
 
 menu {
   background-color: #1e1e2e;

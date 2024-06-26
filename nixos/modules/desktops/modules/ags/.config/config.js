@@ -28,125 +28,346 @@ var Launcher = BarGroup_default({
 });
 var Launcher_default = Launcher;
 
-// nixos/modules/desktops/modules/ags/src/services/wallpaper.ts
+// nixos/modules/desktops/modules/ags/src/services/wallhaven.ts
 var DEFAULT_TRANSITION_TIME = 1e3 * 60 * 5;
+var ROOT_URL = "https://wallhaven.cc/api/v1";
 var WallpaperService = class extends Service {
   static {
     Service.register(
       this,
       {},
       {
-        folders: ["jsobject", "r"],
-        displayTime: ["int", "rw"]
+        general: ["boolean", "rw"],
+        anime: ["boolean", "rw"],
+        people: ["boolean", "rw"],
+        sfw: ["boolean", "rw"],
+        sketchy: ["boolean", "rw"],
+        nsfw: ["boolean", "rw"],
+        collection: ["string", "rw"],
+        username: ["string", "rw"],
+        "search-term": ["string", "rw"],
+        apikey: ["string", "rw"],
+        "display-time": ["int", "rw"],
+        path: ["string", "r"],
+        json: ["string", "r"],
+        tags: ["gobject", "r"]
       }
     );
   }
-  _wallpapers = /* @__PURE__ */ new Map();
-  _currentWallpaper = null;
-  _monitors = [];
-  _timer = null;
-  _displayTime = DEFAULT_TRANSITION_TIME;
-  get folders() {
-    return Array.from(this._wallpapers.values());
+  #category = "111";
+  #purity = "111";
+  #apikey = "";
+  #collection = "";
+  #searchTerm = "";
+  #username = "";
+  #displayTime = DEFAULT_TRANSITION_TIME;
+  #wallpapers = [];
+  #configFile;
+  #wallpaperFolder;
+  #timer = null;
+  #currentWallpaper = null;
+  #tags = [];
+  #getSaveFolder;
+  get path() {
+    return this.#currentWallpaper?.[0] ?? "-";
   }
-  get displayTime() {
-    return this._displayTime;
+  get json() {
+    return this.#currentWallpaper ? JSON.stringify(this.#currentWallpaper[1], null, 2) : "-";
   }
-  set displayTime(v) {
-    if (v < 1e3) {
-      print("[Wallpaper] Display time set too low!");
-      this._displayTime = 1e3;
-    } else {
-      this._displayTime = v;
-    }
+  get tags() {
+    return this.#tags;
+  }
+  get general() {
+    return this.#category[0 /* General */] === "1";
+  }
+  set general(v) {
+    this.#setCategory(0 /* General */, v);
+  }
+  get anime() {
+    return this.#category[1 /* Anime */] === "1";
+  }
+  set anime(v) {
+    this.#setCategory(1 /* Anime */, v);
+  }
+  get people() {
+    return this.#category[2 /* People */] === "1";
+  }
+  set people(v) {
+    this.#setCategory(2 /* People */, v);
+  }
+  get sfw() {
+    return this.#purity[0 /* SFW */] === "1";
+  }
+  set sfw(v) {
+    this.#setPurity(0 /* SFW */, v);
+  }
+  get sketchy() {
+    return this.#purity[1 /* Sketchy */] === "1";
+  }
+  set sketchy(v) {
+    this.#setPurity(1 /* Sketchy */, v);
+  }
+  get nsfw() {
+    return this.#purity[2 /* NSFW */] === "1";
+  }
+  set nsfw(v) {
+    this.#setPurity(2 /* NSFW */, v);
+  }
+  get collection() {
+    return this.#collection;
+  }
+  set collection(v) {
+    this.#collection = v;
+    this.#onChange("collection");
+  }
+  get username() {
+    return this.#username;
+  }
+  set username(v) {
+    this.#username = v;
+    this.#onChange("username");
+  }
+  get search_term() {
+    return this.#searchTerm;
+  }
+  set search_term(v) {
+    this.#searchTerm = v;
+    this.#onChange("search-term");
+  }
+  get apikey() {
+    return this.#apikey;
+  }
+  set apikey(v) {
+    this.#apikey = v;
+    this.#onChange("apikey");
+  }
+  get display_time() {
+    return this.#displayTime / 6e4;
+  }
+  set display_time(v) {
+    this.#displayTime = v * 6e4;
+    this.#onChange("display-time");
+  }
+  constructor(configFile, wallpaperFolder = "/tmp/wallpapers", getSaveFolder) {
+    super();
+    Utils.exec(`mkdir -p ${wallpaperFolder}`);
+    ["sfw", "sketchy", "nsfw"].forEach((purity) => {
+      Utils.exec(
+        `mkdir -p ${getSaveFolder({
+          id: "0",
+          path: "https://picsum.photos/300/200",
+          purity,
+          short_url: "https://picsum.photos/300/200",
+          url: "https://picsum.photos/300/200"
+        })}`
+      );
+    });
+    this.#configFile = configFile;
+    this.#wallpaperFolder = wallpaperFolder;
+    this.#getSaveFolder = getSaveFolder;
+    this.#loadFile();
     this.#startTimer();
   }
-  constructor(...wallpaperFolders) {
-    super();
-    wallpaperFolders.forEach((wallpaperFolder) => {
-      const getWallpapers = () => {
-        this._wallpapers.set(wallpaperFolder, {
-          path: wallpaperFolder,
-          enabled: true,
-          wallpapers: this.#loadFiles(wallpaperFolder)
-        });
-      };
-      this._monitors.push(
-        Utils.monitorFile(wallpaperFolder, () => {
-          print(`[Wallpaper] Wallpapers in ${wallpaperFolder} changed. Reloading folder.`);
-          getWallpapers();
-        })
-      );
-      getWallpapers();
-    });
-    this._currentWallpaper = Utils.exec(`swww query`).split(": ").pop() ?? null;
-    print("[Wallpaper] Current wallpaper:", this._currentWallpaper);
-    print("[Wallpaper] Starting timer");
-    this._timer = setTimeout(() => {
-      this.random();
-    }, DEFAULT_TRANSITION_TIME);
+  async random() {
+    try {
+      if (this.#wallpapers.length === 0) {
+        await this.#fetchWallpapers();
+      }
+      print(`[Wallpaper] ${this.#wallpapers.length} wallpapers remaining in queue`);
+      const wallpaper2 = this.#wallpapers.shift();
+      if (!wallpaper2) {
+        console.error("[Wallpaper] Could not fetch wallpapers");
+        return;
+      }
+      const fileName = `${this.#wallpaperFolder}/${wallpaper2.path.split("/").pop()}`;
+      print(`[Wallpaper] Downloading wallpaper: ${wallpaper2.path} to ${fileName}...`);
+      const response = await Utils.execAsync(`curl -o ${fileName} ${wallpaper2.path}`);
+      if (response) {
+        print(`[Wallpaper] curl: ${response}`);
+      }
+      print(`[Wallpaper] Switching wallpaper to: ${fileName}`);
+      const result = Utils.exec(`swww img --resize fit -t random ${fileName}`);
+      if (result) {
+        print(`[Wallpaper] swww: ${result}`);
+      }
+      this.#currentWallpaper = [fileName, wallpaper2];
+      const tags = await this.#getTags(wallpaper2.id);
+      this.#tags = tags;
+      print(`[Wallpaper] ID: ${wallpaper2.id}`);
+      print(`[Wallpaper] Tags: ${tags.map((t) => t.name).join(", ")}`);
+      this.#onChange(["json", "path", "tags"], false);
+    } catch (err) {
+      console.error(err);
+    }
+    this.#saveFile();
+    this.#startTimer();
   }
-  #loadFiles(folder) {
-    const files = Utils.exec(`ls -A1 ${folder}`);
-    return files.split("\n").map((file) => `${folder}/${file}`);
+  save() {
+    this.#saveFile();
+  }
+  saveCurrentWallpaper() {
+    if (!this.#currentWallpaper) {
+      return;
+    }
+    const wallpaper2 = this.#currentWallpaper[1];
+    const saveTo = this.#getSaveFolder(wallpaper2);
+    print(`[Wallpaper] Saving current wallpaper to: ${saveTo}/${wallpaper2.path.split("/").pop()}`);
+    const result = Utils.exec(`cp ${this.#currentWallpaper[0]} ${saveTo}`);
+    if (result) {
+      print(`[Wallpaper] cp: ${result}`);
+    }
+  }
+  async #getTags(id) {
+    if (!this.#apikey) {
+      return;
+    }
+    const url = `${ROOT_URL}/w/${id}?apikey=${this.#apikey}`;
+    print(`[Wallpaper] Fetching wallpaper tags at ${url}`);
+    const response = await Utils.fetch(url);
+    const detail = await response.json();
+    const tags = detail.data.tags;
+    return tags;
+  }
+  async #fetchWallpapers() {
+    try {
+      const url = this.#getUrl();
+      print("[Wallpaper] Request:", url);
+      const response = await Utils.fetch(url);
+      const searchResult = await response.json();
+      const { current_page, last_page } = searchResult.meta;
+      print(
+        `[Wallpaper] Received ${searchResult.data.length} wallpapers, ${current_page}/${last_page} pages`
+      );
+      this.#wallpapers = searchResult.data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  #onChange(notify, reset = true) {
+    this.emit("changed");
+    if (notify) {
+      if (Array.isArray(notify)) {
+        notify.forEach((n) => this.notify(n));
+      } else {
+        this.notify(notify);
+      }
+    }
+    if (reset) {
+      this.#wallpapers = [];
+    }
+    this.#saveFile();
   }
   #startTimer() {
-    if (this._timer) {
-      this._timer.destroy();
+    if (this.#timer) {
+      this.#timer.destroy();
     }
-    this._timer = setTimeout(() => this.random(), this._displayTime);
+    this.#timer = setTimeout(() => this.random(), this.#displayTime);
   }
-  enableFolder(folderPath) {
-    print(`[Wallpaper] Enabling folder ${folderPath}`);
-    const folder = this._wallpapers.get(folderPath);
-    if (folder) {
-      folder.enabled = true;
-    }
-  }
-  disableFolder(folderPath) {
-    print(`[Wallpaper] Disabling folder ${folderPath}`);
-    const folder = this._wallpapers.get(folderPath);
-    if (folder) {
-      folder.enabled = false;
-      if (this._currentWallpaper?.startsWith(folderPath)) {
-        this.random();
+  #loadFile() {
+    try {
+      const contents = Utils.readFile(this.#configFile);
+      if (contents.length === 0) {
+        print(`[Wallpaper] No config file found at ${this.#configFile}. Creating default config.`);
+        this.#saveFile();
+        return;
+      }
+      const json = JSON.parse(contents);
+      this.#category = json.category;
+      this.#purity = json.purity;
+      this.#apikey = json.apikey;
+      this.#collection = json.collection;
+      this.#username = json.username;
+      this.#searchTerm = json.searchTerm;
+      this.#displayTime = parseInt(json.displayTime);
+      this.#currentWallpaper = json.currentWallpaper;
+      this.#tags = json.tags;
+    } catch (err) {
+      if (err instanceof Error) {
+        print(`[Wallpaper] Error reading config file (${this.#configFile}):
+${err.message}`);
+      } else {
+        print(`[Wallpaper] Unknown error while reading config file: ${this.#configFile}`);
       }
     }
   }
-  random() {
-    const enabledFolders = Array.from(this._wallpapers.entries()).filter(
-      ([_, folder]) => folder.enabled
-    );
-    print(
-      `[Wallpaper] Getting random wallpaper from one of: ${enabledFolders.map(([f]) => f).join(", ")}`
-    );
-    if (enabledFolders.length === 0) {
-      return;
+  #saveFile() {
+    try {
+      const json = {
+        category: this.#category,
+        purity: this.#purity,
+        apikey: this.#apikey,
+        collection: this.#collection,
+        username: this.#username,
+        searchTerm: this.#searchTerm,
+        displayTime: this.#displayTime,
+        currentWallpaper: this.#currentWallpaper,
+        tags: this.#tags
+      };
+      Utils.writeFileSync(JSON.stringify(json, null, 2), this.#configFile);
+    } catch (err) {
+      if (err instanceof Error) {
+        print(`[Wallpaper] Error writing config file (${this.#configFile}):
+${err.message}`);
+      } else {
+        print(`[Wallpaper] Error while writing config file: ${this.#configFile}
+${err}`);
+      }
     }
-    const folderIndex = Math.floor(enabledFolders.length * Math.random());
-    const wallpapers = enabledFolders[folderIndex][1].wallpapers;
-    const fileIndex = Math.floor(wallpapers.length * Math.random());
-    const nextWallpaper = wallpapers[fileIndex];
-    print(`[Wallpaper] Requesting next wallpaper: ${nextWallpaper}`);
-    if (nextWallpaper === this._currentWallpaper && (this._wallpapers.size > 1 || wallpapers.length > 1)) {
-      print(`[Wallpaper] Wallpaper is the same as the current one. Getting a new one.`);
-      this.random();
-    } else {
-      this._currentWallpaper = nextWallpaper;
-      Utils.exec(`swww img --resize fit -t random ${nextWallpaper}`);
-      this.#startTimer();
+  }
+  #setCategory(flag, value) {
+    const parts = this.#category.split("");
+    parts[flag] = value ? "1" : "0";
+    this.#category = parts.join("");
+    this.#onChange(["general", "anime", "people"]);
+  }
+  #setPurity(flag, value) {
+    const parts = this.#purity.split("");
+    parts[flag] = value ? "1" : "0";
+    this.#purity = parts.join("");
+    this.#onChange(["sfw", "sketchy", "nsfw"]);
+  }
+  #getUrl() {
+    const useCollection = !!(this.#collection && this.#username);
+    const path = useCollection ? "/collections" : "/search";
+    const params = {};
+    if (this.#apikey) {
+      params.apikey = this.#apikey;
     }
+    if (!useCollection) {
+      const seed = Math.random().toString(36).slice(2, 8);
+      params.categories = this.#category;
+      params.purity = this.#purity;
+      params.sorting = "random";
+      params.seed = seed;
+      params.atleast = "2560x1080";
+      params.ratios = "16x9,16x10,32x9,4x1,64x27,256x135";
+      if (this.#searchTerm) {
+        params.q = this.#searchTerm;
+      }
+    }
+    return `${ROOT_URL}${path}?${Object.entries(params).map(([key, value]) => `${key}=${value}`).join("&")}`;
   }
 };
 var wallpaper = new WallpaperService(
-  "/home/slumpy/Wallpapers/sfw",
-  "/home/slumpy/Wallpapers/nsfw"
+  "/home/slumpy/.wallhaven.config",
+  "/home/slumpy/Wallpapers/downloaded",
+  (wallpaper2) => {
+    return `/home/slumpy/Wallpapers/${wallpaper2.purity}`;
+  }
 );
-var wallpaper_default = wallpaper;
+var wallhaven_default = wallpaper;
 
 // nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Wallpaper.ts
 var RightClickMenu = Widget.Menu({
   children: [
+    Widget.MenuItem({
+      onActivate: () => wallhaven_default.saveCurrentWallpaper(),
+      child: Widget.Label("Save Current Wallpaper")
+    }),
+    Widget.MenuItem({
+      onActivate: () => App.openWindow("wallpaper-details-menu"),
+      child: Widget.Label("Details")
+    }),
     Widget.MenuItem({
       onActivate: () => App.openWindow("wallpaper-settings-menu"),
       child: Widget.Label("Settings")
@@ -157,7 +378,7 @@ var Wallpaper = BarGroup_default({
   className: "wallpaper",
   children: [
     BarWidget_default({
-      onClicked: () => wallpaper_default.random(),
+      onClicked: () => wallhaven_default.random(),
       // @ts-expect-error
       onSecondaryClickRelease: (_, event) => RightClickMenu.popup_at_pointer(event),
       child: Widget.Button({
@@ -590,48 +811,64 @@ var PowerMenu = Widget.Window({
 var PowerMenu_default = PowerMenu;
 
 // nixos/modules/desktops/modules/ags/src/windows/wallpaper/WallpaperSettings.ts
+var Switch = (prop, label) => Widget.Box({
+  children: [
+    Widget.Switch({
+      className: wallhaven_default.bind(prop).as((v) => v ? "active" : ""),
+      active: wallhaven_default.bind(prop),
+      onActivate: ({ active }) => wallhaven_default[prop] = active
+    }),
+    Widget.Label(label)
+  ]
+});
+var Input = (label, field, changeAction) => Widget.Box({
+  className: "input",
+  children: [
+    Widget.Entry({
+      className: "entry",
+      text: wallhaven_default.bind(field).as((v) => v.toString()),
+      hexpand: false,
+      visibility: true
+    }).on("focus-out-event", (self) => {
+      changeAction ? changeAction(self) : wallhaven_default[field] = self.text;
+    }),
+    Widget.Label({
+      className: "label",
+      label
+    })
+  ]
+});
 var Root3 = Widget.Box({
   className: "wallpaper-settings",
   vertical: true,
   children: [
     Widget.Label({
       className: "title",
-      label: "Enable/Disable sources"
+      label: "Settings"
     }),
-    ...wallpaper_default.folders.map(
-      (folder) => Widget.Box({
+    Widget.CenterBox({
+      startWidget: Widget.Box({
+        vertical: true,
         children: [
-          Widget.Switch({
-            className: folder.enabled ? "active" : "inactive",
-            active: folder.enabled,
-            onActivate: ({ active }) => active ? wallpaper_default.enableFolder(folder.path) : wallpaper_default.disableFolder(folder.path)
-          }),
-          Widget.Label({
-            label: folder.path
-          })
+          Switch("general", "General"),
+          Switch("anime", "Anime"),
+          Switch("people", "People")
         ]
+      }),
+      endWidget: Widget.Box({
+        vertical: true,
+        children: [Switch("sfw", "SFW"), Switch("sketchy", "Sketchy"), Switch("nsfw", "NSFW")]
       })
-    ),
-    Widget.Box({
-      className: "input",
-      children: [
-        Widget.Entry({
-          className: "entry",
-          text: wallpaper_default.bind("displayTime").as((t) => `${t / 1e3 / 60}`),
-          hexpand: false,
-          visibility: true,
-          onChange: ({ text }) => {
-            const val = parseInt(text);
-            if (!isNaN(val) && val > 0) {
-              wallpaper_default.displayTime = val * 1e3 * 60;
-            }
-          }
-        }),
-        Widget.Label({
-          className: "label",
-          label: "Duration of each wallpaper (in minutes)"
-        })
-      ]
+    }),
+    Input("Search Term", "search_term"),
+    Input("Wallhaven API Key", "apikey"),
+    Input("Wallhaven Username", "username"),
+    Input("Wallhaven Collection", "collection"),
+    Input("Duration of each wallpaper (in minutes)", "display_time", (self) => {
+      const val = parseInt(self.text);
+      if (!isNaN(val) && val > 0) {
+        wallhaven_default.display_time = val;
+      }
     }),
     Widget.Button({
       className: "button",
@@ -654,8 +891,69 @@ var WallpaperSettings = Widget.Window({
 });
 var WallpaperSettings_default = WallpaperSettings;
 
+// nixos/modules/desktops/modules/ags/src/windows/wallpaper/WallpaperDetails.ts
+var Root4 = Widget.Box({
+  className: "wallpaper-details",
+  vertical: true,
+  children: [
+    Widget.Label({
+      className: "title",
+      label: "Details"
+    }),
+    Widget.Box({
+      children: [
+        Widget.Label("Path: "),
+        Widget.Label({
+          className: "code",
+          label: wallhaven_default.bind("path")
+        })
+      ]
+    }),
+    Widget.Label({
+      className: "code",
+      label: wallhaven_default.bind("json")
+    }),
+    // @ts-expect-error
+    Widget.FlowBox().hook(wallhaven_default, (self) => {
+      self.foreach((child) => child.destroy());
+      wallhaven_default.tags.forEach((tag) => {
+        self.add(
+          Widget.Button({
+            onClicked: () => wallhaven_default.search_term = `id:${tag.id}`,
+            child: Widget.Label({
+              className: `tag ${tag.purity}`,
+              label: tag.name
+            })
+          })
+        );
+      });
+      self.show_all();
+    }),
+    Widget.Button({
+      className: "button",
+      onClicked: () => App.closeWindow("wallpaper-details-menu"),
+      child: Widget.Label("Close")
+    })
+  ]
+});
+var WallpaperDetails = Widget.Window({
+  setup() {
+  },
+  name: "wallpaper-details-menu",
+  anchor: [],
+  child: Root4,
+  layer: "overlay",
+  keymode: "exclusive",
+  visible: false
+}).keybind([], "Escape", () => App.closeWindow("wallpaper-details-menu")).hook(App, (self, name, visible) => {
+  if (name === "wallpaper-details-menu") {
+    self.visible = visible;
+  }
+});
+var WallpaperDetails_default = WallpaperDetails;
+
 // nixos/modules/desktops/modules/ags/src/windows/index.ts
-var windows_default = [Bar_default, Calendar_default, PowerMenu_default, WallpaperSettings_default];
+var windows_default = [Bar_default, Calendar_default, PowerMenu_default, WallpaperSettings_default, WallpaperDetails_default];
 
 // nixos/modules/desktops/modules/ags/src/config.ts
 App.config({

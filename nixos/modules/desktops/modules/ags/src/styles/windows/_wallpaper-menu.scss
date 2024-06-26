@@ -1,5 +1,6 @@
 // Wallpaper menu
-.wallpaper-settings {
+.wallpaper-settings,
+.wallpaper-details {
   background-color: $background;
   border-radius: $border-radius;
   padding: 2rem;
@@ -12,6 +13,29 @@
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
+  }
+
+  .code {
+    font-family: monospace;
+  }
+
+  .tag {
+    padding: 0.5rem;
+    margin: 0.25rem;
+    border-radius: $border-radius;
+    color: $mocha-crust;
+
+    &.nsfw {
+      background-color: $mocha-pink;
+    }
+
+    &.sfw {
+      background-color: $mocha-sapphire;
+    }
+
+    &.sketchy {
+      background-color: $mocha-peach;
+    }
   }
 
   .button {
@@ -38,15 +62,11 @@
 
     slider {
       border-radius: $border-radius;
-      background-color: $mauve;
+      background-color: $gray;
     }
 
     &.active slider {
       background-color: $mauve;
-    }
-
-    &.inactive slider {
-      background-color: $gray;
     }
   }
 }
