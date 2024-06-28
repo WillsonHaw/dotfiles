@@ -35,6 +35,15 @@ interface Tag {
   created_at: string;
 }
 
+interface Meta {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+  query: string | { id: number; tag: string } | null;
+  seed: string | null;
+}
+
 export class WallpaperService extends Service {
   static {
     Service.register(
@@ -53,8 +62,10 @@ export class WallpaperService extends Service {
         apikey: ['string', 'rw'],
         'display-time': ['int', 'rw'],
         path: ['string', 'r'],
-        json: ['string', 'r'],
+        remaining: ['int', 'r'],
+        json: ['gobject', 'r'],
         tags: ['gobject', 'r'],
+        meta: ['gobject', 'r'],
       },
     );
   }
@@ -73,18 +84,27 @@ export class WallpaperService extends Service {
   #timer: GLib.Source | null = null;
   #currentWallpaper: [string, Wallpaper] | null = null;
   #tags: Tag[] = [];
+  #meta: Meta | null = null;
   #getSaveFolder: (wallpaper: Wallpaper) => string;
 
   get path() {
     return this.#currentWallpaper?.[0] ?? '-';
   }
 
+  get remaining() {
+    return this.#wallpapers.length;
+  }
+
   get json() {
-    return this.#currentWallpaper ? JSON.stringify(this.#currentWallpaper[1], null, 2) : '-';
+    return this.#currentWallpaper?.[1];
   }
 
   get tags() {
     return this.#tags;
+  }
+
+  get meta() {
+    return this.#meta ? JSON.stringify(this.#meta, null, 2) : 'Missing Metadata';
   }
 
   get general() {
@@ -248,7 +268,7 @@ export class WallpaperService extends Service {
       print(`[Wallpaper] ID: ${wallpaper.id}`);
       print(`[Wallpaper] Tags: ${tags.map((t) => t.name).join(', ')}`);
 
-      this.#onChange(['json', 'path', 'tags'], false);
+      this.#onChange(['json', 'path', 'tags', 'remaining'], false);
     } catch (err) {
       console.error(err);
     }
@@ -307,6 +327,9 @@ export class WallpaperService extends Service {
         `[Wallpaper] Received ${searchResult.data.length} wallpapers, ${current_page}/${last_page} pages`,
       );
       this.#wallpapers = searchResult.data;
+      this.#meta = searchResult.meta;
+
+      this.#onChange('meta', false);
     } catch (err) {
       console.error(err);
     }
@@ -364,6 +387,7 @@ export class WallpaperService extends Service {
       this.#displayTime = parseInt(json.displayTime);
       this.#currentWallpaper = json.currentWallpaper;
       this.#tags = json.tags;
+      this.#meta = json.meta;
     } catch (err) {
       if (err instanceof Error) {
         print(`[Wallpaper] Error reading config file (${this.#configFile}):\n${err.message}`);
@@ -385,6 +409,7 @@ export class WallpaperService extends Service {
         displayTime: this.#displayTime,
         currentWallpaper: this.#currentWallpaper,
         tags: this.#tags,
+        meta: this.#meta,
       };
 
       Utils.writeFileSync(JSON.stringify(json, null, 2), this.#configFile);
@@ -425,7 +450,15 @@ export class WallpaperService extends Service {
     }
 
     if (!useCollection) {
-      const seed = Math.random().toString(36).slice(2, 8);
+      let seed;
+
+      if (this.#meta && this.#meta.seed && this.#meta.current_page < this.#meta.last_page) {
+        seed = this.#meta.seed;
+
+        params.page = (this.#meta.current_page + 1).toString();
+      } else {
+        seed = Math.random().toString(36).slice(2, 8);
+      }
 
       params.categories = this.#category;
       params.purity = this.#purity;
@@ -448,7 +481,7 @@ export class WallpaperService extends Service {
 // TODO: .config file
 const wallpaper = new WallpaperService(
   '/home/slumpy/.wallhaven.config',
-  '/home/slumpy/Wallpapers/downloaded',
+  '/tmp/wallhaven-downloads',
   (wallpaper: Wallpaper) => {
     return `/home/slumpy/Wallpapers/${wallpaper.purity}`;
   },

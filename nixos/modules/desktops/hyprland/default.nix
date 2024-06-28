@@ -53,13 +53,19 @@
           catppuccin = {
             enable = true;
             flavor = "mocha";
+            accent = "mauve";
+            pointerCursor.enable = true;
           };
 
-          gtk.catppuccin = {
+          gtk = {
             enable = true;
-            cursor.enable = true;
-            gnomeShellTheme = true;
-            icon.enable = true;
+
+            catppuccin = {
+              enable = true;
+              flavor = "mocha";
+              accent = "mauve";
+              icon.enable = true;
+            };
           };
 
           qt.style.catppuccin.enable = true;
@@ -70,6 +76,7 @@
             enable = true;
 
             plugins = [
+              # hyprland-plugins.packages.${pkgs.system}.hyprbars
               # hyprland-plugins.packages.x86_64-linux.hyprexpo
               # hy3.packages.x86_64-linux.hy3
             ];
@@ -167,9 +174,11 @@
 
         systemPackages = with pkgs; [
           # hyprpicker
+          hyprcursor
           hyprlock
           hypridle
           hyprshade
+          nwg-look
         ];
       };
 

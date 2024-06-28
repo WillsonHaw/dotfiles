@@ -223,6 +223,10 @@ tooltip label {
     margin: 0.25rem;
     border-radius: 0.5rem;
     color: #11111b; }
+    .wallpaper-settings .tag.action,
+    .wallpaper-details .tag.action {
+      background-color: #cba6f7;
+      margin-bottom: 2rem; }
     .wallpaper-settings .tag.nsfw,
     .wallpaper-details .tag.nsfw {
       background-color: #f5c2e7; }
@@ -266,3 +270,6 @@ menu {
     padding: 0.35rem 0.75rem; }
     menu > *:hover {
       background-color: #11111b; }
+
+.separator {
+  background-color: #11111b; }

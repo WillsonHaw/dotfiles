@@ -49,8 +49,10 @@ var WallpaperService = class extends Service {
         apikey: ["string", "rw"],
         "display-time": ["int", "rw"],
         path: ["string", "r"],
-        json: ["string", "r"],
-        tags: ["gobject", "r"]
+        remaining: ["int", "r"],
+        json: ["gobject", "r"],
+        tags: ["gobject", "r"],
+        meta: ["gobject", "r"]
       }
     );
   }
@@ -67,15 +69,22 @@ var WallpaperService = class extends Service {
   #timer = null;
   #currentWallpaper = null;
   #tags = [];
+  #meta = null;
   #getSaveFolder;
   get path() {
     return this.#currentWallpaper?.[0] ?? "-";
   }
+  get remaining() {
+    return this.#wallpapers.length;
+  }
   get json() {
-    return this.#currentWallpaper ? JSON.stringify(this.#currentWallpaper[1], null, 2) : "-";
+    return this.#currentWallpaper?.[1];
   }
   get tags() {
     return this.#tags;
+  }
+  get meta() {
+    return this.#meta ? JSON.stringify(this.#meta, null, 2) : "Missing Metadata";
   }
   get general() {
     return this.#category[0 /* General */] === "1";
@@ -195,7 +204,7 @@ var WallpaperService = class extends Service {
       this.#tags = tags;
       print(`[Wallpaper] ID: ${wallpaper2.id}`);
       print(`[Wallpaper] Tags: ${tags.map((t) => t.name).join(", ")}`);
-      this.#onChange(["json", "path", "tags"], false);
+      this.#onChange(["json", "path", "tags", "remaining"], false);
     } catch (err) {
       console.error(err);
     }
@@ -239,6 +248,8 @@ var WallpaperService = class extends Service {
         `[Wallpaper] Received ${searchResult.data.length} wallpapers, ${current_page}/${last_page} pages`
       );
       this.#wallpapers = searchResult.data;
+      this.#meta = searchResult.meta;
+      this.#onChange("meta", false);
     } catch (err) {
       console.error(err);
     }
@@ -281,6 +292,7 @@ var WallpaperService = class extends Service {
       this.#displayTime = parseInt(json.displayTime);
       this.#currentWallpaper = json.currentWallpaper;
       this.#tags = json.tags;
+      this.#meta = json.meta;
     } catch (err) {
       if (err instanceof Error) {
         print(`[Wallpaper] Error reading config file (${this.#configFile}):
@@ -301,7 +313,8 @@ ${err.message}`);
         searchTerm: this.#searchTerm,
         displayTime: this.#displayTime,
         currentWallpaper: this.#currentWallpaper,
-        tags: this.#tags
+        tags: this.#tags,
+        meta: this.#meta
       };
       Utils.writeFileSync(JSON.stringify(json, null, 2), this.#configFile);
     } catch (err) {
@@ -334,7 +347,13 @@ ${err}`);
       params.apikey = this.#apikey;
     }
     if (!useCollection) {
-      const seed = Math.random().toString(36).slice(2, 8);
+      let seed;
+      if (this.#meta && this.#meta.seed && this.#meta.current_page < this.#meta.last_page) {
+        seed = this.#meta.seed;
+        params.page = (this.#meta.current_page + 1).toString();
+      } else {
+        seed = Math.random().toString(36).slice(2, 8);
+      }
       params.categories = this.#category;
       params.purity = this.#purity;
       params.sorting = "random";
@@ -350,7 +369,7 @@ ${err}`);
 };
 var wallpaper = new WallpaperService(
   "/home/slumpy/.wallhaven.config",
-  "/home/slumpy/Wallpapers/downloaded",
+  "/tmp/wallhaven-downloads",
   (wallpaper2) => {
     return `/home/slumpy/Wallpapers/${wallpaper2.purity}`;
   }
@@ -363,6 +382,10 @@ var RightClickMenu = Widget.Menu({
     Widget.MenuItem({
       onActivate: () => wallhaven_default.saveCurrentWallpaper(),
       child: Widget.Label("Save Current Wallpaper")
+    }),
+    Widget.MenuItem({
+      onActivate: () => Utils.exec("waypaper"),
+      child: Widget.Label("Browse Local")
     }),
     Widget.MenuItem({
       onActivate: () => App.openWindow("wallpaper-details-menu"),
@@ -892,6 +915,32 @@ var WallpaperSettings = Widget.Window({
 var WallpaperSettings_default = WallpaperSettings;
 
 // nixos/modules/desktops/modules/ags/src/windows/wallpaper/WallpaperDetails.ts
+import Gdk from "gi://Gdk";
+var display = Gdk.Display.get_default();
+var Separator = () => Widget.Separator({
+  vertical: false,
+  hpack: "center",
+  className: "separator"
+});
+var Button = ({
+  onClicked,
+  label,
+  className
+}) => Widget.Button({
+  onClicked,
+  onHover: (button) => {
+    const cursor = Gdk.Cursor.new_from_name(display, "pointer");
+    console.log(cursor);
+    button.window.set_cursor(cursor);
+  },
+  onHoverLost: (button) => {
+    button.window.set_cursor(null);
+  },
+  child: Widget.Label({
+    className: `tag ${className}`,
+    label
+  })
+});
 var Root4 = Widget.Box({
   className: "wallpaper-details",
   vertical: true,
@@ -900,35 +949,82 @@ var Root4 = Widget.Box({
       className: "title",
       label: "Details"
     }),
-    Widget.Box({
-      children: [
-        Widget.Label("Path: "),
-        Widget.Label({
-          className: "code",
-          label: wallhaven_default.bind("path")
-        })
-      ]
-    }),
-    Widget.Label({
-      className: "code",
-      label: wallhaven_default.bind("json")
-    }),
-    // @ts-expect-error
-    Widget.FlowBox().hook(wallhaven_default, (self) => {
-      self.foreach((child) => child.destroy());
-      wallhaven_default.tags.forEach((tag) => {
-        self.add(
-          Widget.Button({
-            onClicked: () => wallhaven_default.search_term = `id:${tag.id}`,
-            child: Widget.Label({
-              className: `tag ${tag.purity}`,
-              label: tag.name
-            })
+    Separator(),
+    Widget.CenterBox({
+      spacing: 24,
+      startWidget: Widget.Box({
+        vpack: "start",
+        spacing: 8,
+        vertical: true,
+        children: [
+          Widget.Box({
+            children: [
+              Widget.Label("Path: "),
+              Widget.Label({
+                className: "code",
+                label: wallhaven_default.bind("path")
+              })
+            ]
+          }),
+          Widget.Box({
+            children: [
+              Widget.Label("# in stack: "),
+              Widget.Label({
+                className: "code",
+                label: wallhaven_default.bind("remaining").as((v) => v.toString())
+              })
+            ]
+          }),
+          Widget.Label({
+            vpack: "start",
+            className: "code",
+            label: wallhaven_default.bind("json").as((v) => v ? JSON.stringify(v, null, 2) : "-")
+          }),
+          Separator(),
+          Widget.Label({
+            className: "code",
+            hpack: "start",
+            label: wallhaven_default.bind("meta")
           })
-        );
-      });
-      self.show_all();
+        ]
+      }),
+      centerWidget: Separator(),
+      endWidget: Widget.Box({
+        vpack: "start",
+        vertical: true,
+        children: [
+          Button({
+            className: "action",
+            label: "Find Similar Wallpapers",
+            onClicked: () => {
+              wallhaven_default.search_term = `like:${wallhaven_default.json?.id}`;
+              wallhaven_default.random();
+            }
+          }),
+          Separator(),
+          Widget.FlowBox({
+            vpack: "start"
+            // @ts-expect-error
+          }).hook(wallhaven_default, (self) => {
+            self.foreach((child) => child.destroy());
+            wallhaven_default.tags.forEach((tag) => {
+              self.add(
+                Button({
+                  className: tag.purity,
+                  label: tag.name,
+                  onClicked: () => {
+                    wallhaven_default.search_term = `id:${tag.id}`;
+                    wallhaven_default.random();
+                  }
+                })
+              );
+            });
+            self.show_all();
+          })
+        ]
+      })
     }),
+    Separator(),
     Widget.Button({
       className: "button",
       onClicked: () => App.closeWindow("wallpaper-details-menu"),

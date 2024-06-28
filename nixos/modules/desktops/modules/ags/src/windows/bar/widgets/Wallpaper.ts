@@ -9,6 +9,10 @@ const RightClickMenu = Widget.Menu({
       child: Widget.Label('Save Current Wallpaper'),
     }),
     Widget.MenuItem({
+      onActivate: () => Utils.exec('waypaper'),
+      child: Widget.Label('Browse Local'),
+    }),
+    Widget.MenuItem({
       onActivate: () => App.openWindow('wallpaper-details-menu'),
       child: Widget.Label('Details'),
     }),

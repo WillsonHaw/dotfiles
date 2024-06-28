@@ -37,7 +37,6 @@
 
     services.razer.enable = true;
     services.swww.enable = true;
-    services.wallpaperengine.enable = true;
     services.nextcloud.enable = true;
   };
 }

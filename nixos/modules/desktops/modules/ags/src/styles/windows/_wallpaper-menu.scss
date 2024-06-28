@@ -25,6 +25,11 @@
     border-radius: $border-radius;
     color: $mocha-crust;
 
+    &.action {
+      background-color: $mocha-mauve;
+      margin-bottom: 2rem;
+    }
+
     &.nsfw {
       background-color: $mocha-pink;
     }

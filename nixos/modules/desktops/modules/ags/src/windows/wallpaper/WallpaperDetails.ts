@@ -1,4 +1,39 @@
-import wallpaper, { WallpaperService } from '../../services/wallhaven';
+import Gdk from 'gi://Gdk';
+import wallpaper from '../../services/wallhaven';
+
+const display = Gdk.Display.get_default();
+
+const Separator = () =>
+  Widget.Separator({
+    vertical: false,
+    hpack: 'center',
+    className: 'separator',
+  });
+
+const Button = ({
+  onClicked,
+  label,
+  className,
+}: {
+  onClicked: () => void;
+  label: string;
+  className: string;
+}) =>
+  Widget.Button({
+    onClicked,
+    onHover: (button) => {
+      const cursor = Gdk.Cursor.new_from_name(display, 'pointer');
+      console.log(cursor);
+      button.window.set_cursor(cursor);
+    },
+    onHoverLost: (button) => {
+      button.window.set_cursor(null);
+    },
+    child: Widget.Label({
+      className: `tag ${className}`,
+      label,
+    }),
+  });
 
 const Root = Widget.Box({
   className: 'wallpaper-details',
@@ -8,40 +43,87 @@ const Root = Widget.Box({
       className: 'title',
       label: 'Details',
     }),
-    Widget.Box({
-      children: [
-        Widget.Label('Path: '),
-        Widget.Label({
-          className: 'code',
-          label: wallpaper.bind('path'),
-        }),
-      ],
-    }),
-    Widget.Label({
-      className: 'code',
-      label: wallpaper.bind('json'),
-    }),
-    // @ts-expect-error
-    Widget.FlowBox().hook(wallpaper, (self) => {
-      // @ts-expect-error
-      self.foreach((child) => child.destroy());
-
-      wallpaper.tags.forEach((tag) => {
-        // @ts-expect-error
-        self.add(
-          Widget.Button({
-            onClicked: () => (wallpaper.search_term = `id:${tag.id}`),
-            child: Widget.Label({
-              className: `tag ${tag.purity}`,
-              label: tag.name,
-            }),
+    Separator(),
+    Widget.CenterBox({
+      spacing: 24,
+      startWidget: Widget.Box({
+        vpack: 'start',
+        spacing: 8,
+        vertical: true,
+        children: [
+          Widget.Box({
+            children: [
+              Widget.Label('Path: '),
+              Widget.Label({
+                className: 'code',
+                label: wallpaper.bind('path'),
+              }),
+            ],
           }),
-        );
-      });
+          Widget.Box({
+            children: [
+              Widget.Label('# in stack: '),
+              Widget.Label({
+                className: 'code',
+                label: wallpaper.bind('remaining').as((v) => v.toString()),
+              }),
+            ],
+          }),
+          Widget.Label({
+            vpack: 'start',
+            className: 'code',
+            label: wallpaper.bind('json').as((v) => (v ? JSON.stringify(v, null, 2) : '-')),
+          }),
+          Separator(),
+          Widget.Label({
+            className: 'code',
+            hpack: 'start',
+            label: wallpaper.bind('meta'),
+          }),
+        ],
+      }),
+      centerWidget: Separator(),
+      endWidget: Widget.Box({
+        vpack: 'start',
+        vertical: true,
+        children: [
+          Button({
+            className: 'action',
+            label: 'Find Similar Wallpapers',
+            onClicked: () => {
+              wallpaper.search_term = `like:${wallpaper.json?.id}`;
+              wallpaper.random();
+            },
+          }),
+          Separator(),
+          Widget.FlowBox({
+            vpack: 'start',
+            // @ts-expect-error
+          }).hook(wallpaper, (self) => {
+            // @ts-expect-error
+            self.foreach((child) => child.destroy());
 
-      // @ts-expect-error
-      self.show_all();
+            wallpaper.tags.forEach((tag) => {
+              // @ts-expect-error
+              self.add(
+                Button({
+                  className: tag.purity,
+                  label: tag.name,
+                  onClicked: () => {
+                    wallpaper.search_term = `id:${tag.id}`;
+                    wallpaper.random();
+                  },
+                }),
+              );
+            });
+
+            // @ts-expect-error
+            self.show_all();
+          }),
+        ],
+      }),
     }),
+    Separator(),
     Widget.Button({
       className: 'button',
       onClicked: () => App.closeWindow('wallpaper-details-menu'),

@@ -31,7 +31,7 @@
         }
 
         function rebuild() {
-          sudo nixos-rebuild switch --flake ~/.dotfiles/nixos$@
+          sudo nixos-rebuild switch --flake ~/dotfiles/nixos$@
         }
 
         function volume() {
