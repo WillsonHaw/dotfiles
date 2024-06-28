@@ -167,7 +167,8 @@ var WallpaperService = class extends Service {
           path: "https://picsum.photos/300/200",
           purity,
           short_url: "https://picsum.photos/300/200",
-          url: "https://picsum.photos/300/200"
+          url: "https://picsum.photos/300/200",
+          colors: []
         })}`
       );
     });
@@ -925,8 +926,12 @@ var Separator = () => Widget.Separator({
 var Button = ({
   onClicked,
   label,
-  className
+  className,
+  halign = "fill",
+  hpack = "fill"
 }) => Widget.Button({
+  halign,
+  hpack,
   onClicked,
   onHover: (button) => {
     const cursor = Gdk.Cursor.new_from_name(display, "pointer");
@@ -949,12 +954,20 @@ var Root4 = Widget.Box({
       className: "title",
       label: "Details"
     }),
-    Separator(),
+    Button({
+      className: "action",
+      label: "Find Similar Wallpapers",
+      hpack: "center",
+      onClicked: () => {
+        wallhaven_default.search_term = `like:${wallhaven_default.json?.id}`;
+        wallhaven_default.random();
+      }
+    }),
     Widget.CenterBox({
-      spacing: 24,
+      spacing: 32,
       startWidget: Widget.Box({
         vpack: "start",
-        spacing: 8,
+        spacing: 32,
         vertical: true,
         children: [
           Widget.Box({
@@ -979,29 +992,21 @@ var Root4 = Widget.Box({
             vpack: "start",
             className: "code",
             label: wallhaven_default.bind("json").as((v) => v ? JSON.stringify(v, null, 2) : "-")
-          }),
-          Separator(),
-          Widget.Label({
-            className: "code",
-            hpack: "start",
-            label: wallhaven_default.bind("meta")
           })
         ]
       }),
       centerWidget: Separator(),
       endWidget: Widget.Box({
+        className: "right-panel",
         vpack: "start",
         vertical: true,
+        spacing: 32,
         children: [
-          Button({
-            className: "action",
-            label: "Find Similar Wallpapers",
-            onClicked: () => {
-              wallhaven_default.search_term = `like:${wallhaven_default.json?.id}`;
-              wallhaven_default.random();
-            }
+          Widget.Label({
+            className: "code",
+            hpack: "start",
+            label: wallhaven_default.bind("meta")
           }),
-          Separator(),
           Widget.FlowBox({
             vpack: "start"
             // @ts-expect-error
@@ -1020,11 +1025,23 @@ var Root4 = Widget.Box({
               );
             });
             self.show_all();
+          }),
+          Widget.Box({
+            hpack: "center",
+            spacing: 8,
+            children: wallhaven_default.bind("json").as(
+              (json) => json?.colors.map(
+                (color) => Widget.Box({
+                  className: "tag color-tile",
+                  hpack: "center",
+                  css: `background-color: ${color};`
+                })
+              )
+            )
           })
         ]
       })
     }),
-    Separator(),
     Widget.Button({
       className: "button",
       onClicked: () => App.closeWindow("wallpaper-details-menu"),

@@ -23,6 +23,7 @@ interface Wallpaper {
   short_url: string;
   path: string;
   purity: string;
+  colors: string[];
 }
 
 interface Tag {
@@ -217,6 +218,7 @@ export class WallpaperService extends Service {
           purity,
           short_url: 'https://picsum.photos/300/200',
           url: 'https://picsum.photos/300/200',
+          colors: [],
         })}`,
       );
     });

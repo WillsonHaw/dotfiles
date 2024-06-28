@@ -214,12 +214,18 @@ tooltip label {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1rem; }
+  .wallpaper-settings .right-panel,
+  .wallpaper-details .right-panel {
+    min-width: 25rem; }
   .wallpaper-settings .code,
   .wallpaper-details .code {
     font-family: monospace; }
+  .wallpaper-settings .color-tiles,
+  .wallpaper-details .color-tiles {
+    margin-top: 2rem; }
   .wallpaper-settings .tag,
   .wallpaper-details .tag {
-    padding: 0.5rem;
+    padding: 0.5rem 0.75rem;
     margin: 0.25rem;
     border-radius: 0.5rem;
     color: #11111b; }
@@ -236,6 +242,11 @@ tooltip label {
     .wallpaper-settings .tag.sketchy,
     .wallpaper-details .tag.sketchy {
       background-color: #fab387; }
+    .wallpaper-settings .tag.color-tile,
+    .wallpaper-details .tag.color-tile {
+      padding: 0;
+      min-width: 2.5rem;
+      min-height: 2.5rem; }
   .wallpaper-settings .button,
   .wallpaper-details .button {
     background-color: #11111b;

@@ -14,12 +14,18 @@ const Button = ({
   onClicked,
   label,
   className,
+  halign = 'fill',
+  hpack = 'fill',
 }: {
   onClicked: () => void;
   label: string;
   className: string;
+  halign?: string;
+  hpack?: string;
 }) =>
   Widget.Button({
+    halign,
+    hpack,
     onClicked,
     onHover: (button) => {
       const cursor = Gdk.Cursor.new_from_name(display, 'pointer');
@@ -43,12 +49,20 @@ const Root = Widget.Box({
       className: 'title',
       label: 'Details',
     }),
-    Separator(),
+    Button({
+      className: 'action',
+      label: 'Find Similar Wallpapers',
+      hpack: 'center',
+      onClicked: () => {
+        wallpaper.search_term = `like:${wallpaper.json?.id}`;
+        wallpaper.random();
+      },
+    }),
     Widget.CenterBox({
-      spacing: 24,
+      spacing: 32,
       startWidget: Widget.Box({
         vpack: 'start',
-        spacing: 8,
+        spacing: 32,
         vertical: true,
         children: [
           Widget.Box({
@@ -74,28 +88,20 @@ const Root = Widget.Box({
             className: 'code',
             label: wallpaper.bind('json').as((v) => (v ? JSON.stringify(v, null, 2) : '-')),
           }),
-          Separator(),
+        ],
+      }),
+      centerWidget: Separator(),
+      endWidget: Widget.Box({
+        className: 'right-panel',
+        vpack: 'start',
+        vertical: true,
+        spacing: 32,
+        children: [
           Widget.Label({
             className: 'code',
             hpack: 'start',
             label: wallpaper.bind('meta'),
           }),
-        ],
-      }),
-      centerWidget: Separator(),
-      endWidget: Widget.Box({
-        vpack: 'start',
-        vertical: true,
-        children: [
-          Button({
-            className: 'action',
-            label: 'Find Similar Wallpapers',
-            onClicked: () => {
-              wallpaper.search_term = `like:${wallpaper.json?.id}`;
-              wallpaper.random();
-            },
-          }),
-          Separator(),
           Widget.FlowBox({
             vpack: 'start',
             // @ts-expect-error
@@ -120,10 +126,22 @@ const Root = Widget.Box({
             // @ts-expect-error
             self.show_all();
           }),
+          Widget.Box({
+            hpack: 'center',
+            spacing: 8,
+            children: wallpaper.bind('json').as((json) =>
+              json?.colors.map((color) =>
+                Widget.Box({
+                  className: 'tag color-tile',
+                  hpack: 'center',
+                  css: `background-color: ${color};`,
+                }),
+              ),
+            ),
+          }),
         ],
       }),
     }),
-    Separator(),
     Widget.Button({
       className: 'button',
       onClicked: () => App.closeWindow('wallpaper-details-menu'),
