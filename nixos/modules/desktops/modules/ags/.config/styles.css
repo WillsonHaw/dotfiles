@@ -219,7 +219,10 @@ tooltip label {
     min-width: 25rem; }
   .wallpaper-settings .code,
   .wallpaper-details .code {
-    font-family: monospace; }
+    font-family: monospace;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background-color: #11111b; }
   .wallpaper-settings .color-tiles,
   .wallpaper-details .color-tiles {
     margin-top: 2rem; }

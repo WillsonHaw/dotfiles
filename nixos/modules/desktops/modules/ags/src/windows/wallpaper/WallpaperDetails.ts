@@ -1,5 +1,6 @@
 import Gdk from 'gi://Gdk';
 import wallpaper from '../../services/wallhaven';
+import { ButtonProps } from 'types/widgets/button';
 
 const display = Gdk.Display.get_default();
 
@@ -14,22 +15,17 @@ const Button = ({
   onClicked,
   label,
   className,
-  halign = 'fill',
-  hpack = 'fill',
+  ...props
 }: {
   onClicked: () => void;
   label: string;
   className: string;
-  halign?: string;
-  hpack?: string;
-}) =>
+} & ButtonProps) =>
   Widget.Button({
-    halign,
-    hpack,
     onClicked,
     onHover: (button) => {
       const cursor = Gdk.Cursor.new_from_name(display, 'pointer');
-      console.log(cursor);
+
       button.window.set_cursor(cursor);
     },
     onHoverLost: (button) => {
@@ -39,6 +35,7 @@ const Button = ({
       className: `tag ${className}`,
       label,
     }),
+    ...props,
   });
 
 const Root = Widget.Box({
@@ -49,14 +46,18 @@ const Root = Widget.Box({
       className: 'title',
       label: 'Details',
     }),
-    Button({
-      className: 'action',
-      label: 'Find Similar Wallpapers',
+    Widget.Box({
       hpack: 'center',
-      onClicked: () => {
-        wallpaper.search_term = `like:${wallpaper.json?.id}`;
-        wallpaper.random();
-      },
+      children: [
+        Button({
+          className: 'action',
+          label: 'Find Similar Wallpapers',
+          onClicked: () => {
+            wallpaper.search_term = `like:${wallpaper.json?.id}`;
+            wallpaper.random();
+          },
+        }),
+      ],
     }),
     Widget.CenterBox({
       spacing: 32,

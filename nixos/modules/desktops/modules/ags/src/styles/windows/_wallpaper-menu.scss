@@ -21,6 +21,9 @@
 
   .code {
     font-family: monospace;
+    padding: 0.75rem;
+    border-radius: $border-radius;
+    background-color: $mocha-crust;
   }
 
   .color-tiles {

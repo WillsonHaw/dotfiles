@@ -943,15 +943,11 @@ var Button = ({
   onClicked,
   label,
   className,
-  halign = "fill",
-  hpack = "fill"
+  ...props
 }) => Widget.Button({
-  halign,
-  hpack,
   onClicked,
   onHover: (button) => {
     const cursor = Gdk.Cursor.new_from_name(display, "pointer");
-    console.log(cursor);
     button.window.set_cursor(cursor);
   },
   onHoverLost: (button) => {
@@ -960,7 +956,8 @@ var Button = ({
   child: Widget.Label({
     className: `tag ${className}`,
     label
-  })
+  }),
+  ...props
 });
 var Root4 = Widget.Box({
   className: "wallpaper-details",
@@ -970,14 +967,18 @@ var Root4 = Widget.Box({
       className: "title",
       label: "Details"
     }),
-    Button({
-      className: "action",
-      label: "Find Similar Wallpapers",
+    Widget.Box({
       hpack: "center",
-      onClicked: () => {
-        wallhaven_default.search_term = `like:${wallhaven_default.json?.id}`;
-        wallhaven_default.random();
-      }
+      children: [
+        Button({
+          className: "action",
+          label: "Find Similar Wallpapers",
+          onClicked: () => {
+            wallhaven_default.search_term = `like:${wallhaven_default.json?.id}`;
+            wallhaven_default.random();
+          }
+        })
+      ]
     }),
     Widget.CenterBox({
       spacing: 32,
