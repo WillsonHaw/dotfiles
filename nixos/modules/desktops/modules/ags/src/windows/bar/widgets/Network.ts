@@ -3,9 +3,25 @@ import BarWidget from '../BarWidget';
 const network = await Service.import('network');
 
 function getIcon() {
-  return network.primary === 'wired'
-    ? network.wired.bind('icon_name')
-    : network.wifi.bind('icon_name');
+  if (network.primary === 'wired') {
+    return '';
+  }
+
+  return network.wifi.bind('strength').as((v) => {
+    const percent = v / 100;
+
+    if (percent > 0.8) {
+      return '󰤨';
+    } else if (percent > 0.6) {
+      return '󰤥';
+    } else if (percent > 0.4) {
+      return '󰤢';
+    } else if (percent > 0.2) {
+      return '󰤟';
+    } else {
+      return '󰤯';
+    }
+  });
 }
 
 function getStrength() {
@@ -23,9 +39,9 @@ const Network = BarWidget({
   child: Widget.CircularProgress({
     className: `circular-progress`,
     rounded: true,
-    child: Widget.Icon({
-      className: 'icon',
-      icon: getIcon(),
+    child: Widget.Label({
+      className: 'icon medium',
+      label: getIcon(),
     }),
     value: getStrength(),
     tooltipText: getTooltip(),

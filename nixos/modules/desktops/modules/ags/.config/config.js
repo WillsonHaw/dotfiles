@@ -612,7 +612,23 @@ var Clock_default = Clock;
 // nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Network.ts
 var network = await Service.import("network");
 function getIcon() {
-  return network.primary === "wired" ? network.wired.bind("icon_name") : network.wifi.bind("icon_name");
+  if (network.primary === "wired") {
+    return "\uEF44";
+  }
+  return network.wifi.bind("strength").as((v) => {
+    const percent = v / 100;
+    if (percent > 0.8) {
+      return "\u{F0928}";
+    } else if (percent > 0.6) {
+      return "\u{F0925}";
+    } else if (percent > 0.4) {
+      return "\u{F0922}";
+    } else if (percent > 0.2) {
+      return "\u{F091F}";
+    } else {
+      return "\u{F092F}";
+    }
+  });
 }
 function getStrength() {
   return network.primary === "wired" ? 1 : network.wifi.bind("strength").as((v) => v / 100);
@@ -625,9 +641,9 @@ var Network = BarWidget_default({
   child: Widget.CircularProgress({
     className: `circular-progress`,
     rounded: true,
-    child: Widget.Icon({
-      className: "icon",
-      icon: getIcon()
+    child: Widget.Label({
+      className: "icon medium",
+      label: getIcon()
     }),
     value: getStrength(),
     tooltipText: getTooltip()
