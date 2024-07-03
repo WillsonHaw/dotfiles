@@ -8,6 +8,7 @@
 {
   imports = [
     ./floorp
+    ./thorium
     ./vivaldi
   ];
 }

@@ -115,16 +115,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1719341859,
-        "narHash": "sha256-aZuNKBwTwj8EXkDBMWNdRKbHPx647wJLWm55h6jOKbo=",
+        "lastModified": 1719002047,
+        "narHash": "sha256-bRLI+zgfT31LCMW4Pf701ZZx2oFeXoBu1BfYQjX6MPc=",
         "owner": "outfoxxed",
         "repo": "hy3",
-        "rev": "d200873687ea1f10958adb6c08cfcfa44b13267f",
+        "rev": "767eec5821cc8b7a4ccc60fa46ae809d4370e731",
         "type": "github"
       },
       "original": {
         "owner": "outfoxxed",
-        "ref": "hl0.41.2",
+        "ref": "hl0.41.1",
         "repo": "hy3",
         "type": "github"
       }
@@ -171,17 +171,17 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1719317162,
-        "narHash": "sha256-JmfnYz+9a4TjNl3mAus1VpoWtTI9d1xkW9MHbkcV0Po=",
-        "ref": "refs/tags/v0.41.2",
-        "rev": "918d8340afd652b011b937d29d5eea0be08467f5",
-        "revCount": 4886,
+        "lastModified": 1718272446,
+        "narHash": "sha256-hLnnNBWP1Qjs1I3fndMgp8rbWJruxdnGTq77A4Rv4R4=",
+        "ref": "refs/tags/v0.41.1",
+        "rev": "9e781040d9067c2711ec2e9f5b47b76ef70762b3",
+        "revCount": 4818,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hyprwm/Hyprland"
       },
       "original": {
-        "ref": "refs/tags/v0.41.2",
+        "ref": "refs/tags/v0.41.1",
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hyprwm/Hyprland"
@@ -224,16 +224,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1719318037,
-        "narHash": "sha256-TnlAcO5K2gkab0mpKurP5Co6eWRycP/KbFqWNS2rsMA=",
-        "ref": "refs/tags/v0.41.2",
-        "rev": "1a3f2913ab941c69ebe3127b2e41916540a2df5b",
-        "revCount": 182,
+        "lastModified": 1718479633,
+        "narHash": "sha256-Bw3JRBUZg2kmDwxa/UHvD//gGcNjbftTj2MSeLvx1q8=",
+        "ref": "refs/tags/v0.41.1",
+        "rev": "d8c66df1ba017ef54ba4ab1f9bc6e68a20602aec",
+        "revCount": 176,
         "type": "git",
         "url": "https://github.com/hyprwm/hyprland-plugins"
       },
       "original": {
-        "ref": "refs/tags/v0.41.2",
+        "ref": "refs/tags/v0.41.1",
         "type": "git",
         "url": "https://github.com/hyprwm/hyprland-plugins"
       }

@@ -34,6 +34,7 @@
 
     browsers.floorp.enable = true;
     browsers.vivaldi.enable = true;
+    browsers.thorium.enable = true;
 
     services.razer.enable = true;
     services.swww.enable = true;

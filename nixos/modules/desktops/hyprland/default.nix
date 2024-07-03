@@ -61,7 +61,6 @@
             enable = true;
 
             catppuccin = {
-              enable = true;
               flavor = "mocha";
               accent = "mauve";
               icon.enable = true;
@@ -76,9 +75,9 @@
             enable = true;
 
             plugins = [
-              # hyprland-plugins.packages.${pkgs.system}.hyprbars
-              # hyprland-plugins.packages.x86_64-linux.hyprexpo
-              # hy3.packages.x86_64-linux.hy3
+              hyprland-plugins.packages.${pkgs.system}.hyprbars
+              hyprland-plugins.packages.x86_64-linux.hyprexpo
+              hy3.packages.${pkgs.system}.hy3
             ];
 
             extraConfig = ''
