@@ -1,9 +1,11 @@
 // nixos/modules/desktops/modules/ags/src/windows/bar/BarGroup.ts
 var BarGroup = ({
   className,
+  spacing = 0,
   ...props
 }) => Widget.Box({
   className: `group ${className}`,
+  spacing,
   vertical: true,
   ...props
 });
@@ -462,27 +464,29 @@ var TopSection_default = TopSection;
 var battery = await Service.import("battery");
 var Battery = BarWidget_default({
   className: "battery",
-  child: battery.available ? Widget.CircularProgress({
-    className: `circular-progress`,
-    visible: battery.bind("available"),
-    rounded: true,
-    child: Widget.Icon({
-      className: "icon",
-      icon: battery.bind("icon_name")
-    }),
-    tooltipText: battery.bind("percent").as((p) => `Battery: ${p}% Remaining`),
-    value: battery.bind("percent").as((p) => p / 100)
-  }) : Widget.CircularProgress({
-    className: `circular-progress`,
-    visible: battery.bind("available"),
-    rounded: true,
-    child: Widget.Label({
-      className: "icon medium",
-      label: "\uF1E6"
-    }),
-    tooltipText: "Plugged In",
-    value: 1
-  })
+  child: battery.bind("available").as(
+    (available) => available ? Widget.CircularProgress({
+      className: `circular-progress`,
+      visible: battery.bind("available"),
+      rounded: true,
+      child: Widget.Icon({
+        className: "icon",
+        icon: battery.bind("icon_name")
+      }),
+      tooltipText: battery.bind("percent").as((p) => `Battery: ${p}% Remaining`),
+      value: battery.bind("percent").as((p) => p / 100)
+    }) : Widget.CircularProgress({
+      className: `circular-progress`,
+      visible: battery.bind("available"),
+      rounded: true,
+      child: Widget.Label({
+        className: "icon medium",
+        label: "\uF1E6"
+      }),
+      tooltipText: "Plugged In",
+      value: 1
+    })
+  )
 });
 var Battery_default = Battery;
 
@@ -680,6 +684,7 @@ var SystemTrayItem = (item) => Widget.Button({
 });
 var SystemTray = BarGroup_default({
   className: "system-tray",
+  spacing: 8,
   visible: systemtray.bind("items").as((i) => i.length > 0),
   children: systemtray.bind("items").as((i) => i.map(SystemTrayItem))
 });

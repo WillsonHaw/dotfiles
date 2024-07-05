@@ -15,6 +15,7 @@ const SystemTrayItem = (item: TrayItem) =>
 
 const SystemTray = BarGroup({
   className: 'system-tray',
+  spacing: 8,
   visible: systemtray.bind('items').as((i) => i.length > 0),
   children: systemtray.bind('items').as((i) => i.map(SystemTrayItem)),
 });
