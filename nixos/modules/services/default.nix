@@ -7,6 +7,7 @@
 
 {
   imports = [
+    ./clipboard
     ./git
     ./keyring
     ./nextcloud
@@ -16,7 +17,6 @@
     ./ssh
     ./tailscale
     ./wallpaper
-    ./wl-clipboard-rs
   ];
 
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
