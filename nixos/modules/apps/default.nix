@@ -10,6 +10,7 @@
     ./browsers
     ./capture
     ./chiaki
+    ./compression
     ./curl
     # ./davinci
     ./dconf2nix

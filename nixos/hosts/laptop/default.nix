@@ -23,6 +23,9 @@
   noodles = {
     device.is-laptop = true;
 
+    apps.p7zip.enable = true;
+    apps.unrar.enable = true;
+
     desktops.hyprland.enable = true;
     desktops.hyprland.card = "/dev/dri/by-path/pci-0000:00:02.0-card";
 
