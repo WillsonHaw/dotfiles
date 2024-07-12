@@ -353,6 +353,8 @@ export class WallpaperService extends Service {
 
     if (reset) {
       this.#wallpapers = [];
+      this.#meta = null;
+      this.#tags = [];
     }
 
     this.#saveFile();

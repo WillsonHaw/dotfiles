@@ -19,6 +19,8 @@
     useOSProber = true;
   };
 
+  services.logind.extraConfig = "RuntimeDirectorySize=4G";
+
   networking.hostName = "slumpy-desktop";
 
   zramSwap.enable = true;

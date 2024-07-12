@@ -268,6 +268,8 @@ var WallpaperService = class extends Service {
     }
     if (reset) {
       this.#wallpapers = [];
+      this.#meta = null;
+      this.#tags = [];
     }
     this.#saveFile();
   }
