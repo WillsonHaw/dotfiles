@@ -33,6 +33,7 @@ var Launcher_default = Launcher;
 // nixos/modules/desktops/modules/ags/src/services/wallhaven.ts
 var DEFAULT_TRANSITION_TIME = 1e3 * 60 * 5;
 var ROOT_URL = "https://wallhaven.cc/api/v1";
+var hyprland = await Service.import("hyprland");
 var WallpaperService = class extends Service {
   static {
     Service.register(
@@ -45,6 +46,9 @@ var WallpaperService = class extends Service {
         sfw: ["boolean", "rw"],
         sketchy: ["boolean", "rw"],
         nsfw: ["boolean", "rw"],
+        "use-image-fill": ["boolean", "rw"],
+        "use-clear-color": ["boolean", "rw"],
+        "use-exact-resolution": ["boolean", "rw"],
         collection: ["string", "rw"],
         username: ["string", "rw"],
         "search-term": ["string", "rw"],
@@ -65,6 +69,9 @@ var WallpaperService = class extends Service {
   #searchTerm = "";
   #username = "";
   #displayTime = DEFAULT_TRANSITION_TIME;
+  #useImageFill = false;
+  #useClearColor = false;
+  #useExactResolution = false;
   #wallpapers = [];
   #configFile;
   #wallpaperFolder;
@@ -73,6 +80,7 @@ var WallpaperService = class extends Service {
   #tags = [];
   #meta = null;
   #getSaveFolder;
+  #monitor = hyprland.getMonitor(hyprland.active.monitor.id);
   get path() {
     return this.#currentWallpaper?.[0] ?? "-";
   }
@@ -123,6 +131,27 @@ var WallpaperService = class extends Service {
   }
   set nsfw(v) {
     this.#setPurity(2 /* NSFW */, v);
+  }
+  get useImageFill() {
+    return this.#useImageFill;
+  }
+  set useImageFill(v) {
+    this.#useImageFill = v;
+    this.#onChange("use-image-fill");
+  }
+  get useClearColor() {
+    return this.#useClearColor;
+  }
+  set useClearColor(v) {
+    this.#useClearColor = v;
+    this.#onChange("use-clear-color");
+  }
+  get useExactResolution() {
+    return this.#useExactResolution;
+  }
+  set useExactResolution(v) {
+    this.#useExactResolution = v;
+    this.#onChange("use-exact-resolution");
   }
   get collection() {
     return this.#collection;
@@ -197,10 +226,16 @@ var WallpaperService = class extends Service {
       if (response) {
         print(`[Wallpaper] curl: ${response}`);
       }
-      print(`[Wallpaper] Switching wallpaper to: ${fileName}`);
-      const result = Utils.exec(`swww img --resize fit -t random ${fileName}`);
+      print(`[Wallpaper] Switching wallpaper to: ${wallpaper2.id}`);
+      let command = `swww img --resize ${this.#useImageFill ? "crop" : "fit"} -t random ${fileName}`;
+      if (this.#useClearColor) {
+        const fill = wallpaper2.colors[0].replace("#", "") ?? "000000";
+        command += ` --fill-color ${fill}`;
+      }
+      print(`[Wallpaper] swww command: ${command}`);
+      const result = Utils.exec(command);
       if (result) {
-        print(`[Wallpaper] swww: ${result}`);
+        print(`[Wallpaper] swww img: ${result}`);
       }
       this.#currentWallpaper = [fileName, wallpaper2];
       const tags = await this.#getTags(wallpaper2.id);
@@ -290,6 +325,8 @@ var WallpaperService = class extends Service {
       const json = JSON.parse(contents);
       this.#category = json.category;
       this.#purity = json.purity;
+      this.#useClearColor = json.useClearColor;
+      this.#useExactResolution = json.useExactResolution;
       this.#apikey = json.apikey;
       this.#collection = json.collection;
       this.#username = json.username;
@@ -312,6 +349,8 @@ ${err.message}`);
       const json = {
         category: this.#category,
         purity: this.#purity,
+        useClearColor: this.#useClearColor,
+        useExactResolution: this.#useExactResolution,
         apikey: this.#apikey,
         collection: this.#collection,
         username: this.#username,
@@ -363,8 +402,13 @@ ${err}`);
       params.purity = this.#purity;
       params.sorting = "random";
       params.seed = seed;
-      params.atleast = "2560x1080";
-      params.ratios = "16x9,16x10,32x9,4x1,64x27,256x135";
+      if (this.#useExactResolution && this.#monitor) {
+        params.resolutions = `${this.#monitor.width}x${this.#monitor.height}`;
+      } else if (this.#monitor) {
+        params.atleast = `1920x${this.#monitor.height}`;
+      } else {
+        params.ratios = "16x9,16x10,32x9,4x1,64x27,256x135";
+      }
       if (this.#searchTerm) {
         params.q = this.#searchTerm;
       }
@@ -421,18 +465,18 @@ var Wallpaper = BarGroup_default({
 var Wallpaper_default = Wallpaper;
 
 // nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Workspaces.ts
-var hyprland = await Service.import("hyprland");
-var dispatch = (ws) => hyprland.messageAsync(`dispatch workspace ${ws}`);
+var hyprland2 = await Service.import("hyprland");
+var dispatch = (ws) => hyprland2.messageAsync(`dispatch workspace ${ws}`);
 var Workspaces = BarGroup_default({
   className: "workspaces",
   children: Array.from({ length: 5 }, (_, i) => i + 1).map(
     (id) => BarWidget_default({
       setup: (self) => {
-        self.hook(hyprland, () => {
-          self.toggleClassName("active", hyprland.active.workspace.id === id);
+        self.hook(hyprland2, () => {
+          self.toggleClassName("active", hyprland2.active.workspace.id === id);
           self.toggleClassName(
             "occupied",
-            (hyprland.workspaces.find((w) => w.id === id)?.windows ?? 0) > 0
+            (hyprland2.workspaces.find((w) => w.id === id)?.windows ?? 0) > 0
           );
         });
       },
@@ -442,7 +486,7 @@ var Workspaces = BarGroup_default({
         setup: (self) => {
           self.bind(
             "label",
-            hyprland.active.workspace,
+            hyprland2.active.workspace,
             "id",
             (ws) => ws === id ? "\uF444" : "\uF4C3"
           );
@@ -907,6 +951,9 @@ var Root3 = Widget.Box({
         children: [Switch("sfw", "SFW"), Switch("sketchy", "Sketchy"), Switch("nsfw", "NSFW")]
       })
     }),
+    Switch("useImageFill", "Resize to Fill"),
+    Switch("useClearColor", "Use Clear Color"),
+    Switch("useExactResolution", "Use Exact Resolution"),
     Input("Search Term", "search_term"),
     Input("Wallhaven API Key", "apikey"),
     Input("Wallhaven Username", "username"),

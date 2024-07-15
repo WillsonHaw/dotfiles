@@ -5,6 +5,8 @@ import GLib from '../types/@girs/glib-2.0/glib-2.0';
 const DEFAULT_TRANSITION_TIME = 1000 * 60 * 5;
 const ROOT_URL = 'https://wallhaven.cc/api/v1';
 
+const hyprland = await Service.import('hyprland');
+
 enum Categories {
   General = 0,
   Anime,
@@ -57,6 +59,9 @@ export class WallpaperService extends Service {
         sfw: ['boolean', 'rw'],
         sketchy: ['boolean', 'rw'],
         nsfw: ['boolean', 'rw'],
+        'use-image-fill': ['boolean', 'rw'],
+        'use-clear-color': ['boolean', 'rw'],
+        'use-exact-resolution': ['boolean', 'rw'],
         collection: ['string', 'rw'],
         username: ['string', 'rw'],
         'search-term': ['string', 'rw'],
@@ -79,6 +84,10 @@ export class WallpaperService extends Service {
   #username = '';
   #displayTime = DEFAULT_TRANSITION_TIME;
 
+  #useImageFill = false;
+  #useClearColor = false;
+  #useExactResolution = false;
+
   #wallpapers: Wallpaper[] = [];
   #configFile: string;
   #wallpaperFolder: string;
@@ -87,6 +96,8 @@ export class WallpaperService extends Service {
   #tags: Tag[] = [];
   #meta: Meta | null = null;
   #getSaveFolder: (wallpaper: Wallpaper) => string;
+
+  #monitor = hyprland.getMonitor(hyprland.active.monitor.id);
 
   get path() {
     return this.#currentWallpaper?.[0] ?? '-';
@@ -154,6 +165,33 @@ export class WallpaperService extends Service {
 
   set nsfw(v: boolean) {
     this.#setPurity(Purities.NSFW, v);
+  }
+
+  get useImageFill() {
+    return this.#useImageFill;
+  }
+
+  set useImageFill(v: boolean) {
+    this.#useImageFill = v;
+    this.#onChange('use-image-fill');
+  }
+
+  get useClearColor() {
+    return this.#useClearColor;
+  }
+
+  set useClearColor(v: boolean) {
+    this.#useClearColor = v;
+    this.#onChange('use-clear-color');
+  }
+
+  get useExactResolution() {
+    return this.#useExactResolution;
+  }
+
+  set useExactResolution(v: boolean) {
+    this.#useExactResolution = v;
+    this.#onChange('use-exact-resolution');
   }
 
   get collection() {
@@ -254,11 +292,24 @@ export class WallpaperService extends Service {
         print(`[Wallpaper] curl: ${response}`);
       }
 
-      print(`[Wallpaper] Switching wallpaper to: ${fileName}`);
-      const result = Utils.exec(`swww img --resize fit -t random ${fileName}`);
+      print(`[Wallpaper] Switching wallpaper to: ${wallpaper.id}`);
+
+      let command = `swww img --resize ${
+        this.#useImageFill ? 'crop' : 'fit'
+      } -t random ${fileName}`;
+
+      if (this.#useClearColor) {
+        const fill = wallpaper.colors[0].replace('#', '') ?? '000000';
+
+        command += ` --fill-color ${fill}`;
+      }
+
+      print(`[Wallpaper] swww command: ${command}`);
+
+      const result = Utils.exec(command);
 
       if (result) {
-        print(`[Wallpaper] swww: ${result}`);
+        print(`[Wallpaper] swww img: ${result}`);
       }
 
       this.#currentWallpaper = [fileName, wallpaper];
@@ -384,6 +435,8 @@ export class WallpaperService extends Service {
 
       this.#category = json.category;
       this.#purity = json.purity;
+      this.#useClearColor = json.useClearColor;
+      this.#useExactResolution = json.useExactResolution;
       this.#apikey = json.apikey;
       this.#collection = json.collection;
       this.#username = json.username;
@@ -406,6 +459,8 @@ export class WallpaperService extends Service {
       const json = {
         category: this.#category,
         purity: this.#purity,
+        useClearColor: this.#useClearColor,
+        useExactResolution: this.#useExactResolution,
         apikey: this.#apikey,
         collection: this.#collection,
         username: this.#username,
@@ -468,8 +523,14 @@ export class WallpaperService extends Service {
       params.purity = this.#purity;
       params.sorting = 'random';
       params.seed = seed;
-      params.atleast = '2560x1080';
-      params.ratios = '16x9,16x10,32x9,4x1,64x27,256x135';
+
+      if (this.#useExactResolution && this.#monitor) {
+        params.resolutions = `${this.#monitor.width}x${this.#monitor.height}`;
+      } else if (this.#monitor) {
+        params.atleast = `1920x${this.#monitor.height}`;
+      } else {
+        params.ratios = '16x9,16x10,32x9,4x1,64x27,256x135';
+      }
 
       if (this.#searchTerm) {
         params.q = this.#searchTerm;
