@@ -8,12 +8,14 @@
 {
   imports = [
     ./browsers
+    ./btop
     ./capture
     ./chiaki
     ./compression
     ./curl
     # ./davinci
     ./dconf2nix
+    ./fastfetch
     ./ferdium
     ./flatpak
     ./gimp
