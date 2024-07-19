@@ -9,5 +9,6 @@
   imports = [
     ./flameshot
     ./grimblast
+    ./obs
   ];
 }

@@ -28,21 +28,29 @@
   noodles = {
     device.is-laptop = false;
 
-    apps.p7zip.enable = true;
-    apps.unrar.enable = true;
+    desktops = {
+      hyprland.enable = true;
+      hyprland.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
+    };
 
-    desktops.hyprland.enable = true;
-    desktops.hyprland.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
+    apps = {
+      p7zip.enable = true;
+      unrar.enable = true;
+      godot.enable = true;
+      office.enable = true;
+      obs.enable = true;
+    };
 
-    apps.godot.enable = true;
-    apps.office.enable = true;
+    browsers = {
+      floorp.enable = true;
+      vivaldi.enable = true;
+      thorium.enable = true;
+    };
 
-    browsers.floorp.enable = true;
-    browsers.vivaldi.enable = true;
-    browsers.thorium.enable = true;
-
-    services.razer.enable = true;
-    services.swww.enable = true;
-    services.nextcloud.enable = true;
+    services = {
+      razer.enable = true;
+      swww.enable = true;
+      nextcloud.enable = true;
+    };
   };
 }
