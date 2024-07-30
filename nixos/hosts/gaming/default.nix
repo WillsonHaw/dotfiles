@@ -13,10 +13,9 @@
     ../../users/slumpy.nix
   ];
 
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/nvme0n1";
-    useOSProber = true;
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
   };
 
   services.logind.extraConfig = "RuntimeDirectorySize=4G";
@@ -30,7 +29,7 @@
 
     desktops = {
       hyprland.enable = true;
-      hyprland.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
+      hyprland.card = "/dev/dri/by-path/pci-0000:01:00.0-card";
     };
 
     apps = {
