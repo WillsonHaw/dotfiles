@@ -5,8 +5,8 @@
 {
     Send "{Blind}{LControl Down}"
     Send "{Blind}{LShift Down}"
-    Send "{Blind}{LWin Down}"
     Send "{Blind}{LAlt Down}"
+    Send "{Blind}{LWin Down}"
     return
 }
 
@@ -14,7 +14,7 @@
 {
     Send "{Blind}{LControl Up}"
     Send "{Blind}{LShift Up}"
-    Send "{Blind}{LWin Up}"
     Send "{Blind}{LAlt Up}"
+    Send "{Blind}{LWin Up}"
     return
 }
