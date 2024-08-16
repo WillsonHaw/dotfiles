@@ -15,8 +15,7 @@ if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
     ExitApp
 }
 
-#Include HyperKey.ahk
-#Include VirtualDesktop/Main.ahk
+; #Include HyperKey.ahk
 #Include WindowDragging.ahk
 #Include WindowTransparency.ahk
 

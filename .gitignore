@@ -1,3 +1,1 @@
-# Ignoring the hardware config since it's per-system. You'll have to copy-paste
-# the config from your system's /etc/nixos folder after setup.
-#nixos/system/hardware-configuration.nix
+*.log

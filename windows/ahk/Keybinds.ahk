@@ -15,30 +15,5 @@ CapsLock & F12::ToggleOpacityGroup()
 ; Utility
 CapsLock & R::Reload
 
-; Apps
-CapsLock & `::Run '*RunAs "alacritty.exe"'
-CapsLock & E::Run '"Files.exe"'
-
-; Virtual Desktop switching
-CapsLock & Right::GoToNextDesktop()
-CapsLock & Left::GoToPrevDesktop()
-
-CapsLock & 1::MoveOrGotoDesktopNumber(0)
-CapsLock & 2::MoveOrGotoDesktopNumber(1)
-CapsLock & 3::MoveOrGotoDesktopNumber(2)
-CapsLock & 4::MoveOrGotoDesktopNumber(3)
-CapsLock & 5::MoveOrGotoDesktopNumber(4)
-CapsLock & 6::MoveOrGotoDesktopNumber(5)
-CapsLock & 7::MoveOrGotoDesktopNumber(6)
-CapsLock & 8::MoveOrGotoDesktopNumber(7)
-CapsLock & 9::MoveOrGotoDesktopNumber(8)
-
-#1::MoveOrGotoDesktopNumber(0)
-#2::MoveOrGotoDesktopNumber(1)
-#3::MoveOrGotoDesktopNumber(2)
-#4::MoveOrGotoDesktopNumber(3)
-#5::MoveOrGotoDesktopNumber(4)
-#6::MoveOrGotoDesktopNumber(5)
-#7::MoveOrGotoDesktopNumber(6)
-#8::MoveOrGotoDesktopNumber(7)
-#9::MoveOrGotoDesktopNumber(8)
+; Forwarded shortcuts, for applications that don't accept F20 as a modifier key
+~F20 & Space::Send "{Blind}!{Space}"

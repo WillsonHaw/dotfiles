@@ -1,7 +1,7 @@
 SetConstants() {
     global
-    defaultInactiveOpacity := 128
-    defaultActiveOpacity := 200
+    defaultInactiveOpacity := 140
+    defaultActiveOpacity := 210
     fullOpacityGroupName := "AlwaysFullOpacity"
     transparentEXEs := [
         "Code.exe", ; VS Code
@@ -26,7 +26,6 @@ SetDefaults() {
 SetConstants()
 SetDefaults()
 
-SetTimer FocusMouse, 5
 SetTimer WatchForMenu, 10
 SetTimer WatchForActivity, 10
 
@@ -91,39 +90,6 @@ WatchForActivity()
 
     activeEXE := newEXE
     activeWin := newWin
-}
-
-; Sets window under mouse active
-FocusMouse()
-{
-    global activeWin
-    local focusedWin
-
-    ; Keep track of previous position and check if it's changed before
-    ; activating the next window. Without this, things like alt+tab would
-    ; be prevented from working
-    static lastX := 0
-    static lastY := 0
-    local x := 0
-    local y := 0
-
-    MouseGetPos &x, &y, &focusedWin
-
-    if (focusedWin != activeWin && x != lastX && y != lastY) {
-        focusClass := WinGetClass("ahk_id " focusedWin)
-        focusTitle := WinGetTitle("ahk_id " focusedWin)
-        isFocusable := ArrayIncludes(focusIncludes, focusClass)
-
-        ; Kinda hacky... check to make sure there's a title. If there isn't,
-        ; it's possible it's a menu or something, which we don't want to lose
-        ; focus on
-        if (isFocusable && focusTitle != "" && WinExist("ahk_id " focusedWin)) {
-            WinActivate
-        }
-   }
-    
-    lastX := x
-    lastY := y
 }
 
 ToggleOpacityGroup() {
