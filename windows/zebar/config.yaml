@@ -63,15 +63,16 @@ window/bar:
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     height: 100%;
-    color: rgb(255 255 255 / 90%);
+    color: #cdd6f4;
     font-family: ui-monospace, monospace;
     font-size: 12px;
     padding: 4px 24px;
-    border-bottom: 1px solid rgb(255 255 255 / 5%);;
-    background: linear-gradient(rgb(0 0 0 / 90%), rgb(5 2 20 / 85%));
+    border-bottom: 1px solid #cba6f7;
+    # background: linear-gradient(rgb(0 0 0 / 90%), rgb(5 2 20 / 85%));
+    background: #1e1e2e;
 
     i {
-      color: rgb(115 130 175 / 95%);
+      color: #cba6f7;
       margin-right: 7px;
     }
 
@@ -92,20 +93,23 @@ window/bar:
         align-items: center;
 
         .workspace {
-          background: rgb(255 255 255 / 5%);
+          background: #313244;
           margin-right: 4px;
           padding: 4px 8px;
-          color: rgb(255 255 255 / 90%);
+          color: #cdd6f4;
           border: none;
           border-radius: 2px;
           cursor: pointer;
 
           &.displayed {
-            background: rgb(255 255 255 / 15%);
+            color: #1e1e2e;
+            background: #cba6f7;
           }
-
-          &.focused,
           &:hover {
+            background: #45475a;
+          }
+          &.focused {
+            color: #1e1e2e;
             background: #cba6f7;
           }
         }
@@ -149,7 +153,7 @@ window/bar:
         .binding-mode,
         .tiling-direction {
           background: rgb(255 255 255 / 15%);
-          color: rgb(255 255 255 / 90%);
+          color: #cdd6f4;
           border-radius: 2px;
           padding: 4px 6px;
           margin: 0;
@@ -195,7 +199,7 @@ window/bar:
       providers: ["cpu"]
       styles: |
         .high-usage {
-          color: #900029;
+          color: #f38ba8;
         }
       template: |
         <i class="nf nf-oct-cpu"></i>
