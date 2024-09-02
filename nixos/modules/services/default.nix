@@ -14,6 +14,7 @@
     ./node
     ./power
     ./razer
+    ./rdp
     ./ssh
     ./tailscale
     ./wallpaper
