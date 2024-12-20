@@ -12,7 +12,7 @@
   };
 
   config = lib.mkIf config.noodles.desktops.module.ags.enable {
-    environment.systemPackages = with pkgs; [ gnome.adwaita-icon-theme ];
+    environment.systemPackages = with pkgs; [ adwaita-icon-theme ];
 
     home-manager.users.slumpy = {
       imports = [ inputs.ags.homeManagerModules.default ];
@@ -26,7 +26,7 @@
         # additional packages to add to gjs's runtime
         extraPackages = with pkgs; [
           gtksourceview
-          webkitgtk
+          webkitgtk_6_0
           accountsservice
         ];
       };

@@ -29,7 +29,7 @@
 
       powerManagement.enable = true;
       powerManagement.finegrained = false;
-      #   open = false;
+      open = false;
 
       #   # vaapi = {
       #   #   enable = true;

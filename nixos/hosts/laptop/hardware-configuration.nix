@@ -34,6 +34,28 @@
     fsType = "vfat";
   };
 
+  fileSystems."/run/media/unraid" = {
+    device = "10.0.0.10:/mnt/user/unraid";
+    fsType = "nfs";
+    options = [
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=600"
+      "noauto"
+    ];
+  };
+
+  fileSystems."/run/media/vm" = {
+    device = "//10.0.0.100/sambashare";
+    fsType = "cifs";
+    options =
+      let
+        # this line prevents hanging on network split
+        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+
+      in
+      [ "${automount_opts},credentials=/etc/nixos/smb-secrets" ];
+  };
+
   swapDevices = [ { device = "/dev/disk/by-uuid/0cd225ed-f707-4db6-8add-5a386ce79e37"; } ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

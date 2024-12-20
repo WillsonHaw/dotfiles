@@ -23,14 +23,10 @@
     fontDir.enable = true;
 
     packages = with pkgs; [
-      (nerdfonts.override {
-        fonts = [
-          "JetBrainsMono"
-          "FiraCode"
-          "SpaceMono"
-          "DejaVuSansMono"
-        ];
-      })
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.fira-code
+      nerd-fonts.space-mono
+      nerd-fonts.dejavu-sans-mono
     ];
   };
 }

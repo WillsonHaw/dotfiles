@@ -16,7 +16,9 @@
     };
   };
 
-  imports = [ inputs.catppuccin.nixosModules.catppuccin ];
+  imports = [
+    inputs.catppuccin.nixosModules.catppuccin
+  ];
 
   config =
     let
@@ -50,33 +52,35 @@
 
           services.kdeconnect.enable = true;
 
+          gtk = {
+            enable = true;
+          };
+
           catppuccin = {
             enable = true;
             flavor = "mocha";
             accent = "mauve";
-            pointerCursor.enable = true;
-          };
 
-          gtk = {
-            enable = true;
-
-            catppuccin = {
+            gtk = {
               flavor = "mocha";
               accent = "mauve";
               icon.enable = true;
             };
-          };
 
-          qt.style.catppuccin.enable = true;
-          services.mako.catppuccin.enable = true;
-          wayland.windowManager.hyprland.catppuccin.enable = true;
+            cursors.enable = true;
+            kvantum.enable = true;
+            mako.enable = true;
+            hyprland.enable = true;
+          };
 
           wayland.windowManager.hyprland = {
             enable = true;
 
+            package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+
             plugins = [
               hyprland-plugins.packages.${pkgs.system}.hyprbars
-              hyprland-plugins.packages.x86_64-linux.hyprexpo
+              hyprland-plugins.packages.${pkgs.system}.hyprexpo
               hy3.packages.${pkgs.system}.hy3
             ];
 

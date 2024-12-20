@@ -10,7 +10,7 @@
     };
 
     hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland?ref=refs/tags/v0.41.2&submodules=1";
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1&ref=refs/tags/v0.46.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -20,18 +20,18 @@
     };
 
     hyprland-plugins = {
-      url = "git+https://github.com/hyprwm/hyprland-plugins?ref=refs/tags/v0.41.2";
+      url = "git+https://github.com/hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
 
     hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.41.2";
+      url = "github:outfoxxed/hy3?ref=refs/tags/hl0.46.0";
       inputs.hyprland.follows = "hyprland";
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    ags.url = "github:Aylur/ags";
+    ags.url = "github:Aylur/ags?ref=refs/tags/v1.9.0";
 
     catppuccin.url = "github:catppuccin/nix";
 
@@ -40,7 +40,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.4.1";
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.5.2";
   };
 
   outputs =

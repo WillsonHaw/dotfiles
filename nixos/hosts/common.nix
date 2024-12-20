@@ -12,6 +12,7 @@
     jq
     unzip
     qdirstat
+    cifs-utils
   ];
 
   imports = [ ../modules ];
