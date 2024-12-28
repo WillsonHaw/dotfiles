@@ -10,7 +10,7 @@
     noodles.services.power.enable = lib.mkEnableOption "Enable power management (for laptops).";
   };
 
-  imports = [ ./tlp ];
+  imports = [ ./cpufreq ];
 
   config.services.upower.enable = true;
 }
