@@ -32,16 +32,18 @@
     apps.p7zip.enable = true;
     apps.unrar.enable = true;
 
+    # desktops.kde.enable = true;
+    # desktops.gnome.enable = true;
     desktops.hyprland.enable = true;
     desktops.hyprland.card = "/dev/dri/by-path/pci-0000:00:02.0-card";
 
     browsers.floorp.enable = true;
-    browsers.vivaldi.enable = true;
+    # browsers.vivaldi.enable = true;
     browsers.thorium.enable = true;
 
     services.swww.enable = true;
     services.nextcloud.enable = true;
-    services.power.enable = true;
+    services.power.cpufreq.enable = true;
     services.remmina.enable = true;
   };
 }

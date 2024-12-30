@@ -22,6 +22,7 @@ const Volume = Widget.EventBox({
   className: 'widget volume',
   onHover: () => showBar.setValue(true),
   onHoverLost: () => showBar.setValue(false),
+  onSecondaryClick: () => Utils.exec('pavucontrol'),
   child: Widget.Box({
     vertical: true,
     children: [

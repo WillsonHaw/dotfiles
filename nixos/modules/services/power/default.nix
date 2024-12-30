@@ -7,10 +7,15 @@
 
 {
   options = {
-    noodles.services.power.enable = lib.mkEnableOption "Enable power management (for laptops).";
+    noodles.services.power.tlp.enable = lib.mkEnableOption "Enable tlp power management (for laptops).";
+    noodles.services.power.cpufreq.enable =
+      lib.mkEnableOption "Enable cpufreq power management (for laptops).";
   };
 
-  imports = [ ./cpufreq ];
+  imports = [
+    ./tlp
+    ./cpufreq
+  ];
 
   config.services.upower.enable = true;
 }

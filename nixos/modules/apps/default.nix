@@ -24,6 +24,7 @@
     ./guitar
     ./office
     ./steam
+    # ./unetbootin
     ./vim
     ./vlc
     ./vscode

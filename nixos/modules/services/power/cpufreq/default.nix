@@ -6,9 +6,10 @@
 }:
 
 {
-  config = lib.mkIf config.noodles.services.power.enable {
+  config = lib.mkIf config.noodles.services.power.cpufreq.enable {
     services.power-profiles-daemon.enable = false;
 
+    services.tlp.enable = false;
     services.auto-cpufreq = {
       enable = true;
       settings = {

@@ -6,7 +6,7 @@
 }:
 
 {
-  config = lib.mkIf config.noodles.services.power.enable {
+  config = lib.mkIf config.noodles.services.power.tlp.enable {
     services.power-profiles-daemon.enable = false;
     services.thermald.enable = true;
 
