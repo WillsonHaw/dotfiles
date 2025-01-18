@@ -10,5 +10,6 @@
     ./floorp
     ./thorium
     ./vivaldi
+    ./zen
   ];
 }

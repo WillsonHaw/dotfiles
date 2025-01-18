@@ -1,4 +1,4 @@
-// nixos/modules/desktops/modules/ags/src/windows/bar/BarGroup.ts
+// windows/bar/BarGroup.ts
 var BarGroup = ({
   className,
   spacing = 0,
@@ -11,14 +11,14 @@ var BarGroup = ({
 });
 var BarGroup_default = BarGroup;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/BarWidget.ts
+// windows/bar/BarWidget.ts
 var BarWidget = ({ className, ...props }) => Widget.Button({
   className: `widget ${className}`,
   ...props
 });
 var BarWidget_default = BarWidget;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Launcher.ts
+// windows/bar/widgets/Launcher.ts
 var Launcher = BarGroup_default({
   className: "launcher",
   children: [
@@ -30,7 +30,7 @@ var Launcher = BarGroup_default({
 });
 var Launcher_default = Launcher;
 
-// nixos/modules/desktops/modules/ags/src/services/wallhaven.ts
+// services/wallhaven.ts
 var DEFAULT_TRANSITION_TIME = 1e3 * 60 * 5;
 var ROOT_URL = "https://wallhaven.cc/api/v1";
 var hyprland = await Service.import("hyprland");
@@ -425,7 +425,7 @@ var wallpaper = new WallpaperService(
 );
 var wallhaven_default = wallpaper;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Wallpaper.ts
+// windows/bar/widgets/Wallpaper.ts
 var RightClickMenu = Widget.Menu({
   children: [
     Widget.MenuItem({
@@ -464,7 +464,7 @@ var Wallpaper = BarGroup_default({
 });
 var Wallpaper_default = Wallpaper;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Workspaces.ts
+// windows/bar/widgets/Workspaces.ts
 var hyprland2 = await Service.import("hyprland");
 var dispatch = (ws) => hyprland2.messageAsync(`dispatch workspace ${ws}`);
 var Workspaces = BarGroup_default({
@@ -497,7 +497,7 @@ var Workspaces = BarGroup_default({
 });
 var Workspaces_default = Workspaces;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/TopSection.ts
+// windows/bar/TopSection.ts
 var TopSection = Widget.Box({
   className: "section top",
   vertical: true,
@@ -506,7 +506,7 @@ var TopSection = Widget.Box({
 });
 var TopSection_default = TopSection;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Battery.ts
+// windows/bar/widgets/Battery.ts
 var battery = await Service.import("battery");
 var Battery = BarWidget_default({
   className: "battery",
@@ -536,7 +536,7 @@ var Battery = BarWidget_default({
 });
 var Battery_default = Battery;
 
-// nixos/modules/desktops/modules/ags/src/services/brightness.ts
+// services/brightness.ts
 var BrightnessService = class extends Service {
   static {
     Service.register(
@@ -594,7 +594,7 @@ var BrightnessService = class extends Service {
 var service = new BrightnessService();
 var brightness_default = service;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Brightness.ts
+// windows/bar/widgets/Brightness.ts
 var showBar = Variable(false);
 var Brightness = Widget.EventBox({
   className: "widget brightness",
@@ -632,7 +632,7 @@ var Brightness = Widget.EventBox({
 });
 var Brightness_default = Brightness;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Clock.ts
+// windows/bar/widgets/Clock.ts
 var SECOND = 1e3;
 var MINUTE = 60 * SECOND;
 var clockHour = Variable("", { poll: [MINUTE, "date '+%H'"] });
@@ -659,7 +659,7 @@ var Clock = BarGroup_default({
 });
 var Clock_default = Clock;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Network.ts
+// windows/bar/widgets/Network.ts
 var network = await Service.import("network");
 function getIcon() {
   if (network.primary === "wired") {
@@ -701,7 +701,7 @@ var Network = BarWidget_default({
 });
 var Network_default = Network;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Power.ts
+// windows/bar/widgets/Power.ts
 var Power = BarGroup_default({
   className: "power",
   children: [
@@ -718,7 +718,7 @@ var Power = BarGroup_default({
 });
 var Power_default = Power;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/SystemTray.ts
+// windows/bar/widgets/SystemTray.ts
 var systemtray = await Service.import("systemtray");
 var SystemTrayItem = (item) => Widget.Button({
   className: "widget",
@@ -736,7 +736,7 @@ var SystemTray = BarGroup_default({
 });
 var SystemTray_default = SystemTray;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/widgets/Volume.ts
+// windows/bar/widgets/Volume.ts
 var audio = await Service.import("audio");
 var showBar2 = Variable(false);
 function getIcon2(volume, isMuted) {
@@ -794,7 +794,7 @@ var Volume = Widget.EventBox({
 });
 var Volume_default = Volume;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/BottomSection.ts
+// windows/bar/BottomSection.ts
 var ControlsGroup = BarGroup_default({
   className: "controls",
   children: [Network_default, Battery_default, Brightness_default, Volume_default]
@@ -807,7 +807,7 @@ var BottomSection = Widget.Box({
 });
 var BottomSection_default = BottomSection;
 
-// nixos/modules/desktops/modules/ags/src/windows/bar/Bar.ts
+// windows/bar/Bar.ts
 var root = Widget.CenterBox({
   className: "bar-window",
   vertical: true,
@@ -822,7 +822,7 @@ var Bar = Widget.Window({
 });
 var Bar_default = Bar;
 
-// nixos/modules/desktops/modules/ags/src/windows/calendar/Calendar.ts
+// windows/calendar/Calendar.ts
 var Root = Widget.Calendar({
   className: "calendar",
   showDayNames: true,
@@ -852,7 +852,7 @@ var Calendar = Widget.Window({
 });
 var Calendar_default = Calendar;
 
-// nixos/modules/desktops/modules/ags/src/windows/power-menu/PowerMenu.ts
+// windows/power-menu/PowerMenu.ts
 var PowerAction = (icon, label, action) => Widget.Button({
   className: "power-action",
   onClicked: () => {
@@ -902,7 +902,7 @@ var PowerMenu = Widget.Window({
 });
 var PowerMenu_default = PowerMenu;
 
-// nixos/modules/desktops/modules/ags/src/windows/wallpaper/WallpaperSettings.ts
+// windows/wallpaper/WallpaperSettings.ts
 var Switch = (prop, label) => Widget.Box({
   children: [
     Widget.Switch({
@@ -986,7 +986,7 @@ var WallpaperSettings = Widget.Window({
 });
 var WallpaperSettings_default = WallpaperSettings;
 
-// nixos/modules/desktops/modules/ags/src/windows/wallpaper/WallpaperDetails.ts
+// windows/wallpaper/WallpaperDetails.ts
 import Gdk from "gi://Gdk";
 var display = Gdk.Display.get_default();
 var Separator = () => Widget.Separator({
@@ -1137,10 +1137,10 @@ var WallpaperDetails = Widget.Window({
 });
 var WallpaperDetails_default = WallpaperDetails;
 
-// nixos/modules/desktops/modules/ags/src/windows/index.ts
+// windows/index.ts
 var windows_default = [Bar_default, Calendar_default, PowerMenu_default, WallpaperSettings_default, WallpaperDetails_default];
 
-// nixos/modules/desktops/modules/ags/src/config.ts
+// config.ts
 App.config({
   style: `${App.configDir}/styles.css`,
   windows: windows_default

@@ -41,6 +41,8 @@
     };
 
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=v0.5.2";
+
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 
   outputs =
