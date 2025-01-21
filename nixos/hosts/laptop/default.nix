@@ -40,6 +40,7 @@
     browsers.floorp.enable = true;
     # browsers.vivaldi.enable = true;
     browsers.thorium.enable = true;
+    browsers.zen.enable = true;
 
     services.swww.enable = true;
     services.nextcloud.enable = true;

@@ -13,7 +13,7 @@
 
   config = lib.mkIf config.noodles.browsers.zen.enable {
     environment.systemPackages = [
-      inputs.zen-browser.packages."${system}".default
+      inputs.zen-browser.packages."${pkgs.system}".default
     ];
   };
 }
