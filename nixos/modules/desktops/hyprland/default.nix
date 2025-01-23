@@ -26,9 +26,10 @@
     in
     lib.mkIf config.noodles.desktops.hyprland.enable {
       noodles.desktops.module = {
-        ags.enable = true;
+        # ags.enable = true;
+        hyprpanel.enable = true;
         eww.enable = true;
-        mako.enable = true;
+        # mako.enable = true;
         rofi.enable = true;
         thunar.enable = true;
         # waybar.enable = true;
@@ -69,7 +70,7 @@
 
             cursors.enable = true;
             kvantum.enable = true;
-            mako.enable = true;
+            # mako.enable = true;
             hyprland.enable = true;
           };
 

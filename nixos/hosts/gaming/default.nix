@@ -48,7 +48,7 @@
 
     services = {
       razer.enable = true;
-      swww.enable = true;
+      # swww.enable = true;
       nextcloud.enable = true;
     };
   };

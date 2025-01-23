@@ -33,6 +33,11 @@
 
     ags.url = "github:Aylur/ags?ref=refs/tags/v1.9.0";
 
+    hyprpanel = {
+      url = "github:Jas-SinghFSU/HyprPanel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     catppuccin.url = "github:catppuccin/nix";
 
     nixpkgs-wayland = {

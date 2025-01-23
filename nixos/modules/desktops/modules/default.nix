@@ -9,6 +9,7 @@
   imports = [
     ./ags
     ./eww
+    ./hyprpanel
     ./mako
     ./rofi
     ./thunar
