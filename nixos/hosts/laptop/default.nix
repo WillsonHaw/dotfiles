@@ -20,12 +20,6 @@
 
   networking.hostName = "slumpy-laptop";
 
-  services = {
-    libinput.touchpad = {
-      tappingDragLock = false;
-    };
-  };
-
   noodles = {
     device.is-laptop = true;
 
@@ -47,5 +41,6 @@
     services.nextcloud.enable = true;
     services.power.cpufreq.enable = true;
     services.remmina.enable = true;
+    services.mcontrolcenter.enable = true;
   };
 }

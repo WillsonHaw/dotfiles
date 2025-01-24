@@ -10,6 +10,7 @@
     ./clipboard
     ./git
     ./keyring
+    ./mcontrolcenter
     ./nextcloud
     ./node
     ./power

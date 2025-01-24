@@ -34,33 +34,13 @@ in
       ];
     }; # $XDG_CONFIG_HOME
     home-manager.users.slumpy = {
-      # xdg.configFile = {
-      #     "thorium-flags.conf" = {
-      #         enable = true;
-      #         text = thorium-flags_dot_conf;
-      #     };
-      #     # "thorium-browser.sh" = {
-      #     #     enable = true;
-      #     #     text = thorium-exec;
-      #     # };
-      # };
-      xdg.mimeApps.defaultApplications."text/html" = "thorium-browser.desktop";
-      xdg.mimeApps.defaultApplications = {
-        "text/xml" = [ "thorium-browser.desktop" ];
-        "x-scheme-handler/http" = [ "thorium-browser.desktop" ];
-        "x-scheme-handler/https" = [ "thorium-browser.desktop" ];
-      };
-      # xdg.desktopEntries = {
-      #     tttt = {
-      #         name = "tttt";
-      #         genericName = "Web Browser";
-      #         exec = "/home/bocmo/.config/thorium-browser.sh";
-      #         # exec = "thorium";
-      #         terminal = false;
-      #         categories = [ "Application" "Network" "WebBrowser" ];
-      #         mimeType = [ "text/html" "text/xml" ];
-      #     };
-      # };
+      xdg.desktopEntries = [
+        {
+          name = "image-viewer";
+          mimeTypes = [ "image/*" ];
+          exec = "qimgv";
+        }
+      ];
     };
   };
 }

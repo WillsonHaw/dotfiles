@@ -23,6 +23,7 @@
     ./gparted
     ./guitar
     ./office
+    ./qimgv
     ./steam
     # ./unetbootin
     ./vim
