@@ -17,6 +17,8 @@
     home-manager.users.slumpy = {
       imports = [ inputs.hyprpanel.homeManagerModules.hyprpanel ];
 
+      home.packages = [ pkgs.hyprpanel ];
+
       programs.hyprpanel = {
         enable = true;
 
@@ -29,52 +31,6 @@
         # See below for more information.
         # Default: false
         overwrite.enable = true;
-
-        # Import a theme from './themes/*.json'.
-        # Default: ""
-        theme = "catppuccin_mocha";
-
-        # Configure bar layouts for monitors.
-        # See 'https://hyprpanel.com/configuration/panel.html'.
-        # Default: null
-        layout = {
-          "bar.layouts" = {
-            "*" = {
-              left = [
-                "dashboard"
-                "workspaces"
-                "windowtitle"
-              ];
-              middle = [
-                "media"
-              ];
-              right = [
-                "volume"
-                "clock"
-                "notifications"
-              ];
-            };
-            "0" = {
-              left = [
-                "dashboard"
-                "workspaces"
-                "windowtitle"
-              ];
-              middle = [
-                "media"
-              ];
-              right = [
-                "volume"
-                "network"
-                "bluetooth"
-                "battery"
-                "systray"
-                "clock"
-                "notifications"
-              ];
-            };
-          };
-        };
 
         # Configure and theme almost all options from the GUI.
         # Options that require '{}' or '[]' are not yet implemented,
@@ -97,6 +53,10 @@
           menus.dashboard.directories.enabled = false;
           menus.dashboard.stats.enable_gpu = true;
 
+          # Import a theme from './themes/*.json'.
+          # Default: ""
+          theme.name = "catppuccin_mocha";
+
           theme.bar.border.location = "bottom";
           theme.bar.border.width = "0.1em";
           theme.bar.border_radius = "0.5em";
@@ -113,6 +73,49 @@
           theme.font.weight = 400;
 
           wallpaper.enable = false;
+
+          # Configure bar layouts for monitors.
+          # See 'https://hyprpanel.com/configuration/panel.html'.
+          # Default: null
+          layout = {
+            "bar.layouts" = {
+              "*" = {
+                left = [
+                  "dashboard"
+                  "workspaces"
+                  "windowtitle"
+                ];
+                middle = [
+                  "media"
+                ];
+                right = [
+                  "volume"
+                  "clock"
+                  "notifications"
+                ];
+              };
+              "0" = {
+                left = [
+                  "dashboard"
+                  "workspaces"
+                  "windowtitle"
+                ];
+                middle = [
+                  "media"
+                ];
+                right = [
+                  "volume"
+                  "network"
+                  "bluetooth"
+                  "battery"
+                  "systray"
+                  "clock"
+                  "notifications"
+                ];
+              };
+            };
+          };
+
         };
       };
     };

@@ -66,6 +66,12 @@
         bright-up = "brillo -q -A 5";
         bright-down = "brillo -q -U 5";
         pp = "pnpm";
+
+        # VPN
+        wg-up = "sudo systemctl start wg-quick-wg0.service";
+        wg-down = "sudo systemctl stop wg-quick-wg0.service";
+        ts-up = "sudo tailscale up";
+        ts-down = "sudo tailscale down";
       };
     };
   };

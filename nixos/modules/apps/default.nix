@@ -17,7 +17,7 @@
     ./dconf2nix
     ./fastfetch
     ./ferdium
-    ./flatpak
+    # ./flatpak
     ./gimp
     ./godot
     ./gparted

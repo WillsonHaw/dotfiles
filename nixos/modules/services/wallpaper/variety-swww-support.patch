@@ -1,15 +1,16 @@
 diff --git a/data/scripts/set_wallpaper b/data/scripts/set_wallpaper
-index c0e8033..61f6fd4 100755
+index 089a6d6..a33eb23 100755
 --- a/data/scripts/set_wallpaper
 +++ b/data/scripts/set_wallpaper
-@@ -35,6 +35,10 @@
- # The default is to simply set WP=$1.
- WP=$1
+@@ -64,7 +64,10 @@ detect_desktop() {
  
+ DE=$(detect_desktop)
+ 
+-if [ "$DE" == "enlightenment" ]; then
 +# SWWW
 +if command -v swww 2>&1 >/dev/null; then
 +    swww img --resize fit -t random $WP
-+fi
- 
- # Enlightenment
- # Needs Modules/System/DBus Extension loaded to work
++elif [ "$DE" == "enlightenment" ]; then
+     # Enlightenment
+     # Needs Modules/System/DBus Extension loaded to work
+     OUTPUT_DIR="$HOME/.e/e/backgrounds"

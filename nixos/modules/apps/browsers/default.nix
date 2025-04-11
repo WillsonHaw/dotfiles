@@ -7,8 +7,10 @@
 
 {
   imports = [
+    ./brave
+    ./edge
     ./floorp
-    ./thorium
+    # ./thorium
     ./vivaldi
     ./zen
   ];

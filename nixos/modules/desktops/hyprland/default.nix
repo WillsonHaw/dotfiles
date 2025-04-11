@@ -28,7 +28,7 @@
       noodles.desktops.module = {
         # ags.enable = true;
         hyprpanel.enable = true;
-        eww.enable = true;
+        # eww.enable = true;
         # mako.enable = true;
         rofi.enable = true;
         thunar.enable = true;
@@ -44,7 +44,7 @@
           ...
         }:
         {
-          imports = [ inputs.catppuccin.homeManagerModules.catppuccin ];
+          imports = [ inputs.catppuccin.homeModules.catppuccin ];
 
           home.file."${config.xdg.configHome}/hypr/hyprland".source = ./.config/hyprland;
           home.file."${config.xdg.configHome}/hypr/hyprlock".source = ./.config/hyprlock;
@@ -80,8 +80,8 @@
             package = inputs.hyprland.packages.${pkgs.system}.hyprland;
 
             plugins = [
-              hyprland-plugins.packages.${pkgs.system}.hyprbars
-              hyprland-plugins.packages.${pkgs.system}.hyprexpo
+              #              hyprland-plugins.packages.${pkgs.system}.hyprbars
+              #              hyprland-plugins.packages.${pkgs.system}.hyprexpo
               hy3.packages.${pkgs.system}.hy3
             ];
 

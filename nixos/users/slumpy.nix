@@ -32,11 +32,6 @@
     useUserPackages = true;
     extraSpecialArgs = inputs;
 
-    # home = {
-    #   username = "slumpy";
-    #   homeDirectory = "/home/slumpy";
-    # };
-
     users.slumpy = {
       programs.home-manager.enable = true;
 
@@ -44,13 +39,6 @@
         username = "slumpy";
         homeDirectory = "/home/slumpy";
         stateVersion = "23.11";
-
-        # packages = with pkgs; [
-        #   python312Packages.pywayland
-        #   python312Packages.psutil
-        #   rubik
-        #   qt5ct
-        # ];
       };
     };
   };

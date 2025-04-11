@@ -7,7 +7,7 @@
 
 {
   imports = [
-    ./carla
+    # ./carla
     # ./guitarix
     ./qjackctl
   ];
