@@ -18,6 +18,8 @@
   };
 
   home-manager.users.slumpy = {
+    home.packages = [ pkgs.wl-mirror ];
+
     services.kanshi = {
       # eDP-1 is the laptop screen
       # DP-2 is the docked monitor
@@ -34,7 +36,8 @@
               }
               {
                 criteria = "eDP-1";
-                status = "disable";
+                status = "enable";
+                position = "0,0";
               }
             ];
           };

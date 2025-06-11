@@ -19,7 +19,7 @@
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
 
-      initExtra = ''
+      initContent = ''
         . ~/.p10k.zsh
 
         function offload() {

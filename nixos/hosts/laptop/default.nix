@@ -33,16 +33,16 @@
 
     browsers.brave.enable = true;
     # browsers.floorp.enable = true;
-    # browsers.vivaldi.enable = true;
+    browsers.vivaldi.enable = true;
     # browsers.thorium.enable = true;
-    # browsers.edge.enable = true;
-    # browsers.zen.enable = true;
+    browsers.edge.enable = false;
+    browsers.zen.enable = true;
 
     services.swww.enable = true;
     services.variety.enable = true;
     services.nextcloud.enable = true;
     services.power.cpufreq.enable = true;
     services.remmina.enable = true;
-    services.mcontrolcenter.enable = true;
+    # services.mcontrolcenter.enable = true;
   };
 }

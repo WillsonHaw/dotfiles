@@ -9,7 +9,7 @@
   imports = [
     ./audio
     ./bluetooth
-    ./display
+    # ./display
     ./brightness
     ./disk
     ./fonts

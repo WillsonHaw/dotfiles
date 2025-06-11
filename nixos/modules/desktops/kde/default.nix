@@ -19,24 +19,24 @@
     ];
 
     # Wayland
-    services = {
-      displayManager = {
-        sddm = {
-          enable = true;
-          wayland.enable = true;
-        };
-      };
+    # services = {
+    #   displayManager = {
+    #     sddm = {
+    #       enable = true;
+    #       wayland.enable = true;
+    #     };
+    #   };
 
-      desktopManager.plasma6.enable = true;
-    };
+    #   desktopManager.plasma6.enable = true;
+    # };
 
     # X11
-    # services = {
-    #   xserver.enable = true;
+    services = {
+      # xserver.enable = true;
 
-    #   displayManager.sddm.enable = true;
-    #   xserver.desktopManager.plasma5.enable = true;
-    # };
+      displayManager.sddm.enable = true;
+      xserver.desktopManager.plasma5.enable = true;
+    };
     services.xserver = {
       enable = true;
       excludePackages = [ pkgs.xterm ];
