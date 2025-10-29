@@ -12,5 +12,8 @@
 
   # Enable WireGuard
   networking.wireguard.enable = true;
-  networking.wg-quick.interfaces.wg0.configFile = "/etc/wireguard/noodlefish.conf";
+  networking.wg-quick.interfaces.wg0 = {
+    autostart = false;
+    configFile = "/etc/wireguard/noodlefish.conf";
+  };
 }

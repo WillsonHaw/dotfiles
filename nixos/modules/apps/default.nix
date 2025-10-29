@@ -12,6 +12,7 @@
     ./capture
     ./chiaki
     ./compression
+    # ./conky
     ./curl
     # ./davinci
     ./dconf2nix

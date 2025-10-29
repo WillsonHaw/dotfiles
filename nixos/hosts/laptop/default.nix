@@ -23,26 +23,36 @@
   noodles = {
     device.is-laptop = true;
 
-    apps.p7zip.enable = true;
-    apps.unrar.enable = true;
+    apps = {
+      p7zip.enable = true;
+      unrar.enable = true;
+      godot.enable = true;
+    };
 
-    # desktops.kde.enable = true;
-    # desktops.gnome.enable = true;
-    desktops.hyprland.enable = true;
-    desktops.hyprland.card = "/dev/dri/by-path/pci-0000:00:02.0-card";
+    desktops = {
+      # kde.enable = true;
+      # gnome.enable = true;
+      hyprland.enable = true;
+      hyprland.card = "/dev/dri/by-path/pci-0000:00:02.0-card";
+    };
 
-    browsers.brave.enable = true;
-    # browsers.floorp.enable = true;
-    browsers.vivaldi.enable = true;
-    # browsers.thorium.enable = true;
-    browsers.edge.enable = false;
-    browsers.zen.enable = true;
+    browsers = {
+      # brave.enable = true;
+      # floorp.enable = true;
+      vivaldi.enable = true;
+      # thorium.enable = true;
+      # edge.enable = false;
+      zen.enable = true;
+    };
 
-    services.swww.enable = true;
-    services.variety.enable = true;
-    services.nextcloud.enable = true;
-    services.power.cpufreq.enable = true;
-    services.remmina.enable = true;
-    # services.mcontrolcenter.enable = true;
+    services = {
+      swww.enable = true;
+      variety.enable = true;
+      nextcloud.enable = true;
+      power.tlp.enable = true;
+      # power.cpufreq.enable = true;
+      remmina.enable = true;
+      mcontrolcenter.enable = true;
+    };
   };
 }

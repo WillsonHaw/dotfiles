@@ -42,9 +42,7 @@
     };
 
     browsers = {
-      floorp.enable = true;
       vivaldi.enable = true;
-      thorium.enable = true;
     };
 
     services = {

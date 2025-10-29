@@ -21,8 +21,8 @@
     "sd_mod"
   ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.msi-ec ];
+  boot.kernelModules = [ "kvm-intel" "msi-ec" ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/073f6810-cf5d-4dac-9e2d-7cf5389d4a24";

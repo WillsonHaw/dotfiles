@@ -12,25 +12,25 @@
 
   config = lib.mkIf config.noodles.desktops.module.rofi.enable {
     home-manager.users.slumpy =
-      let
-        wayland_overlay = (
-          self: super: {
-            rofi-wayland-unwrapped = super.rofi-wayland-unwrapped.overrideAttrs (old: {
-              src = super.fetchFromGitHub {
-                owner = "lbonn";
-                repo = "rofi";
-                rev = "c6b4dfe0b5c813c7f374929194210f4e3aa2e75d";
-                fetchSubmodules = true;
-                sha256 = "sha256-7eMW4qdrGUUgeFI3ZueXCMMK1bCkeqrYDRunnZpUt3Y=";
-              };
-            });
-          }
-        );
-      in
+      # let
+      #   wayland_overlay = (
+      #     self: super: {
+      #       rofi-wayland-unwrapped = super.rofi-wayland-unwrapped.overrideAttrs (old: {
+      #         src = super.fetchFromGitHub {
+      #           owner = "lbonn";
+      #           repo = "rofi";
+      #           rev = "c6b4dfe0b5c813c7f374929194210f4e3aa2e75d";
+      #           fetchSubmodules = true;
+      #           sha256 = "sha256-7eMW4qdrGUUgeFI3ZueXCMMK1bCkeqrYDRunnZpUt3Y=";
+      #         };
+      #       });
+      #     }
+      #   );
+      # in
       {
-        nixpkgs.overlays = [ wayland_overlay ];
+        # nixpkgs.overlays = [ wayland_overlay ];
 
-        home.packages = with pkgs; [ rofi-wayland-unwrapped ];
+        home.packages = with pkgs; [ rofi-unwrapped ];
 
         programs.rofi = {
           plugins = [ pkgs.rofi-emoji ];

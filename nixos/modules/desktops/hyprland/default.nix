@@ -62,12 +62,6 @@
             flavor = "mocha";
             accent = "mauve";
 
-            gtk = {
-              flavor = "mocha";
-              accent = "mauve";
-              icon.enable = true;
-            };
-
             cursors.enable = true;
             kvantum.enable = true;
             # mako.enable = true;
