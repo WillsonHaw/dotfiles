@@ -71,12 +71,12 @@
           wayland.windowManager.hyprland = {
             enable = true;
 
-            package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+            package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
 
             plugins = [
-              #              hyprland-plugins.packages.${pkgs.system}.hyprbars
-              #              hyprland-plugins.packages.${pkgs.system}.hyprexpo
-              hy3.packages.${pkgs.system}.hy3
+              #              hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprbars
+              #              hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
+              hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
             ];
 
             extraConfig = ''

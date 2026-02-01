@@ -8,12 +8,16 @@
 {
   environment.systemPackages = with pkgs; [
     inotify-tools
-    nixfmt-rfc-style
+    nixfmt
     jq
     unzip
     qdirstat
     cifs-utils
   ];
+
+  nix.settings = {
+    download-buffer-size = 524288000; # 500 MiB
+  };
 
   imports = [ ../modules ];
 

@@ -8,6 +8,6 @@
 
 {
   home-manager.users.slumpy = {
-    home.packages = [ inputs.hyprland-contrib.packages.${pkgs.system}.grimblast ];
+    home.packages = [ inputs.hyprland-contrib.packages.${pkgs.stdenv.hostPlatform.system}.grimblast ];
   };
 }

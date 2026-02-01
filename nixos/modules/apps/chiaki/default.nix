@@ -6,5 +6,5 @@
 }:
 
 {
-  environment.systemPackages = with pkgs; [ chiaki ];
+  environment.systemPackages = with pkgs; [ chiaki-ng ];
 }

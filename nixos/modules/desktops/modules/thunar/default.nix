@@ -12,7 +12,7 @@
 
   config = lib.mkIf config.noodles.desktops.module.thunar.enable {
     programs.thunar.enable = true;
-    programs.thunar.plugins = with pkgs.xfce; [
+    programs.thunar.plugins = with pkgs; [
       thunar-archive-plugin
       thunar-volman
     ];
