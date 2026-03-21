@@ -13,7 +13,6 @@
   config = lib.mkIf config.noodles.apps.office.enable {
     environment.systemPackages = with pkgs; [
       libreoffice
-      okular
     ];
   };
 }

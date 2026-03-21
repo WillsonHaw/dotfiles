@@ -39,22 +39,12 @@
     };
 
     apps = {
-      compression = {
-        p7zip.enable = true;
-        unrar.enable = true;
-      };
-      godot.enable = true;
       office.enable = true;
       capture.obs.enable = true;
-
-      browsers = {
-        vivaldi.enable = true;
-      };
     };
 
     services = {
       razer.enable = true;
-      nextcloud.enable = true;
     };
   };
 }

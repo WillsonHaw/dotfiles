@@ -31,16 +31,7 @@
     };
 
     apps = {
-      compression = {
-        p7zip.enable = true;
-        unrar.enable = true;
-      };
       godot.enable = true;
-
-      browsers = {
-        vivaldi.enable = true;
-        zen.enable = true;
-      };
     };
 
     desktops = {
@@ -48,13 +39,7 @@
     };
 
     services = {
-      wallpaper = {
-        swww.enable = true;
-        variety.enable = true;
-      };
-      nextcloud.enable = true;
       power.tlp.enable = true;
-      remmina.enable = true;
       mcontrolcenter.enable = true;
     };
   };

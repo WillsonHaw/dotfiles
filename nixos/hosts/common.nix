@@ -61,20 +61,38 @@
     };
 
     apps = {
+      compression = {
+        p7zip.enable = true;
+        unrar.enable = true;
+      };
+
+      browsers = {
+        zen.enable = true;
+      };
+
       btop.enable = true;
       chiaki.enable = true;
       capture.flameshot.enable = true;
       capture.grimblast.enable = true;
       fastfetch.enable = true;
-      ferdium.enable = true;
       gimp.enable = true;
       gparted.enable = true;
+      office.enable = true;
       qimgv.enable = true;
       steam.enable = true;
       vim.enable = true;
       vlc.enable = true;
       vscode.enable = true;
       guitar.qjackctl.enable = true;
+    };
+
+    services = {
+      wallpaper = {
+        swww.enable = true;
+        variety.enable = true;
+      };
+      nextcloud.enable = true;
+      remmina.enable = true;
     };
   };
 }
