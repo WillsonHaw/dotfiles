@@ -7,10 +7,10 @@
 
 {
   options = {
-    noodles.browsers.brave.enable = lib.mkEnableOption "Enable Brave.";
+    noodles.apps.browsers.brave.enable = lib.mkEnableOption "Enable Brave.";
   };
 
-  config = lib.mkIf config.noodles.browsers.brave.enable {
+  config = lib.mkIf config.noodles.apps.browsers.brave.enable {
     environment.systemPackages = [ pkgs.brave ];
   };
 }

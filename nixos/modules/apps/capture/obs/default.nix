@@ -7,10 +7,10 @@
 
 {
   options = {
-    noodles.apps.obs.enable = lib.mkEnableOption "Enable OBS Studio.";
+    noodles.apps.capture.obs.enable = lib.mkEnableOption "Enable OBS Studio.";
   };
 
-  config = lib.mkIf config.noodles.apps.obs.enable {
+  config = lib.mkIf config.noodles.apps.capture.obs.enable {
     environment.systemPackages = with pkgs; [ obs-studio ];
   };
 }

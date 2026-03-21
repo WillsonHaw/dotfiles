@@ -7,13 +7,13 @@
 
 {
   options = {
-    noodles.services.swww.enable = lib.mkEnableOption "Enable Swww.";
+    noodles.services.wallpaper.swww.enable = lib.mkEnableOption "Enable Swww.";
   };
 
-  config = lib.mkIf config.noodles.services.swww.enable {
+  config = lib.mkIf config.noodles.services.wallpaper.swww.enable {
     environment.systemPackages = with pkgs; [ waypaper ];
 
-    home-manager.users.slumpy = {
+    home-manager.users.${config.noodles.user} = {
       home.packages = with pkgs; [ swww ];
     };
   };

@@ -6,8 +6,11 @@
   ...
 }:
 
+let
+  user = config.noodles.user;
+in
 {
-  users.users.slumpy = {
+  users.users.${user} = {
     isNormalUser = true;
     shell = pkgs.zsh;
     ignoreShellProgramCheck = true;
@@ -30,14 +33,14 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = inputs;
+    extraSpecialArgs = { inherit inputs; };
 
-    users.slumpy = {
+    users.${user} = {
       programs.home-manager.enable = true;
 
       home = {
-        username = "slumpy";
-        homeDirectory = "/home/slumpy";
+        username = user;
+        homeDirectory = "/home/${user}";
         stateVersion = "23.11";
       };
     };

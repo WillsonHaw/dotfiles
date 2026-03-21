@@ -7,11 +7,11 @@
 
 {
   options = {
-    noodles.desktops.module.waybar.enable = lib.mkEnableOption "Enable waybar.";
+    noodles.desktops.components.waybar.enable = lib.mkEnableOption "Enable waybar.";
   };
 
-  config = lib.mkIf config.noodles.desktops.module.waybar.enable {
-    home-manager.users.slumpy =
+  config = lib.mkIf config.noodles.desktops.components.waybar.enable {
+    home-manager.users.${config.noodles.user} =
       { config, ... }:
       {
         home.file."${config.xdg.configHome}/waybar" = {

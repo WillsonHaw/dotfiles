@@ -41,7 +41,6 @@
     enableSSHSupport = true;
   };
 
-  system.stateVersion = "23.11"; # Did you read the comment?
 
   nix.gc = {
     automatic = true;
@@ -53,4 +52,29 @@
     "nix-command"
     "flakes"
   ];
+
+  # Enable modules that should be active on all hosts
+  noodles = {
+    shell = {
+      kitty.enable = true;
+      zsh.enable = true;
+    };
+
+    apps = {
+      btop.enable = true;
+      chiaki.enable = true;
+      capture.flameshot.enable = true;
+      capture.grimblast.enable = true;
+      fastfetch.enable = true;
+      ferdium.enable = true;
+      gimp.enable = true;
+      gparted.enable = true;
+      qimgv.enable = true;
+      steam.enable = true;
+      vim.enable = true;
+      vlc.enable = true;
+      vscode.enable = true;
+      guitar.qjackctl.enable = true;
+    };
+  };
 }

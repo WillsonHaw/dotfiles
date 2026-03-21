@@ -8,13 +8,13 @@
 
 {
   options = {
-    noodles.desktops.module.ags.enable = lib.mkEnableOption "Enable ags.";
+    noodles.desktops.components.ags.enable = lib.mkEnableOption "Enable ags.";
   };
 
-  config = lib.mkIf config.noodles.desktops.module.ags.enable {
+  config = lib.mkIf config.noodles.desktops.components.ags.enable {
     environment.systemPackages = with pkgs; [ adwaita-icon-theme ];
 
-    home-manager.users.slumpy = {
+    home-manager.users.${config.noodles.user} = {
       imports = [ inputs.ags.homeManagerModules.default ];
 
       programs.ags = {

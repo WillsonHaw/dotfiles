@@ -1,17 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, ... }:
 
+let
+  dirs = lib.attrNames (
+    lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./.)
+  );
+in
 {
-  imports = [
-    ./brave
-    ./edge
-    ./floorp
-    # ./thorium
-    ./vivaldi
-    ./zen
-  ];
+  imports = map (d: ./${d}) dirs;
 }

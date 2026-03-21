@@ -1,35 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, ... }:
 
+let
+  dirs = lib.attrNames (
+    lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./.)
+  );
+in
 {
-  imports = [
-    ./browsers
-    ./btop
-    ./capture
-    ./chiaki
-    ./compression
-    # ./conky
-    ./curl
-    # ./davinci
-    ./dconf2nix
-    ./fastfetch
-    ./ferdium
-    # ./flatpak
-    ./gimp
-    ./godot
-    ./gparted
-    ./guitar
-    ./office
-    ./qimgv
-    ./steam
-    # ./unetbootin
-    ./vim
-    ./vlc
-    ./vscode
-    # ./waydroid
-  ];
+  imports = map (d: ./${d}) dirs;
 }

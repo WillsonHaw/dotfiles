@@ -9,7 +9,7 @@
   imports = [
     ../common.nix
     ./hardware-configuration.nix
-    ./nvidia.nix
+    ./graphics.nix
     ../../users/slumpy.nix
   ];
 
@@ -24,29 +24,36 @@
 
   zramSwap.enable = true;
 
+  system.stateVersion = "23.11";
+
   noodles = {
-    device.is-laptop = false;
+    user = "slumpy";
+
+    device = {
+      is-laptop = false;
+      gpu.card = "/dev/dri/by-path/pci-0000:01:00.0-card";
+    };
 
     desktops = {
       hyprland.enable = true;
-      hyprland.card = "/dev/dri/by-path/pci-0000:01:00.0-card";
     };
 
     apps = {
-      p7zip.enable = true;
-      unrar.enable = true;
+      compression = {
+        p7zip.enable = true;
+        unrar.enable = true;
+      };
       godot.enable = true;
       office.enable = true;
-      obs.enable = true;
-    };
+      capture.obs.enable = true;
 
-    browsers = {
-      vivaldi.enable = true;
+      browsers = {
+        vivaldi.enable = true;
+      };
     };
 
     services = {
       razer.enable = true;
-      # swww.enable = true;
       nextcloud.enable = true;
     };
   };

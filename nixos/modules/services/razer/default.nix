@@ -12,6 +12,6 @@
 
   config = lib.mkIf config.noodles.services.razer.enable {
     hardware.openrazer.enable = true;
-    hardware.openrazer.users = [ "slumpy?" ];
+    hardware.openrazer.users = [ config.noodles.user ];
   };
 }

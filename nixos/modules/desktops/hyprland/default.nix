@@ -9,11 +9,6 @@
 {
   options = {
     noodles.desktops.hyprland.enable = lib.mkEnableOption "Enable hyprland desktop.";
-    noodles.desktops.hyprland.card = lib.mkOption {
-      description = "Path to PCI device that Hyprland should use.";
-      default = "";
-      type = lib.types.str;
-    };
   };
 
   imports = [
@@ -25,7 +20,7 @@
       rootConfig = config;
     in
     lib.mkIf config.noodles.desktops.hyprland.enable {
-      noodles.desktops.module = {
+      noodles.desktops.components = {
         # ags.enable = true;
         hyprpanel.enable = true;
         # eww.enable = true;
@@ -36,11 +31,9 @@
         wlogout.enable = true;
       };
 
-      home-manager.users.slumpy =
+      home-manager.users.${config.noodles.user} =
         {
           config,
-          hyprland-plugins,
-          hy3,
           ...
         }:
         {
@@ -74,9 +67,9 @@
             package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
 
             plugins = [
-              #              hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprbars
-              #              hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
-              hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
+              #              inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprbars
+              #              inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
+              inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
             ];
 
             extraConfig = ''
@@ -93,8 +86,8 @@
 
           # Use specified GPU for hyprland
           home.file."${config.xdg.configHome}/hypr/card" = lib.mkIf (
-            rootConfig.noodles.desktops.hyprland.card != null
-          ) { source = config.lib.file.mkOutOfStoreSymlink rootConfig.noodles.desktops.hyprland.card; };
+            rootConfig.noodles.device.gpu.card != ""
+          ) { source = config.lib.file.mkOutOfStoreSymlink rootConfig.noodles.device.gpu.card; };
         };
 
       programs.hyprland = {

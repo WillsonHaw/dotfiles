@@ -11,7 +11,7 @@
   environment.systemPackages = with pkgs; [
     pwvucontrol
     pavucontrol
-    helvum
+    crosspipe
   ];
 
   services.pipewire = {

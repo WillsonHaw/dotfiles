@@ -11,7 +11,7 @@
   };
 
   config = lib.mkIf config.noodles.services.remmina.enable {
-    home-manager.users.slumpy = {
+    home-manager.users.${config.noodles.user} = {
       services.remmina.enable = true;
     };
   };

@@ -6,7 +6,7 @@
 }:
 
 {
-  home-manager.users.slumpy = {
+  home-manager.users.${config.noodles.user} = {
     programs.git = {
       enable = true;
       settings = {

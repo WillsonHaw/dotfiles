@@ -7,11 +7,11 @@
 
 {
   options = {
-    noodles.desktops.module.rofi.enable = lib.mkEnableOption "Enable rofi.";
+    noodles.desktops.components.rofi.enable = lib.mkEnableOption "Enable rofi.";
   };
 
-  config = lib.mkIf config.noodles.desktops.module.rofi.enable {
-    home-manager.users.slumpy =
+  config = lib.mkIf config.noodles.desktops.components.rofi.enable {
+    home-manager.users.${config.noodles.user} =
       # let
       #   wayland_overlay = (
       #     self: super: {

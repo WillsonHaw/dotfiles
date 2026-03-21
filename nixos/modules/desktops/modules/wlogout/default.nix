@@ -7,11 +7,11 @@
 
 {
   options = {
-    noodles.desktops.module.wlogout.enable = lib.mkEnableOption "Enable wlogout.";
+    noodles.desktops.components.wlogout.enable = lib.mkEnableOption "Enable wlogout.";
   };
 
-  config = lib.mkIf config.noodles.desktops.module.wlogout.enable {
-    home-manager.users.slumpy = {
+  config = lib.mkIf config.noodles.desktops.components.wlogout.enable {
+    home-manager.users.${config.noodles.user} = {
       programs.wlogout.enable = true;
     };
   };

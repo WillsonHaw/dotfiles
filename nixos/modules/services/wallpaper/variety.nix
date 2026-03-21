@@ -7,10 +7,10 @@
 
 {
   options = {
-    noodles.services.variety.enable = lib.mkEnableOption "Enable Variety.";
+    noodles.services.wallpaper.variety.enable = lib.mkEnableOption "Enable Variety.";
   };
 
-  config = lib.mkIf config.noodles.services.variety.enable {
+  config = lib.mkIf config.noodles.services.wallpaper.variety.enable {
     # nixpkgs.overlays = [
     #   (final: prev: {
     #     variety = prev.variety.overrideAttrs (old: {
@@ -25,7 +25,7 @@
     #   })
     # ];
 
-    home-manager.users.slumpy = {
+    home-manager.users.${config.noodles.user} = {
       home.packages = with pkgs; [
         (variety.overrideAttrs (oldAttrs: {
           patches = [ ./variety-swww-support.patch ];

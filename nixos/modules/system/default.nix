@@ -1,22 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, ... }:
 
+let
+  dirs = lib.attrNames (
+    lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./.)
+  );
+in
 {
-  imports = [
-    ./audio
-    ./bluetooth
-    # ./display
-    ./brightness
-    ./disk
-    ./fonts
-    ./networking
-    ./nvidia
-    ./polkit
-    ./print
-    ./xdg
-  ];
+  imports = map (d: ./${d}) dirs;
 }

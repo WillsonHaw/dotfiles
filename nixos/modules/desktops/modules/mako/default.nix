@@ -7,11 +7,11 @@
 
 {
   options = {
-    noodles.desktops.module.mako.enable = lib.mkEnableOption "Enable mako.";
+    noodles.desktops.components.mako.enable = lib.mkEnableOption "Enable mako.";
   };
 
-  config = lib.mkIf config.noodles.desktops.module.mako.enable {
-    home-manager.users.slumpy = {
+  config = lib.mkIf config.noodles.desktops.components.mako.enable {
+    home-manager.users.${config.noodles.user} = {
       home.packages = [ pkgs.mako ];
 
       services.mako = {

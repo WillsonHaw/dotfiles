@@ -6,7 +6,7 @@
 }:
 
 {
-  home-manager.users.slumpy = {
+  home-manager.users.${config.noodles.user} = {
     home.packages = with pkgs; [ networkmanagerapplet ];
   };
 

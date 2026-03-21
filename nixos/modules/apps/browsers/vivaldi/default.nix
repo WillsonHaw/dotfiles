@@ -7,11 +7,11 @@
 
 {
   options = {
-    noodles.browsers.vivaldi.enable = lib.mkEnableOption "Enable Vivaldi.";
+    noodles.apps.browsers.vivaldi.enable = lib.mkEnableOption "Enable Vivaldi.";
   };
 
-  config = lib.mkIf config.noodles.browsers.vivaldi.enable {
-    home-manager.users.slumpy =
+  config = lib.mkIf config.noodles.apps.browsers.vivaldi.enable {
+    home-manager.users.${config.noodles.user} =
       let
         vivaldi = pkgs.vivaldi.override {
           proprietaryCodecs = true;

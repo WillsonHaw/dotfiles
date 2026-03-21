@@ -8,11 +8,11 @@
 
 {
   options = {
-    noodles.desktops.module.hyprpanel.enable = lib.mkEnableOption "Enable hyprpanel.";
+    noodles.desktops.components.hyprpanel.enable = lib.mkEnableOption "Enable hyprpanel.";
   };
 
-  config = lib.mkIf config.noodles.desktops.module.hyprpanel.enable {
-    home-manager.users.slumpy = {
+  config = lib.mkIf config.noodles.desktops.components.hyprpanel.enable {
+    home-manager.users.${config.noodles.user} = {
       programs.hyprpanel = {
         enable = true;
 

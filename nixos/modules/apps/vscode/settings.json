@@ -1,0 +1,82 @@
+{
+  "catppuccin.accentColor": "mauve",
+  "editor.semanticHighlighting.enabled": true,
+  "terminal.integrated.minimumContrastRatio": 1,
+  "terminal.integrated.gpuAcceleration": "off",
+  "window.titleBarStyle": "custom",
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "remote.SSH.remotePlatform": {
+    "NoodleFish_Dev": "linux"
+  },
+  "redhat.telemetry.enabled": false,
+  "workbench.activityBar.location": "top",
+  "cSpell.userWords": [
+    "callees",
+    "plexinc",
+    "plextv",
+    "Pressable",
+    "Workerized"
+  ],
+  "security.workspace.trust.untrustedFiles": "open",
+  "editor.formatOnSave": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.renderWhitespace": "all",
+  "editor.tabSize": 2,
+  "workbench.editor.enablePreview": true,
+  "workbench.editor.wrapTabs": true,
+  "window.density.editorTabHeight": "compact",
+  "security.allowedUNCHosts": ["10.0.0.100"],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "diffEditor.renderSideBySide": true,
+  "diffEditor.experimental.showMoves": true,
+  "chat.agent.enabled": true,
+  "geminicodeassist.enableTelemetry": false,
+  "geminicodeassist.updateChannel": "Insiders",
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "tizen.working.folder": "e:\\plex\\react-native-client\\plex",
+  "tizen.studio.path": "e:\\lib\\tizen-sdk",
+  "biome.suggestInstallingGlobally": false,
+  "biome.requireConfiguration": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "githubPullRequests.pullBranch": "never",
+  "terminal.integrated.shellIntegration.enabled": true,
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "workbench.startupEditor": "none",
+  "explorer.confirmDragAndDrop": false,
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "json.schemaDownload.trustedDomains": {
+    "https://schemastore.azurewebsites.net/": true,
+    "https://raw.githubusercontent.com/": true,
+    "https://www.schemastore.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://json-schema.org/": true,
+    "https://biomejs.dev": true
+  },
+  "chat.viewSessions.orientation": "stacked"
+}

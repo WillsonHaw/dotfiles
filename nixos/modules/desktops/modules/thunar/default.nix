@@ -7,10 +7,10 @@
 
 {
   options = {
-    noodles.desktops.module.thunar.enable = lib.mkEnableOption "Enable Thunar.";
+    noodles.desktops.components.thunar.enable = lib.mkEnableOption "Enable Thunar.";
   };
 
-  config = lib.mkIf config.noodles.desktops.module.thunar.enable {
+  config = lib.mkIf config.noodles.desktops.components.thunar.enable {
     programs.thunar.enable = true;
     programs.thunar.plugins = with pkgs; [
       thunar-archive-plugin

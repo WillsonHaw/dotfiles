@@ -6,7 +6,7 @@
 }:
 
 {
-  home-manager.users.slumpy =
+  home-manager.users.${config.noodles.user} =
     { config, ... }:
     {
       home.file."${config.home.homeDirectory}/.ssh/config".source = ./.config/config;

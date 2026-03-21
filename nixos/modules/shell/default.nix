@@ -1,13 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, ... }:
 
+let
+  dirs = lib.attrNames (
+    lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./.)
+  );
+in
 {
-  imports = [
-    ./kitty
-    ./zsh
-  ];
+  imports = map (d: ./${d}) dirs;
 }

@@ -6,5 +6,11 @@
 }:
 
 {
-  environment.systemPackages = [ pkgs.qimgv ];
+  options = {
+    noodles.apps.qimgv.enable = lib.mkEnableOption "Enable qimgv.";
+  };
+
+  config = lib.mkIf config.noodles.apps.qimgv.enable {
+    environment.systemPackages = [ pkgs.qimgv ];
+  };
 }

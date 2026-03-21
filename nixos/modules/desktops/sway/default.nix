@@ -41,7 +41,7 @@
       __GL_SHADER_CACHE = "1";
     };
 
-    home-manager.users.slumpy =
+    home-manager.users.${config.noodles.user} =
       { config, ... }:
       {
         home.packages = with pkgs; [

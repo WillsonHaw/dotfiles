@@ -11,7 +11,7 @@
   };
 
   config = lib.mkIf config.noodles.desktops.gnome.enable {
-    noodles.desktops.module = { };
+    noodles.desktops.components = { };
 
     services.xserver = {
       enable = true;
@@ -84,7 +84,7 @@
     #   })
     # ];
 
-    home-manager.users.slumpy =
+    home-manager.users.${config.noodles.user} =
       { lib, ... }:
       with lib.hm.gvariant;
       let

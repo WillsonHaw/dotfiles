@@ -6,5 +6,11 @@
 }:
 
 {
-  environment.systemPackages = [ pkgs.davinci-resolve ];
+  options = {
+    noodles.apps.davinci.enable = lib.mkEnableOption "Enable DaVinci Resolve.";
+  };
+
+  config = lib.mkIf config.noodles.apps.davinci.enable {
+    environment.systemPackages = [ pkgs.davinci-resolve ];
+  };
 }

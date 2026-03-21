@@ -6,11 +6,17 @@
 }:
 
 {
-  home-manager.users.slumpy = {
-    programs.kitty = {
-      enable = true;
-      shellIntegration.enableZshIntegration = true;
-      themeFile = "Catppuccin-Mocha";
+  options = {
+    noodles.shell.kitty.enable = lib.mkEnableOption "Enable Kitty.";
+  };
+
+  config = lib.mkIf config.noodles.shell.kitty.enable {
+    home-manager.users.${config.noodles.user} = {
+      programs.kitty = {
+        enable = true;
+        shellIntegration.enableZshIntegration = true;
+        themeFile = "Catppuccin-Mocha";
+      };
     };
   };
 }

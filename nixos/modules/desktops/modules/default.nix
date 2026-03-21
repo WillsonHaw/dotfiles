@@ -1,19 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, ... }:
 
+let
+  dirs = lib.attrNames (
+    lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./.)
+  );
+in
 {
-  imports = [
-    ./ags
-    ./eww
-    ./hyprpanel
-    ./mako
-    ./rofi
-    ./thunar
-    ./waybar
-    ./wlogout
-  ];
+  imports = map (d: ./${d}) dirs;
 }
