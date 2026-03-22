@@ -34,9 +34,7 @@
       gpu.card = "/dev/dri/by-path/pci-0000:01:00.0-card";
     };
 
-    desktops = {
-      hyprland.enable = true;
-    };
+    desktops.environment = "hyprland";
 
     apps = {
       office.enable = true;

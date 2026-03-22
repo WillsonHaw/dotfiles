@@ -6,11 +6,7 @@
 }:
 
 {
-  options = {
-    noodles.desktops.kde.enable = lib.mkEnableOption "Enable kde desktop.";
-  };
-
-  config = lib.mkIf config.noodles.desktops.kde.enable {
+  config = lib.mkIf (config.noodles.desktops.environment == "kde") {
     environment.systemPackages = [ pkgs.libsForQt5.qt5ct ];
 
     environment.plasma6.excludePackages = with pkgs.kdePackages; [

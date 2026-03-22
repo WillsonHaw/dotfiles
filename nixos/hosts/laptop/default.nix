@@ -34,9 +34,7 @@
       godot.enable = true;
     };
 
-    desktops = {
-      hyprland.enable = true;
-    };
+    desktops.environment = "cosmic";
 
     services = {
       power.tlp.enable = true;

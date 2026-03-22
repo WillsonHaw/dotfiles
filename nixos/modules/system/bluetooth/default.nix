@@ -6,8 +6,8 @@
 }:
 
 {
-  # Don't use blueman with kde, since it has it's own bluetooth management
-  services.blueman.enable = !config.noodles.desktops.kde.enable;
+  # Don't use blueman with kde, since it has its own bluetooth management
+  services.blueman.enable = config.noodles.desktops.environment != "kde";
 
   hardware.bluetooth = {
     enable = true; # enables support for Bluetooth

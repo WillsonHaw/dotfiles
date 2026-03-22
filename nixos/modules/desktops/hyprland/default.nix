@@ -7,10 +7,6 @@
 }:
 
 {
-  options = {
-    noodles.desktops.hyprland.enable = lib.mkEnableOption "Enable hyprland desktop.";
-  };
-
   imports = [
     inputs.catppuccin.nixosModules.catppuccin
   ];
@@ -19,7 +15,7 @@
     let
       rootConfig = config;
     in
-    lib.mkIf config.noodles.desktops.hyprland.enable {
+    lib.mkIf (config.noodles.desktops.environment == "hyprland") {
       noodles.desktops.components = {
         # ags.enable = true;
         hyprpanel.enable = true;

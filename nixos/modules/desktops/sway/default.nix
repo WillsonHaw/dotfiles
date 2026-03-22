@@ -7,7 +7,6 @@
 
 {
   options = {
-    noodles.desktops.sway.enable = lib.mkEnableOption "Enable sway desktop.";
     noodles.desktops.sway.autosuspend = lib.mkOption {
       description = "Whether to autosuspend on idle.";
       default = true;
@@ -15,7 +14,7 @@
     };
   };
 
-  config = lib.mkIf config.noodles.desktops.sway.enable {
+  config = lib.mkIf (config.noodles.desktops.environment == "sway") {
     services = {
       dbus.packages = [ pkgs.gcr ];
       udev.packages = [ pkgs.swayosd ];

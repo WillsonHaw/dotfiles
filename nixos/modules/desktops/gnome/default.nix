@@ -6,13 +6,7 @@
 }:
 
 {
-  options = {
-    noodles.desktops.gnome.enable = lib.mkEnableOption "Enable GNOME desktop.";
-  };
-
-  config = lib.mkIf config.noodles.desktops.gnome.enable {
-    noodles.desktops.components = { };
-
+  config = lib.mkIf (config.noodles.desktops.environment == "gnome") {
     services.xserver = {
       enable = true;
       displayManager.gdm.enable = true;

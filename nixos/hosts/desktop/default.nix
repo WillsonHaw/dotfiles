@@ -35,9 +35,7 @@
       gpu.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
     };
 
-    desktops = {
-      hyprland.enable = true;
-    };
+    desktops.environment = "hyprland";
 
     apps = {
       godot.enable = true;
