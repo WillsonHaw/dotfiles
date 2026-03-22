@@ -1,3 +1,4 @@
+# WireGuard - Modern, fast VPN tunnel configuration.
 {
   config,
   lib,

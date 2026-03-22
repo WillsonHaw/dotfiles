@@ -13,6 +13,8 @@
     ../../users/slumpy.nix
   ];
 
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
@@ -34,7 +36,7 @@
       godot.enable = true;
     };
 
-    desktops.environment = "cosmic";
+    desktops.environment = "niri";
 
     services = {
       power.tlp.enable = true;

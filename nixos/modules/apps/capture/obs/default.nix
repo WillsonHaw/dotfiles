@@ -1,3 +1,4 @@
+# OBS Studio - Open-source streaming and screen recording software.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# COSMIC - System76's Rust-based desktop environment built on Wayland.
 {
   config,
   lib,

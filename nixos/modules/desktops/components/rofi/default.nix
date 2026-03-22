@@ -1,3 +1,4 @@
+# Rofi - Application launcher and window switcher for Wayland.
 {
   config,
   lib,

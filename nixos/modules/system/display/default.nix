@@ -1,3 +1,4 @@
+# Display - Kanshi dynamic display configuration daemon for Wayland.
 {
   config,
   lib,

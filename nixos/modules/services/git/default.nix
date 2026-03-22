@@ -1,3 +1,4 @@
+# Git - Version control system configuration with aliases and home-manager integration.
 {
   config,
   lib,

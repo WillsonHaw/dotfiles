@@ -1,3 +1,4 @@
+# Conky - Lightweight system monitor that renders info directly on the desktop.
 {
   config,
   lib,

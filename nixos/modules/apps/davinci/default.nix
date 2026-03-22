@@ -1,3 +1,4 @@
+# DaVinci Resolve - Professional video editing and color grading suite.
 {
   config,
   lib,

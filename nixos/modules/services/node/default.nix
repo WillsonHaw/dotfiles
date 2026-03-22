@@ -1,3 +1,4 @@
+# Node - JavaScript runtime with Volta for managing Node.js versions.
 {
   config,
   lib,

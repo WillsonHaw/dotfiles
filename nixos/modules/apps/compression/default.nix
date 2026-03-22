@@ -1,3 +1,4 @@
+# Compression - Provides 7-zip and unrar archive utilities.
 {
   config,
   lib,

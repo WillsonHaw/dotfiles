@@ -1,3 +1,4 @@
+# Hyprland - Dynamic tiling Wayland compositor with smooth animations and Catppuccin theming.
 {
   config,
   lib,

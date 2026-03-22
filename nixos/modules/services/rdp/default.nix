@@ -1,3 +1,4 @@
+# RDP - Remmina remote desktop client for RDP, VNC, and SSH connections.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# Keyring - GNOME Keyring secret storage with Seahorse GUI and PAM integration.
 {
   config,
   lib,

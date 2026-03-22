@@ -1,3 +1,4 @@
+# TLP - Advanced power management daemon for Linux laptops.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# Chiaki - Open-source PlayStation 4/5 remote play client.
 {
   config,
   lib,

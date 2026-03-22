@@ -1,3 +1,4 @@
+# Nextcloud - Self-hosted cloud sync client for files, contacts, and calendars.
 {
   config,
   lib,

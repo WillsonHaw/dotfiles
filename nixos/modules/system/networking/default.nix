@@ -1,3 +1,4 @@
+# Networking - NetworkManager configuration with GUI applet support.
 {
   config,
   lib,

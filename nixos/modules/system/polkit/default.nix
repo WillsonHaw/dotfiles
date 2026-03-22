@@ -1,3 +1,4 @@
+# Polkit - PolicyKit authentication agent for privilege escalation prompts.
 {
   config,
   lib,

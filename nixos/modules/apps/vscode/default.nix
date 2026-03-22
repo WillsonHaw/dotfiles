@@ -1,3 +1,4 @@
+# VS Code - Microsoft's extensible code editor, configured with nix-ld for compatibility.
 {
   config,
   lib,

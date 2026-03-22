@@ -1,3 +1,4 @@
+# Waybar - Highly customizable status bar for Wayland compositors.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# GParted - Graphical disk partition editor for managing storage devices.
 {
   config,
   lib,

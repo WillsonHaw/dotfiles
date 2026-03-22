@@ -1,3 +1,4 @@
+# LibreOffice - Free and open-source office productivity suite.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# qimgv - Fast Qt-based image viewer with video support.
 {
   config,
   lib,

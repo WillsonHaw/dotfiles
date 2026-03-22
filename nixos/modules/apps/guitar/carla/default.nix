@@ -1,3 +1,4 @@
+# Carla - Audio plugin host supporting LADSPA, DSSI, LV2, VST2, and VST3.
 {
   config,
   lib,

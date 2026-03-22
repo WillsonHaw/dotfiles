@@ -1,3 +1,4 @@
+# Power - Aggregates power management options for TLP and auto-cpufreq.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# Razer - OpenRazer daemon and Polychromatic GUI for Razer peripheral management.
 {
   config,
   lib,

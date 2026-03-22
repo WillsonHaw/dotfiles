@@ -1,3 +1,4 @@
+# AGS - Widget framework for building custom Wayland desktop shells in JavaScript.
 {
   config,
   lib,

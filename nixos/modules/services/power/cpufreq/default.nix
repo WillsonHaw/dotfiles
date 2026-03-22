@@ -1,3 +1,4 @@
+# auto-cpufreq - Automatic CPU frequency and power optimizer for laptops.
 {
   config,
   lib,

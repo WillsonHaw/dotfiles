@@ -1,3 +1,4 @@
+# GIMP - Open-source image editor for photo retouching and graphic design.
 {
   config,
   lib,

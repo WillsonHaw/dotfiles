@@ -1,3 +1,4 @@
+# Niri - Scrollable tiling Wayland compositor with Catppuccin theming.
 {
   config,
   lib,
@@ -66,6 +67,8 @@
             cursors.enable = true;
             kvantum.enable = true;
           };
+
+          home.file."${config.xdg.configHome}/niri/config.kdl".source = ./config.kdl;
 
           # Use specified GPU for niri
           home.file."${config.xdg.configHome}/niri/card" = lib.mkIf (

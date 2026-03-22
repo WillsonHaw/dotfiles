@@ -1,3 +1,4 @@
+# Brave - Privacy-focused Chromium-based web browser with built-in ad blocking.
 {
   config,
   lib,

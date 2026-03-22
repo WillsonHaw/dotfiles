@@ -1,3 +1,4 @@
+# swww - Efficient animated wallpaper daemon for Wayland, with waypaper GUI frontend.
 {
   config,
   lib,

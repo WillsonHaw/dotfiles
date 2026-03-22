@@ -1,3 +1,4 @@
+# Disk - NTFS filesystem support for mounting Windows partitions.
 {
   config,
   lib,

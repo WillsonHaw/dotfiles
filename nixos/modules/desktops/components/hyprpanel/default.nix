@@ -1,3 +1,4 @@
+# HyprPanel - Feature-rich status bar and system panel for Hyprland.
 {
   config,
   lib,

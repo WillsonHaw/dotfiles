@@ -1,3 +1,4 @@
+# NVIDIA - Proprietary NVIDIA GPU driver configuration with PRIME offload support.
 {
   config,
   lib,
@@ -24,9 +25,9 @@
         nvidiaPersistenced = false;
         nvidiaSettings = true;
 
-        powerManagement.enable = true;
-        powerManagement.finegrained = false;
-        open = false;
+        powerManagement.enable = lib.mkDefault true;
+        powerManagement.finegrained = lib.mkDefault false;
+        open = lib.mkDefault false;
       };
     };
   };

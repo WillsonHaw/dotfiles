@@ -1,3 +1,4 @@
+# Zen Browser - Minimalist Firefox-based browser focused on speed and privacy.
 {
   config,
   inputs,

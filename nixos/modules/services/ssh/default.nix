@@ -1,3 +1,4 @@
+# SSH - OpenSSH server and client configuration.
 {
   config,
   lib,

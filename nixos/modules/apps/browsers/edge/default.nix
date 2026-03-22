@@ -1,3 +1,4 @@
+# Edge - Microsoft's Chromium-based web browser.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# Vivaldi - Feature-rich Chromium-based browser with extensive UI customization.
 {
   config,
   lib,

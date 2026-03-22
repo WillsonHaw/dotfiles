@@ -1,3 +1,4 @@
+# Thunar - Xfce's fast and lightweight file manager with plugin support.
 {
   config,
   lib,

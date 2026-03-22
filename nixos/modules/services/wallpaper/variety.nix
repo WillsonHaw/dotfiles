@@ -1,3 +1,4 @@
+# Variety - Automatic wallpaper changer with support for multiple image sources.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# Guitarix - Virtual guitar amplifier and effects processor for Linux.
 {
   config,
   lib,

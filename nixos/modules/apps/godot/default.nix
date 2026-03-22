@@ -1,3 +1,4 @@
+# Godot - Open-source 2D and 3D game engine with its own scripting language.
 {
   config,
   lib,

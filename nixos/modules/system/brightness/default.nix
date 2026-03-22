@@ -1,3 +1,4 @@
+# Brightness - Screen brightness control via brillo and brightnessctl.
 {
   config,
   lib,

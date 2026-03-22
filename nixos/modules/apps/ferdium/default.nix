@@ -1,3 +1,4 @@
+# Ferdium - All-in-one messaging app that combines multiple chat services.
 {
   config,
   lib,

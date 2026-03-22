@@ -1,3 +1,4 @@
+# Flatpak - Sandboxed application distribution framework for Linux.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# Bluetooth - Bluetooth support with Blueman applet for desktop environments.
 {
   config,
   lib,

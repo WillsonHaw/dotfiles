@@ -1,3 +1,4 @@
+# Kitty - GPU-accelerated terminal emulator with ligature and image support.
 {
   config,
   lib,

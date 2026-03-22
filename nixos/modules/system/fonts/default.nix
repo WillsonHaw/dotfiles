@@ -1,3 +1,4 @@
+# Fonts - System font packages including Nerd Fonts, Font Awesome, and Comic Mono.
 {
   config,
   lib,

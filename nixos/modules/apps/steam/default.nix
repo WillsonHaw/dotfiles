@@ -1,3 +1,4 @@
+# Steam - Valve's gaming platform with Proton compatibility, plus Lutris game manager.
 {
   config,
   lib,

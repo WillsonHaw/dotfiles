@@ -1,3 +1,4 @@
+# KDE Plasma - Feature-rich desktop environment with deep customization support.
 {
   config,
   lib,

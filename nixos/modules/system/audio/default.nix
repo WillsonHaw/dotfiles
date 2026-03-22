@@ -1,3 +1,4 @@
+# Audio - PipeWire-based audio stack replacing PulseAudio and ALSA.
 {
   config,
   lib,

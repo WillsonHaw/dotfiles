@@ -1,3 +1,4 @@
+# UNetbootin - Tool for creating bootable USB drives from ISO images.
 {
   config,
   lib,

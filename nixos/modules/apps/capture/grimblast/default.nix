@@ -1,3 +1,4 @@
+# Grimblast - Wayland screenshot utility built for Hyprland.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# btop - Terminal-based resource monitor with CPU, memory, disk, and network stats.
 {
   config,
   lib,

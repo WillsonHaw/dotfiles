@@ -1,3 +1,4 @@
+# GNOME - Full-featured desktop environment with a clean, modern UI.
 {
   config,
   lib,

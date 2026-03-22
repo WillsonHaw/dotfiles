@@ -1,3 +1,4 @@
+# QjackCtl - GUI frontend for the JACK audio connection kit.
 {
   config,
   lib,

@@ -13,6 +13,8 @@
     ../../users/slumpy.nix
   ];
 
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   boot.loader.grub = {
     enable = true;
     device = "/dev/nvme0n1";

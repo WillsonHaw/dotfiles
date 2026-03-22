@@ -1,3 +1,4 @@
+# XDG - Default application MIME type associations and portal configuration.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# VLC - Cross-platform media player that handles nearly any audio/video format.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# Sway - i3-compatible tiling Wayland compositor.
 {
   config,
   lib,

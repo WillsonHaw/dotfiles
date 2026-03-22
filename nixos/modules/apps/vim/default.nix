@@ -1,3 +1,4 @@
+# Vim - Highly configurable terminal text editor.
 {
   config,
   lib,

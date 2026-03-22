@@ -1,3 +1,4 @@
+# Zsh - Z shell with Powerlevel10k prompt, syntax highlighting, and autosuggestions.
 {
   config,
   lib,

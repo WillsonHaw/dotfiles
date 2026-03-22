@@ -1,3 +1,4 @@
+# Fastfetch - Fast system information tool, a neofetch alternative written in C.
 {
   config,
   lib,

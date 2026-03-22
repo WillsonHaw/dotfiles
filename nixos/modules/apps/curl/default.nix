@@ -1,3 +1,4 @@
+# curl - Command-line tool for transferring data via URLs.
 {
   config,
   lib,

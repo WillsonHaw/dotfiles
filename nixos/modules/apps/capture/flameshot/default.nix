@@ -1,3 +1,4 @@
+# Flameshot - Screenshot tool with a built-in annotation editor.
 {
   config,
   lib,

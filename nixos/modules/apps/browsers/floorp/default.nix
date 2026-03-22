@@ -1,3 +1,4 @@
+# Floorp - Privacy-focused Firefox fork with enhanced customization options.
 {
   config,
   lib,

@@ -1,3 +1,4 @@
+# Eww - Elkowar's Wacky Widgets, a custom widget system for Wayland and X11.
 {
   config,
   lib,

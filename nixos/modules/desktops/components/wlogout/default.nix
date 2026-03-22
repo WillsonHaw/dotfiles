@@ -1,3 +1,4 @@
+# wlogout - Wayland logout menu with customizable layout and styling.
 {
   config,
   lib,

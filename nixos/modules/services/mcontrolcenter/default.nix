@@ -1,3 +1,4 @@
+# MControlCenter - MSI laptop fan control and hardware management utility.
 {
   config,
   inputs,

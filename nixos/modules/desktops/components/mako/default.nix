@@ -1,3 +1,4 @@
+# Mako - Lightweight Wayland notification daemon.
 {
   config,
   lib,
