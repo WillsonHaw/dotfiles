@@ -40,6 +40,11 @@
             sudo nixos-rebuild switch --flake ~/dotfiles/nixos$@
           }
 
+          function rebuild-all() {
+            nix flake update --flake ~/dotfiles/nixos$@
+            rebuild
+          }
+
           function volume() {
             wpctl set-volume @DEFAULT_AUDIO_SINK@ $@%
           }
