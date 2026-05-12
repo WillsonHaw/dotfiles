@@ -17,13 +17,16 @@
 
       services.mako = {
         enable = true;
-        sort = "+time";
 
-        font = "liberation sans 10";
-        borderRadius = 8;
-        maxIconSize = 32;
-        maxVisible = 5;
-        defaultTimeout = 7500;
+        settings = {
+          font = "liberation sans 10";
+          sort = "+time";
+
+          default-timeout = 7500;
+          max-icon-size = 32;
+          border-radius = 8;
+          max-visible = 5;
+        };
       };
     };
   };

@@ -48,9 +48,7 @@
             sudo mount -o loop $@
           }
 
-          if [[ $(tty) == /dev/tty1 ]] then
-            Hyprland 2>&1 > /dev/null;
-          fi
+
         '';
 
         envExtra = ''
@@ -72,6 +70,7 @@
           bright-up = "brillo -q -A 5";
           bright-down = "brillo -q -U 5";
           pp = "pnpm";
+          gp = "git push";
 
           # VPN
           wg-up = "sudo systemctl start wg-quick-wg0.service";

@@ -10,10 +10,7 @@
     ../common.nix
     ./hardware-configuration.nix
     ./graphics.nix
-    ../../users/slumpy.nix
   ];
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.loader.grub = {
     enable = true;
@@ -21,31 +18,15 @@
     useOSProber = true;
   };
 
-  services.logind.extraConfig = "RuntimeDirectorySize=4G";
-
   networking.hostName = "slumpy-desktop";
-
-  zramSwap.enable = true;
 
   system.stateVersion = "23.11";
 
   noodles = {
-    user = "slumpy";
-
-    device = {
-      is-laptop = false;
-      gpu.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
-    };
+    device.gpu.card = "/dev/dri/by-path/pci-0000:09:00.0-card";
 
     desktops.environment = "hyprland";
 
-    apps = {
-      godot.enable = true;
-      capture.obs.enable = true;
-    };
-
-    services = {
-      razer.enable = true;
-    };
+    apps.godot.enable = true;
   };
 }

@@ -18,6 +18,7 @@
     in
     lib.mkIf (config.noodles.desktops.environment == "hyprland") {
       noodles.desktops.components = {
+        greeter = "regreet";
         # ags.enable = true;
         hyprpanel.enable = true;
         # eww.enable = true;
@@ -45,6 +46,7 @@
 
           gtk = {
             enable = true;
+            gtk4.theme = null;
           };
 
           catppuccin = {

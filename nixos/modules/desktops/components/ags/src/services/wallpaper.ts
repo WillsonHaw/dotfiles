@@ -75,7 +75,7 @@ class WallpaperService extends Service {
       getWallpapers();
     });
 
-    this._currentWallpaper = Utils.exec(`swww query`).split(': ').pop() ?? null;
+    this._currentWallpaper = Utils.exec(`awww query`).split(': ').pop() ?? null;
 
     print('[Wallpaper] Current wallpaper:', this._currentWallpaper);
 
@@ -153,7 +153,7 @@ class WallpaperService extends Service {
     } else {
       this._currentWallpaper = nextWallpaper;
 
-      Utils.exec(`swww img --resize fit -t random ${nextWallpaper}`);
+      Utils.exec(`awww img --resize fit -t random ${nextWallpaper}`);
 
       this.#startTimer();
     }

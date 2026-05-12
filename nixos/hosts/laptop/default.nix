@@ -10,7 +10,6 @@
     ../common.nix
     ./hardware-configuration.nix
     ./graphics.nix
-    ../../users/slumpy.nix
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
@@ -20,21 +19,33 @@
     efi.canTouchEfiVariables = true;
   };
 
+  # Resume from swap partition for hibernation
+  boot.resumeDevice = "/dev/disk/by-uuid/0cd225ed-f707-4db6-8add-5a386ce79e37";
+
+  # Disable USB and other devices from waking the system
+  # (prevents immediate wake after hibernate/suspend)
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{power/wakeup}="disabled"
+  '';
+
+  systemd.sleep.settings.Sleep = {
+    AllowSuspend = "yes";
+    AllowHibernation = "yes";
+    AllowSuspendThenHibernate = "yes";
+    HibernateDelaySec = "3600";
+  };
+
   networking.hostName = "slumpy-laptop";
 
   system.stateVersion = "23.11";
 
   noodles = {
-    user = "slumpy";
-
     device = {
       is-laptop = true;
       gpu.card = "/dev/dri/by-path/pci-0000:00:02.0-card";
     };
 
-    apps = {
-      godot.enable = true;
-    };
+    apps.godot.enable = true;
 
     desktops.environment = "niri";
 

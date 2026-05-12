@@ -294,7 +294,7 @@ export class WallpaperService extends Service {
 
       print(`[Wallpaper] Switching wallpaper to: ${wallpaper.id}`);
 
-      let command = `swww img --resize ${
+      let command = `awww img --resize ${
         this.#useImageFill ? 'crop' : 'fit'
       } -t random ${fileName}`;
 
@@ -304,12 +304,12 @@ export class WallpaperService extends Service {
         command += ` --fill-color ${fill}`;
       }
 
-      print(`[Wallpaper] swww command: ${command}`);
+      print(`[Wallpaper] awww command: ${command}`);
 
       const result = Utils.exec(command);
 
       if (result) {
-        print(`[Wallpaper] swww img: ${result}`);
+        print(`[Wallpaper] awww img: ${result}`);
       }
 
       this.#currentWallpaper = [fileName, wallpaper];

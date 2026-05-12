@@ -46,7 +46,10 @@
 
       xdg = {
         autostart.enable = true;
-        portal.enable = true;
+        portal = {
+          enable = true;
+          extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+        };
       };
 
       home-manager.users.${config.noodles.user} =
@@ -57,7 +60,10 @@
         {
           imports = [ inputs.catppuccin.homeModules.catppuccin ];
 
-          gtk.enable = true;
+          gtk = {
+            enable = true;
+            gtk4.theme = null;
+          };
 
           catppuccin = {
             enable = true;
@@ -67,6 +73,13 @@
             cursors.enable = true;
             kvantum.enable = true;
           };
+
+          programs.zsh.initContent = lib.mkOrder 500 ''
+            # Auto-start niri on tty1
+            if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+              exec niri-session
+            fi
+          '';
 
           home.file."${config.xdg.configHome}/niri/config.kdl".source = ./config.kdl;
 
