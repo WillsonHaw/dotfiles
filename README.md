@@ -18,33 +18,30 @@ Pick the one that matches the machine you're installing.
 
 ## Quickstart — fresh install
 
-From the NixOS installer ISO, after partitioning and mounting to `/mnt`:
+Boot the [NixOS minimal installer ISO](https://nixos.org/download.html) (wired networking comes up automatically; wifi → `nmtui`). Then:
 
 ```bash
-# 1. Network
-sudo systemctl start NetworkManager && nmtui   # or wired
-
-# 2. Hardware config for this machine
-nixos-generate-config --root /mnt
-
-# 3. Clone this repo (private — use a fine-grained read-only PAT)
+sudo -i
 nix-shell -p git --run \
-  'git clone https://<USER>:<PAT>@github.com/<USER>/dotfiles.git /mnt/etc/nixos/dotfiles'
+  'git clone https://github.com/<USER>/dotfiles.git /tmp/dotfiles'
+# ↑ git will prompt for your GitHub username + a fine-grained read-only PAT
 
-# 4. Copy the generated hardware config into the chosen host
-HOST=slumpy-dev-home   # or slumpy-laptop / slumpy-desktop / slumpy-gaming / slumpy-dev-komodo
-TARGET=${HOST#slumpy-}
-cp /mnt/etc/nixos/hardware-configuration.nix \
-   /mnt/etc/nixos/dotfiles/nixos/hosts/$TARGET/hardware-configuration.nix
-
-# 5. Install
-nixos-install --root /mnt \
-  --flake /mnt/etc/nixos/dotfiles/nixos#$HOST \
-  --no-root-passwd
-
-# 6. Reboot, log in, then move the repo into place
-sudo mv /etc/nixos/dotfiles ~/dotfiles
+/tmp/dotfiles/nixos/install.sh
+# ↑ prompts for which host to install; auto-picks the disk if there's only one
 ```
+
+That's it. [`nixos/install.sh`](nixos/install.sh) handles partitioning (UEFI/GPT), formatting, mounting, hardware-config generation, and `nixos-install`. After it finishes:
+
+```bash
+reboot
+# log in as slumpy
+sudo mv /etc/nixos/dotfiles ~/dotfiles
+git init-keys     # generate SSH + GPG, paste to github.com/settings/keys
+```
+
+`nixos-install` runs with `--no-root-passwd` because `users.mutableUsers = false` and the user's `hashedPassword` is set declaratively. Make sure that hash matches a password you remember — once installed there's no `passwd` recovery path (your declared SSH key in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix) is the backup).
+
+> **BIOS, LUKS, btrfs, or multi-disk setups?** The script assumes a single-disk UEFI install with no encryption. For anything else, partition/mount manually and run the latter half of the script by hand (or see the [NixOS manual](https://nixos.org/manual/nixos/stable/#sec-installation)). The `dev-*` hosts enable `zramSwap` so an on-disk swap partition is only needed for hibernation.
 
 `--no-root-passwd` is required: `users.mutableUsers = false` and the user's `hashedPassword` is set declaratively. Make sure that hash matches a password you remember — once installed there's no `passwd` recovery path (your declared SSH key in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix) is the backup).
 
