@@ -80,15 +80,21 @@ parted -s "$DISK" set 1 esp on
 parted -s "$DISK" mkpart primary ext4  1GiB 100%
 
 partprobe "$DISK"
-sleep 1
+udevadm settle
 
 mkfs.fat  -F32 -n ESP   "${DISK}${PART}1"
 mkfs.ext4 -F   -L nixos "${DISK}${PART}2"
 
+# Wait for udev to create the /dev/disk/by-label/* symlinks before mounting.
+udevadm settle
+
 # --- Mount ------------------------------------------------------------------
-mount /dev/disk/by-label/nixos /mnt
+# Mount by device path rather than label — labels rely on udev symlinks that
+# can race the mount call. nixos-generate-config still picks up UUIDs from
+# /proc/mounts when it writes hardware-configuration.nix.
+mount "${DISK}${PART}2" /mnt
 mkdir -p /mnt/boot
-mount -o umask=077 /dev/disk/by-label/ESP /mnt/boot
+mount -o umask=077 "${DISK}${PART}1" /mnt/boot
 
 # --- Hardware config --------------------------------------------------------
 nixos-generate-config --root /mnt

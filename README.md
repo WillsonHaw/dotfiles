@@ -23,8 +23,7 @@ Boot the [NixOS minimal installer ISO](https://nixos.org/download.html) (wired n
 ```bash
 sudo -i
 nix-shell -p git --run \
-  'git clone https://github.com/<USER>/dotfiles.git /tmp/dotfiles'
-# ↑ git will prompt for your GitHub username + a fine-grained read-only PAT
+  'git clone https://<USER>:<PASS>@github.com/<USER>/dotfiles.git /tmp/dotfiles'
 
 /tmp/dotfiles/nixos/install.sh
 # ↑ prompts for which host to install; auto-picks the disk if there's only one
