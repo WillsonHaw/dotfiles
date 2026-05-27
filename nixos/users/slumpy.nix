@@ -23,10 +23,11 @@ in
       "video"
       "jackaudio"
     ];
-    hashedPassword = "$6$Rt71522o4dFiYX9V$RienW2CDtVjV3Q2u73YJ7kIrUAHJ89jb3d0R4tfNhpMsIo2hQI9GJUjmPKVJ4yleMllrQojQ7qx46G6/IhTXC1";
+    hashedPassword = "$6$rcLVbMcB0E0zdml1$/iFJt99o04EJuS1LbyMtPAtS2euC6n0V3ayiTaD35C0nVKSuifryDtQZEh.Yt2FT25hc2VuryvGzXkCLWIfA//";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXtwwCwAQNOW6YZuMpUoOzEGmDKK5W4WQpKd21jKtvw willsonhaw@gmail.com"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJhc6E9VyPuA3SMJuU3aRJkVw/xfRlT9hECU40py7vgk slumpy@slumpy-desktop"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE1WXDv8fc5OwenVI+910X6xJUBcl/HLqIDVqL44Ghsl willsonhaw@gmail.com" # Gaming Desktop
     ];
   };
 
