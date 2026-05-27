@@ -6,16 +6,37 @@
   ...
 }:
 
+let
+  git-init-keys = pkgs.writeShellApplication {
+    name = "git-init-keys";
+    runtimeInputs = with pkgs; [
+      git
+      openssh
+      gnupg
+      gawk
+      gnugrep
+      coreutils
+    ];
+    text = builtins.readFile ./init-keys.sh;
+  };
+in
 {
   home-manager.users.${config.noodles.user} = {
+    home.packages = [ git-init-keys ];
+
     programs.git = {
       enable = true;
-      signing.format = null;
+      # signingkey is per-host (depends on the generated GPG fingerprint), so
+      # git-init-keys writes it to ~/.config/git/config.local instead.
+      includes = [ { path = "~/.config/git/config.local"; } ];
       settings = {
         init.defaultBranch = "main";
         pull.rebase = true;
         column.ui = "auto";
         branch.sort = "-committerdate";
+
+        commit.gpgsign = true;
+        tag.gpgsign = true;
 
         user = {
           name = "WillsonHaw";

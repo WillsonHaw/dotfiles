@@ -81,6 +81,10 @@
         slumpy-desktop = mkHost "desktop" { };
 
         slumpy-gaming = mkHost "gaming" { };
+
+        slumpy-dev-home = mkHost "dev-home" { };
+
+        slumpy-dev-komodo = mkHost "dev-komodo" { };
       };
     };
 }

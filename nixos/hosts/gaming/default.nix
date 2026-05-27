@@ -8,6 +8,7 @@
 {
   imports = [
     ../common.nix
+    ../desktop-defaults.nix
     ./hardware-configuration.nix
     ./graphics.nix
   ];

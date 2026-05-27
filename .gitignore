@@ -1,1 +1,15 @@
 *.log
+
+# Secrets — never commit
+*.key
+*.pem
+*.kdbx
+*.gpg
+*.asc
+id_rsa*
+id_ed25519*
+id_ecdsa*
+.env
+.env.*
+config.local
+*.local
