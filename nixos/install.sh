@@ -118,6 +118,7 @@ Install complete.
   1. reboot
   2. log in as slumpy
   3. sudo mv /etc/nixos/dotfiles ~/dotfiles
-  4. git init-keys     # generate SSH + GPG, then paste to github.com/settings/keys
+  4. sudo chown -R slumpy:users ~/dotfiles
+  5. git init-keys     # generate SSH + GPG, then paste to github.com/settings/keys
 
 EOF

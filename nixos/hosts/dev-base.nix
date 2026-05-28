@@ -6,18 +6,23 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
 {
   imports = [
     ./common.nix
+    inputs.vscode-server.nixosModules.default
   ];
 
   zramSwap.enable = true;
 
-  # Headless — VSCode Remote SSH connects to sshd.
+  # Headless — VSCode Remote SSH connects to sshd. The vscode-server module
+  # patches the binaries VSCode pushes to ~/.vscode-server so they actually
+  # run on NixOS.
   noodles.desktops.environment = null;
+  services.vscode-server.enable = true;
 
   # Docker for containerized dev workflows.
   virtualisation.docker.enable = true;

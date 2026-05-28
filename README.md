@@ -35,6 +35,7 @@ That's it. [`nixos/install.sh`](nixos/install.sh) handles partitioning (UEFI/GPT
 reboot
 # log in as slumpy
 sudo mv /etc/nixos/dotfiles ~/dotfiles
+sudo chown -R slumpy:users ~/dotfiles      # repo was cloned as root during install
 git init-keys     # generate SSH + GPG, paste to github.com/settings/keys
 ```
 

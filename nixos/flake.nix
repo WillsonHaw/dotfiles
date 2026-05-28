@@ -29,24 +29,21 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
     ags = {
       url = "github:Aylur/ags?ref=refs/tags/v3.1.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    catppuccin.url = "github:catppuccin/nix";
 
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    catppuccin.url = "github:catppuccin/nix";
     nix-flatpak.url = "github:gmodena/nix-flatpak";
-
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
-
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
   outputs =
