@@ -24,4 +24,8 @@
 
   # Machine-specific services.
   noodles.services.nginx.enable = true;
+  noodles.development = {
+    volta.enable = true;
+    # android-studio.enable = true;
+  };
 }

@@ -54,6 +54,10 @@
           function mount-iso() {
             sudo mount -o loop $@
           }
+
+          if [[ -f "$HOME/.secrets" ]]; then
+            source "$HOME/.secrets"
+          fi
         '';
 
         envExtra = ''

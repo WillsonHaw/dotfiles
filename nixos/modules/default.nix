@@ -24,6 +24,7 @@
   imports = [
     ./apps
     ./desktops
+    ./development
     ./services
     ./shell
     ./system

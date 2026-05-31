@@ -26,7 +26,7 @@
 
   # Docker for containerized dev workflows.
   virtualisation.docker.enable = true;
-  users.users.${config.noodles.user}.extraGroups = [ "docker" ];
+  users.users.${config.noodles.user}.extraGroups = [ "docker" "kvm" ];
 
   environment.systemPackages = with pkgs; [
     gh
@@ -35,6 +35,7 @@
     fzf
     bat
     eza
+    lsof
   ];
 
   home-manager.users.${config.noodles.user} = {
