@@ -28,6 +28,8 @@
         initContent = ''
           . ~/.p10k.zsh
 
+          [ -f ~/.zsh_secrets ] && . ~/.zsh_secrets
+
           function offload() {
             export __NV_PRIME_RENDER_OFFLOAD=1
             export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
@@ -52,8 +54,6 @@
           function mount-iso() {
             sudo mount -o loop $@
           }
-
-
         '';
 
         envExtra = ''

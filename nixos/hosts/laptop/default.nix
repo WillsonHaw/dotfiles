@@ -46,7 +46,10 @@
       gpu.card = "/dev/dri/by-path/pci-0000:00:02.0-card";
     };
 
-    apps.godot.enable = true;
+    apps = {
+      antigravity.enable = true;
+      godot.enable = true;
+    };
 
     desktops.environment = "niri";
 

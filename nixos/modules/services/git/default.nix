@@ -50,6 +50,7 @@ in
           co = "checkout";
           pu = "pull -r";
           rc = "rebase --continue";
+          pm = "fetch origin main:main";
           undo-ci = "reset --soft HEAD~";
           fixup = "!sh -c 'REV=$(git rev-parse $1) && git commit --fixup $@ && git rebase -i --autostash --autosquash $REV^' -";
           cleanup = "!git branch --merged | grep -v -P '^\\*|master|main|develop|staging' | xargs -n1 -r git branch -d";

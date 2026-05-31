@@ -6,7 +6,8 @@
   "window.titleBarStyle": "custom",
   "workbench.colorTheme": "Catppuccin Mocha",
   "remote.SSH.remotePlatform": {
-    "NoodleFish_Dev": "linux"
+    "NoodleFish_Dev": "linux",
+    "Komodo_Dev": "linux"
   },
   "redhat.telemetry.enabled": false,
   "workbench.activityBar.location": "top",
