@@ -32,6 +32,7 @@ in
       settings = {
         init.defaultBranch = "main";
         pull.rebase = true;
+        push.autoSetupRemote = true;
         column.ui = "auto";
         branch.sort = "-committerdate";
 
