@@ -45,7 +45,7 @@ in
 
         alias = {
           st = "status";
-          wc = "whatchanged";
+          wc = "log --raw --no-merges";
           cp = "cherry-pick";
           co = "checkout";
           pu = "pull -r";
