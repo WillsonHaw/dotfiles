@@ -36,6 +36,7 @@
     bat
     eza
     lsof
+    nixd
   ];
 
   home-manager.users.${config.noodles.user} = {
