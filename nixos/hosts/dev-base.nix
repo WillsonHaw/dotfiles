@@ -37,6 +37,8 @@
     eza
     lsof
     nixd
+    direnv
+    nix-direnv
   ];
 
   home-manager.users.${config.noodles.user} = {

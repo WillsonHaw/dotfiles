@@ -14,6 +14,15 @@
       nginx
     ];
 
+    # Allow bindind to ports 80/443 as a normal user. Nix store
+    # paths are immutable, so capabilities are applied to a wrapper at boot.
+    security.wrappers.nginx = {
+      source = "${pkgs.nginx}/bin/nginx";
+      owner = config.noodles.user;
+      group = "users";
+      capabilities = "cap_net_bind_service+ep";
+    };
+
     services.nginx = {
       enable = true;
       appendConfig = "daemon off;";
