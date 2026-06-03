@@ -1,7 +1,9 @@
 keys:
-  - &primary age1zffssm9dl39zqnvax8k5g2yuxvhfz9y6vpkrkxcddwnd80vh4p6sepx6nj
+  - &komodo_vm age1zffssm9dl39zqnvax8k5g2yuxvhfz9y6vpkrkxcddwnd80vh4p6sepx6nj
+  - &msi_laptop age1xlrfxj3lfgm0k5fd26q8xw89wyk3gtcue30m7jtjpkvt0hhs4gssjlemhu
 creation_rules:
 - path_regex: secrets/secrets.yaml$
   key_groups:
   - age:
-    - *primary
+    - *komodo_vm
+    - *msi_laptop

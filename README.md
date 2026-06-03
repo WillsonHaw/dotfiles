@@ -86,6 +86,24 @@ For another machine that should share an existing **role** (e.g. another dev box
 2. Register `slumpy-dev-<name> = mkHost "dev-<name>" { };` in the flake.
 3. Toggle the optional `noodles.*` services this machine needs (e.g. `noodles.services.nginx.enable = true;`).
 
+### Update sops keys
+
+1. Generate an SSH key if one hasn't alerady been generated
+2. Create age keys:
+   ```bash
+   mkdir -p ~/.config/sops/age
+   nix-shell -p ssh-to-age --run 'ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt'
+   ```
+3. Get publlic key
+   ```bash
+   nix-shell -p age --run 'age-keygen -y ~/.config/sops/age/keys.txt'
+   ```
+4. Update .sops.yaml with the new public key
+5. Update keys from a host that has already been set up
+   ```bash
+   nix-shell -p sops --run 'sops updatekeys ./secrets/secrets.yaml'
+   ```
+
 ## Adding an optional service
 
 Optional services follow the existing `noodles.*` pattern — see [`modules/services/nginx/default.nix`](nixos/modules/services/nginx/default.nix) for the canonical example:
