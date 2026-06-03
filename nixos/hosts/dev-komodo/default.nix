@@ -23,47 +23,47 @@
   system.stateVersion = "25.11";
 
   # Machine-specific services.
-  # noodles.services = {
-  #   nginx.enable = true;
-  #   samba = {
-  #     enable = true;
-  #     openFirewall = true;
-  #     wsdd.enable = true;
+  noodles.services = {
+    nginx.enable = true;
+    samba = {
+      enable = true;
+      openFirewall = true;
+      wsdd.enable = true;
 
-  #     shares = {
-  #       share = {
-  #         path = "/home/${config.noodles.user}/repos";
-  #         validUsers = [ config.noodles.user ];
-  #       };
-  #     };
-  #   };
-  # };
-  services.samba = {
-    enable = true;
-    securityType = "user";
-    openFirewall = true;
-    settings = {
-      global = {
-        "workgroup" = "WORKGROUP";
-        "server string" = "smbnix";
-        "netbios name" = "smbnix";
-        "security" = "user";
-        #"use sendfile" = "yes";
-        #"max protocol" = "smb2";
-        # note: localhost is the ipv6 localhost ::1
-        # "hosts allow" = "192.168.0. 127.0.0.1 localhost";
-        # "hosts deny" = "0.0.0.0/0";
+      shares = {
+        repos = {
+          path = "/home/${config.noodles.user}/repos";
+          validUsers = [ config.noodles.user ];
+        };
       };
     };
   };
+  # services.samba = {
+  #   enable = true;
+  #   securityType = "user";
+  #   openFirewall = true;
+  #   settings = {
+  #     global = {
+  #       "workgroup" = "WORKGROUP";
+  #       "server string" = "smbnix";
+  #       "netbios name" = "smbnix";
+  #       "security" = "user";
+  #       #"use sendfile" = "yes";
+  #       #"max protocol" = "smb2";
+  #       # note: localhost is the ipv6 localhost ::1
+  #       # "hosts allow" = "192.168.0. 127.0.0.1 localhost";
+  #       # "hosts deny" = "0.0.0.0/0";
+  #     };
+  #   };
+  # };
 
-  services.samba-wsdd = {
-    enable = true;
-    openFirewall = true;
-  };
+  # services.samba-wsdd = {
+  #   enable = true;
+  #   openFirewall = true;
+  # };
 
-  networking.firewall.enable = true;
-  networking.firewall.allowPing = true;
+  # networking.firewall.enable = true;
+  # networking.firewall.allowPing = true;
 
   noodles.development = {
     volta.enable = true;

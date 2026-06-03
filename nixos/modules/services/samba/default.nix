@@ -37,11 +37,10 @@ in
 
     wsdd.enable = lib.mkEnableOption "Advertise shares to Windows hosts via WS-Discovery.";
 
-    usershares.enable =
-      lib.mkEnableOption ''
-        Allow members of the samba group to publish ad-hoc shares from their
-        file manager (e.g. Dolphin right-click → Share).
-      '';
+    usershares.enable = lib.mkEnableOption ''
+      Allow members of the samba group to publish ad-hoc shares from their
+      file manager (e.g. Dolphin right-click → Share).
+    '';
 
     shares = lib.mkOption {
       type = lib.types.attrsOf (
@@ -145,29 +144,41 @@ in
       openFirewall = cfg.openFirewall;
       usershares.enable = cfg.usershares.enable;
 
-      settings =
-        {
-          global = {
-            workgroup = "WORKGROUP";
-            "map to guest" = "Bad User";
-          };
-        }
-        // lib.mapAttrs (
-          name: share:
-          shareToSettings name (
-            share
-            // {
-              validUsers =
-                if share.validUsers != [ ] then share.validUsers
-                else lib.optionals (!share.guestOk) [ user ];
-            }
-          )
-        ) cfg.shares;
+      settings = {
+        global = {
+          workgroup = "WORKGROUP";
+          "map to guest" = "Bad User";
+        };
+      }
+      // lib.mapAttrs (
+        name: share:
+        shareToSettings name (
+          share
+          // {
+            validUsers =
+              if share.validUsers != [ ] then share.validUsers else lib.optionals (!share.guestOk) [ user ];
+          }
+        )
+      ) cfg.shares;
     };
 
     services.samba-wsdd = lib.mkIf cfg.wsdd.enable {
       enable = true;
       openFirewall = cfg.openFirewall;
+    };
+
+    system.activationScripts.samba-password-sync = {
+      deps = [
+        "users"
+        "groups"
+      ];
+      text = ''
+        if [ -f "${config.sops.secrets.host_pw.path}" ]; then
+          PASSWORD=$(cat "${config.sops.secrets.host_pw.path}")
+          # Quietly inject the password into the smbpasswd database
+          echo -e "$PASSWORD\n$PASSWORD" | ${pkgs.samba}/bin/smbpasswd -s -a ${config.noodles.user}
+        fi
+      '';
     };
   };
 }
