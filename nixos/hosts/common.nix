@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -9,7 +10,21 @@
   imports = [
     ../modules
     ../users/slumpy.nix
+    inputs.sops-nix.nixosModules.sops
   ];
+
+  sops = {
+    defaultSopsFile = ../secrets/secrets.yaml;
+    defaultSopsFormat = "yaml";
+    
+    age.keyFile = "/home/${config.noodles.user}/.config/sops/age/keys.txt";
+
+    secrets = {
+      host_pw = {
+        owner = config.noodles.user;
+      };
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     claude-code

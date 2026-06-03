@@ -44,6 +44,11 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+    
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     antigravity-nix = {
       url = "github:jacopone/antigravity-nix";
