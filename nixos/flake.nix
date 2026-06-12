@@ -100,6 +100,8 @@
         slumpy-dev-home = mkHost "dev-home" { };
 
         slumpy-dev-komodo = mkHost "dev-komodo" { };
+
+        slumpy-laptop-komodo = mkHost "laptop-komodo" { };
       };
     };
 }
