@@ -44,7 +44,7 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-    
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -54,6 +54,7 @@
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
 
     cursor-flake = {
       url = "github:omarcresp/cursor-flake";
@@ -94,12 +95,10 @@
         };
 
         slumpy-desktop = mkHost "desktop" { };
-
         slumpy-gaming = mkHost "gaming" { };
-
         slumpy-dev-home = mkHost "dev-home" { };
-
         slumpy-dev-komodo = mkHost "dev-komodo" { };
+        slumpy-laptop-komodo = mkHost "laptop-komodo" { };
       };
     };
 }

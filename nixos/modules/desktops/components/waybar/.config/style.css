@@ -27,6 +27,7 @@ window#waybar.hidden {
 #mpris,
 #cpu,
 #memory,
+#disk,
 #custom-media,
 #tray,
 #mode,
@@ -121,9 +122,12 @@ window#waybar.hidden {
 }
 
 #bluetooth,
+#custom-tailscale,
 #backlight,
 #battery,
 #pulseaudio,
+#wireplumber,
+#power-profiles-daemon,
 #network {
   background-color: #252733;
   padding: 0em 2em;
@@ -154,6 +158,45 @@ window#waybar.hidden {
   font-size: 22px;
 }
 
+#wireplumber {
+  color: #81A1C1;
+  border-radius: 8px 0px 0px 8px;
+  padding-left: 14px;
+  font-size: 22px;
+}
+
+#wireplumber.muted {
+  color: #fb958b;
+  padding-left: 9px;
+  font-size: 22px;
+}
+
+#disk {
+  color: #a1c999;
+}
+
+#power-profiles-daemon {
+  color: #ecd3a0;
+}
+
+#power-profiles-daemon.performance {
+  color: #fb958b;
+}
+
+#power-profiles-daemon.power-saver {
+  color: #a1c999;
+}
+
+#custom-tailscale {
+  color: #8a909e;
+  border-radius: 0px 8px 8px 0px;
+  margin-right: 6px;
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: 20px;
+}
+
+
 #backlight {
   color: #ecd3a0;
   padding-right: 5px;
@@ -162,7 +205,6 @@ window#waybar.hidden {
 }
 
 #network {
-  padding-left: 0.2em;
   color: #5E81AC;
   border-radius: 8px 0px 0px 8px;
   padding-left: 14px;
@@ -175,9 +217,9 @@ window#waybar.hidden {
 }
 
 #bluetooth {
-  padding-left: 0.2em;
   color: #5E81AC;
-  border-radius: 8px 0px 0px 8px;
+  border-radius: 8px;
+  margin-right: 6px;
   padding-left: 14px;
   padding-right: 14px;
   font-size: 20px;
@@ -277,17 +319,21 @@ window#waybar.hidden {
 
 #custom-power-menu {
   color: #8a909e;
-  margin-right: 12px;
-  border-radius: 8px;
-  padding-right: 16px;
   border-radius: 0 8px 8px 0;
-  margin-top: 7px;
-  margin-bottom: 7px;
+  padding-left: 7.5px;
+  padding-right: 18px;
+  margin-right: 12px;
+  margin-top: 8.5px;
+  margin-bottom: 8.5px;
 }
 
 #custom-wallpaper {
   color: #8a909e;
-  padding-right: 12px;
+  border-radius: 8px 0 0 8px;
+  padding-left: 14px;
+  padding-right: 7.5px;
+  margin-top: 8.5px;
+  margin-bottom: 8.5px;
 }
 
 tooltip {

@@ -19,6 +19,18 @@
       default = "";
       type = lib.types.str;
     };
+
+    noodles.device.battery = lib.mkOption {
+      description = "Battery device name as reported by /sys/class/power_supply (e.g. BAT0, BAT1).";
+      default = "BAT1";
+      type = lib.types.str;
+    };
+
+    noodles.device.battery-adapter = lib.mkOption {
+      description = "AC adapter device name as reported by /sys/class/power_supply (e.g. AC, ADP1).";
+      default = "ADP1";
+      type = lib.types.str;
+    };
   };
 
   imports = [

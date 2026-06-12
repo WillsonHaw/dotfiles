@@ -18,10 +18,11 @@
 
   zramSwap.enable = true;
 
-  # Headless — VSCode Remote SSH connects to sshd. The vscode-server module
-  # patches the binaries VSCode pushes to ~/.vscode-server so they actually
-  # run on NixOS.
-  noodles.desktops.environment = null;
+  # Headless by default — VSCode Remote SSH connects to sshd. The vscode-server
+  # module patches the binaries VSCode pushes to ~/.vscode-server so they
+  # actually run on NixOS. Hosts that combine this role with a desktop env
+  # (e.g. a dev laptop) can override `noodles.desktops.environment`.
+  noodles.desktops.environment = lib.mkDefault null;
   services.vscode-server.enable = true;
 
   # Docker for containerized dev workflows.

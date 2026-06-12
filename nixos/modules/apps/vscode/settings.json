@@ -13,8 +13,6 @@
   "workbench.activityBar.location": "top",
   "cSpell.userWords": [
     "callees",
-    "plexinc",
-    "plextv",
     "Pressable",
     "Workerized"
   ],
@@ -26,7 +24,10 @@
   "workbench.editor.enablePreview": true,
   "workbench.editor.wrapTabs": true,
   "window.density.editorTabHeight": "compact",
-  "security.allowedUNCHosts": ["10.0.0.100"],
+  "security.allowedUNCHosts": [
+    "10.0.0.100",
+    "10.0.0.201"
+  ],
   "eslint.workingDirectories": [
     {
       "mode": "auto"
@@ -37,13 +38,6 @@
   "chat.agent.enabled": true,
   "geminicodeassist.enableTelemetry": false,
   "geminicodeassist.updateChannel": "Insiders",
-  "[javascript]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  },
-  "tizen.working.folder": "e:\\plex\\react-native-client\\plex",
-  "tizen.studio.path": "e:\\lib\\tizen-sdk",
-  "biome.suggestInstallingGlobally": false,
-  "biome.requireConfiguration": true,
   "github.copilot.nextEditSuggestions.enabled": true,
   "githubPullRequests.pullBranch": "never",
   "terminal.integrated.shellIntegration.enabled": true,
@@ -65,6 +59,9 @@
   "explorer.confirmDragAndDrop": false,
   "gitlens.ai.model": "vscode",
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
   "[typescript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },

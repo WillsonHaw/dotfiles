@@ -31,11 +31,7 @@
       {
         # nixpkgs.overlays = [ wayland_overlay ];
 
-        home.packages = with pkgs; [ rofi-unwrapped ];
-
-        programs.rofi = {
-          plugins = [ pkgs.rofi-emoji ];
-        };
+        home.packages = [ pkgs.rofi-unwrapped ];
 
         xdg.configFile."rofi".source = pkgs.symlinkJoin {
           name = "rofi-configs";
