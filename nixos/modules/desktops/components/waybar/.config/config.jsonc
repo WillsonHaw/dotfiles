@@ -5,18 +5,23 @@
     "custom/launcher",
     "cpu",
     "memory",
+    "disk",
+    "temperature",
     "custom/weather",
     "hyprland/workspaces"
   ],
   "modules-center": ["mpris"],
   "modules-right": [
+    "bluetooth",
+    "custom/tailscale",
     "network",
-    "pulseaudio",
+    "wireplumber",
     "backlight",
+    "power-profiles-daemon",
     "battery",
+    "idle_inhibitor",
     "clock",
     "tray",
-    "hyprland/language",
     "custom/wallpaper",
     "custom/power-menu"
   ],
@@ -57,19 +62,25 @@
   },
   "cpu": {
     "interval": 10,
-    "format": "  {}%",
+    "format": "󰍛 {}%",
     "max-length": 10,
     "on-click": ""
   },
   "memory": {
     "interval": 30,
-    "format": " {}%",
-    "format-alt": " {used:0.1f}GB",
+    "format": "󰑭 {}%",
+    "format-alt": "󰑭 {used:0.1f}GB",
     "max-length": 10
+  },
+  "disk": {
+    "interval": 30,
+    "format": "󰋊 {percentage_used}%",
+    "path": "/",
+    "tooltip-format": "{used} used / {total} total"
   },
   "temperature": {
     "interval": 10,
-    "format": " {temperatureC}°C",
+    "format": "󰔏 {temperatureC}°C",
     "max-length": 10
   },
   "backlight": {
@@ -95,7 +106,7 @@
     "tooltip-format": "Brightness {percent}%"
   },
   "network": {
-    /* "format-wifi": "直", */
+    /* "format-wifi": "直", */
     "format-wifi": "<small>{bandwidthDownBytes}</small> {icon}",
     "min-length": 10,
     "fixed-width": 10,
@@ -111,7 +122,7 @@
     "format-alt": "bluetooth: {status}",
     "interval": 30,
     "format-icons": {
-      "enabled": "",
+      "enabled": "󰂯",
       "disabled": "󰂲"
     },
     "tooltip-format": "{status}"
@@ -120,12 +131,22 @@
     "format": "{icon}",
     "format-muted": "󰖁",
     "format-icons": {
-      "default": ["", "", "󰕾"]
+      "default": ["", "", "󰕾"]
     },
     "on-click": "pamixer -t",
     "on-scroll-up": "pamixer -i 1",
     "on-scroll-down": "pamixer -d 1",
     "on-click-right": "exec pavucontrol",
+    "tooltip-format": "Volume {volume}%"
+  },
+  "wireplumber": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰖁 muted",
+    "format-icons": ["󰕿", "󰖀", "󰕾"],
+    "on-click": "pamixer -t",
+    "on-scroll-up": "pamixer -i 1",
+    "on-scroll-down": "pamixer -d 1",
+    "on-click-right": "pavucontrol",
     "tooltip-format": "Volume {volume}%"
   },
   "battery": {
@@ -140,14 +161,57 @@
     "format": "{icon} ",
     "format-warning": "{icon}",
     "format-critical": "{icon}",
-    "format-charging": "<span font-family='Font Awesome 6 Free'></span>",
+    "format-charging": "<span font-family='Font Awesome 6 Free'></span>",
     "format-plugged": "󰚥",
     "format-notcharging": "󰚥",
-    "format-alt": "{icon}<small> {time}</small>",
-    "format-full": "󰂄",
     "format-alt": "<small>{capacity}%</small> ",
     "format-full": "󰚥",
     "format-icons": ["󱊡", "󱊢", "󱊣"]
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "󰅶",
+      "deactivated": "󰾪"
+    },
+    "tooltip-format-activated": "Idle inhibitor on",
+    "tooltip-format-deactivated": "Idle inhibitor off"
+  },
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "tooltip": true,
+    "format-icons": {
+      "default": "󱐋",
+      "performance": "󱐋",
+      "balanced": "󰗑",
+      "power-saver": "󰌪"
+    }
+  },
+  "privacy": {
+    "icon-spacing": 4,
+    "icon-size": 18,
+    "transition-duration": 250,
+    "modules": [
+      {
+        "type": "screenshare",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      },
+      {
+        "type": "audio-in",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      }
+    ]
+  },
+  "custom/tailscale": {
+    "exec": "bash ~/.config/waybar/scripts/tailscale.sh",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "tailscale up",
+    "on-click-right": "tailscale down",
+    "tooltip": true
   },
   "custom/weather": {
     "exec": "nix-shell ~/.config/waybar/scripts/weather.py",
@@ -157,7 +221,7 @@
   "custom/lock": {
     "tooltip": false,
     "on-click": "swaylock",
-    "format": ""
+    "format": ""
   },
   "mpris": {
     "format": "{player_icon} {title}",
@@ -174,14 +238,14 @@
   },
   "custom/spotify": {
     "exec": "nix-shell ~/.config/waybar/scripts/mediaplayer.py --player youtube-music",
-    "format": " {}",
+    "format": " {}",
     "return-type": "json",
     "on-click": "playerctl play-pause",
     "on-double-click-right": "playerctl next",
     "on-scroll-down": "playerctl previous"
   },
   "custom/power-menu": {
-    "format": "",
+    "format": "",
     "on-click": "bash ~/.config/waybar/scripts/power-menu/powermenu.sh"
   },
   "custom/launcher": {
