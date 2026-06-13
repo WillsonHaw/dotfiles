@@ -189,20 +189,13 @@ window#waybar.hidden {
 
 #custom-tailscale {
   color: #8a909e;
-  border-radius: 8px;
+  border-radius: 0px 8px 8px 0px;
   margin-right: 6px;
   padding-left: 14px;
   padding-right: 14px;
   font-size: 20px;
 }
 
-#custom-tailscale.connected {
-  color: #a1c999;
-}
-
-#custom-tailscale.disconnected {
-  color: #fb958b;
-}
 
 #backlight {
   color: #ecd3a0;
@@ -213,8 +206,7 @@ window#waybar.hidden {
 
 #network {
   color: #5E81AC;
-  border-radius: 8px;
-  margin-right: 6px;
+  border-radius: 8px 0px 0px 8px;
   padding-left: 14px;
   padding-right: 14px;
   font-size: 20px;
@@ -327,17 +319,21 @@ window#waybar.hidden {
 
 #custom-power-menu {
   color: #8a909e;
-  margin-right: 12px;
-  border-radius: 8px;
-  padding-right: 16px;
   border-radius: 0 8px 8px 0;
-  margin-top: 7px;
-  margin-bottom: 7px;
+  padding-left: 7.5px;
+  padding-right: 18px;
+  margin-right: 12px;
+  margin-top: 8.5px;
+  margin-bottom: 8.5px;
 }
 
 #custom-wallpaper {
   color: #8a909e;
-  padding-right: 12px;
+  border-radius: 8px 0 0 8px;
+  padding-left: 14px;
+  padding-right: 7.5px;
+  margin-top: 8.5px;
+  margin-bottom: 8.5px;
 }
 
 tooltip {

@@ -31,9 +31,8 @@
       {
         # nixpkgs.overlays = [ wayland_overlay ];
 
-        home.packages = with pkgs; [ rofi-unwrapped ];
-
         programs.rofi = {
+          package = pkgs.rofi-wayland-unwrapped;
           plugins = [ pkgs.rofi-emoji ];
         };
 

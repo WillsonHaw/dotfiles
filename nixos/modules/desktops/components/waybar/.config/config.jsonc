@@ -10,17 +10,16 @@
     "custom/weather",
     "hyprland/workspaces"
   ],
-  "modules-center": ["mpris"],
+  "modules-center": ["mpris", "clock"],
   "modules-right": [
     "bluetooth",
-    "custom/tailscale",
     "network",
+    "custom/tailscale",
     "wireplumber",
     "backlight",
     "power-profiles-daemon",
     "battery",
     "idle_inhibitor",
-    "clock",
     "tray",
     "custom/wallpaper",
     "custom/power-menu"
@@ -57,8 +56,8 @@
   },
   "clock": {
     "format": "{:%H:%M}",
-    "format-alt": "{:%b %d %Y}",
-    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    "tooltip-format": "{:%A, %B %d %Y}",
+    "on-click": "gsimplecal"
   },
   "cpu": {
     "interval": 10,
@@ -106,13 +105,12 @@
     "tooltip-format": "Brightness {percent}%"
   },
   "network": {
-    /* "format-wifi": "直", */
-    "format-wifi": "<small>{bandwidthDownBytes}</small> {icon}",
-    "min-length": 10,
-    "fixed-width": 10,
+    "format-wifi": "{icon}",
     "format-ethernet": "󰈀",
     "format-disconnected": "󰤭",
-    "tooltip-format": "{essid}",
+    "tooltip-format-wifi": "{essid}\n{ipaddr}\n↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}",
+    "tooltip-format-ethernet": "{ipaddr}\n↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Disconnected",
     "interval": 1,
     "on-click": "~/.config/waybar/scripts/network/rofi-network-manager.sh",
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
@@ -140,8 +138,8 @@
     "tooltip-format": "Volume {volume}%"
   },
   "wireplumber": {
-    "format": "{icon} {volume}%",
-    "format-muted": "󰖁 muted",
+    "format": "{icon}",
+    "format-muted": "󰖁",
     "format-icons": ["󰕿", "󰖀", "󰕾"],
     "on-click": "pamixer -t",
     "on-scroll-up": "pamixer -i 1",
@@ -209,8 +207,7 @@
     "exec": "bash ~/.config/waybar/scripts/tailscale.sh",
     "return-type": "json",
     "interval": 5,
-    "on-click": "tailscale up",
-    "on-click-right": "tailscale down",
+    "on-click": "~/.config/waybar/scripts/tailscale-toggle.sh",
     "tooltip": true
   },
   "custom/weather": {
@@ -245,7 +242,7 @@
     "on-scroll-down": "playerctl previous"
   },
   "custom/power-menu": {
-    "format": "",
+    "format": "⏻",
     "on-click": "bash ~/.config/waybar/scripts/power-menu/powermenu.sh"
   },
   "custom/launcher": {
