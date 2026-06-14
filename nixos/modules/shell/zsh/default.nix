@@ -88,7 +88,7 @@
           # VPN
           wg-up = "sudo systemctl start wg-quick-wg0.service";
           wg-down = "sudo systemctl stop wg-quick-wg0.service";
-          ts-up = "sudo tailscale up";
+          ts-up = "sudo tailscale up --accept-routes";
           ts-down = "sudo tailscale down";
           hyprlock-fix = "hyprctl --instance 0 'keyword:misc_allow_session_lock_restore 1' && hyprctl --instance 0 'dispatch exec hyprlock'";
         };
