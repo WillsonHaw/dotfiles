@@ -140,7 +140,7 @@ in
 
     services.samba = {
       enable = true;
-      package = pkgs.samba4Full;
+      package = pkgs.samba;
       openFirewall = cfg.openFirewall;
       usershares.enable = cfg.usershares.enable;
 
