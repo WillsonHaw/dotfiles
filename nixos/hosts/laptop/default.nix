@@ -50,6 +50,7 @@
       antigravity.enable = true;
       cursor.enable = true;
       godot.enable = true;
+      waynergy.enable = true;
     };
 
     desktops.environment = "niri";
