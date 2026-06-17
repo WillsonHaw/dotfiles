@@ -31,6 +31,8 @@ in
     home-manager.users.${config.noodles.user} =
       { config, ... }:
       {
+        home.file."${config.xdg.configHome}/xkb/keycodes/win".source = lib.mkForce ./keycodes;
+
         home.file."${config.xdg.configHome}/waynergy/xkb_keymap".text = lib.mkForce ''
           xkb_keymap {
             xkb_keycodes  { include "win+aliases(qwerty)" };
