@@ -1,5 +1,4 @@
 * {
-  /* `otf-font-awesome` is required to be installed for icons */
   font-family: Material Design Icons, JetBrainsMono Nerd Font, Iosevka Nerd Font;
   font-size: 14px;
   border: none;
@@ -22,319 +21,209 @@ window#waybar.hidden {
   color: #64727d;
 }
 
-#clock,
-#temperature,
-#mpris,
+/* ── Left/center pills ─────────────────────────────────────────────────────── */
+
 #cpu,
 #memory,
 #disk,
-#custom-media,
-#tray,
-#mode,
-#custom-lock,
-#workspaces,
-#idle_inhibitor,
-#custom-launcher,
+#temperature,
+#mpris,
 #custom-spotify,
-#custom-weather,
-#custom-weather.severe,
-#custom-weather.sunnyDay,
-#custom-weather.clearNight,
-#custom-weather.cloudyFoggyDay,
-#custom-weather.cloudyFoggyNight,
-#custom-weather.rainyDay,
-#custom-weather.rainyNight,
-#custom-weather.showyIcyDay,
-#custom-weather.snowyIcyNight,
-#custom-weather.default {
+#custom-media,
+#workspaces,
+#mode,
+#custom-lock {
   color: #e5e5e5;
-  border-radius: 6px;
-  padding: 2px 10px;
   background-color: #252733;
   border-radius: 8px;
   font-size: 16px;
-
-  margin-left: 4px;
-  margin-right: 4px;
-
-  margin-top: 8.5px;
-  margin-bottom: 8.5px;
+  padding: 2px 10px;
+  margin: 8.5px 4px;
 }
 
-#temperature {
-  color: #7a95c9;
-}
+#temperature  { color: #7a95c9; }
+#cpu          { color: #fb958b; }
+#memory       { color: #a1c999; }
+#disk         { color: #a1c999; }
 
-#cpu {
-  color: #fb958b;
-}
-
-#memory {
-  color: #a1c999;
-}
-
-#workspaces button {
-  color: #7a95c9;
-  box-shadow: inset 0 -3px transparent;
-
-  padding-right: 3px;
-  padding-left: 4px;
-
-  margin-left: 0.1em;
-  margin-right: 0em;
-  transition: all 0.5s cubic-bezier(0.55, -0.68, 0.48, 1.68);
-}
-
-#workspaces button.active {
-  color: #ecd3a0;
-  padding-left: 1px;
-  padding-right: 5px;
+#custom-weather {
   font-family: Iosevka Nerd Font;
-  font-weight: bold;
-  font-size: 12px;
-  margin-left: 0em;
-  margin-right: 0em;
-  transition: all 0.5s cubic-bezier(0.55, -0.68, 0.48, 1.68);
-}
-
-/* If workspaces is the leftmost module, omit left margin */
-.modules-left>widget:first-child>#workspaces {
-  margin-left: 0;
-}
-
-/* If workspaces is the rightmost module, omit right margin */
-.modules-right>widget:last-child>#workspaces {
-  margin-right: 0;
-}
-
-#custom-launcher {
-  margin-left: 12px;
-
-  padding-right: 18px;
-  padding-left: 14px;
-
-  font-size: 22px;
-
-  color: #7a95c9;
-
-  margin-top: 8.5px;
-  margin-bottom: 8.5px;
-}
-
-#bluetooth,
-#custom-tailscale,
-#backlight,
-#battery,
-#pulseaudio,
-#wireplumber,
-#power-profiles-daemon,
-#network {
-  background-color: #252733;
-  padding: 0em 2em;
-
-  font-size: 14px;
-
-  padding-left: 7.5px;
-  padding-right: 7.5px;
-
-  padding-top: 3px;
-  padding-bottom: 3px;
-
-  margin-top: 7px;
-  margin-bottom: 7px;
-
-  font-size: 20px;
-}
-
-#pulseaudio {
-  color: #81A1C1;
-  padding-left: 9px;
-  font-size: 22px;
-}
-
-#pulseaudio.muted {
-  color: #fb958b;
-  padding-left: 9px;
-  font-size: 22px;
-}
-
-#wireplumber {
-  color: #81A1C1;
-  border-radius: 8px 0px 0px 8px;
-  padding-left: 14px;
-  font-size: 22px;
-}
-
-#wireplumber.muted {
-  color: #fb958b;
-  padding-left: 9px;
-  font-size: 22px;
-}
-
-#disk {
-  color: #a1c999;
-}
-
-#power-profiles-daemon {
-  color: #ecd3a0;
-}
-
-#power-profiles-daemon.performance {
-  color: #fb958b;
-}
-
-#power-profiles-daemon.power-saver {
-  color: #a1c999;
-}
-
-#custom-tailscale {
+  font-size: 13px;
   color: #8a909e;
-  border-radius: 0px 8px 8px 0px;
-  margin-right: 6px;
-  padding-left: 14px;
-  padding-right: 14px;
-  font-size: 20px;
+  padding: 2px 8px;
+  margin: 8.5px 4px;
 }
+#custom-weather.severe          { color: #eb937d; }
+#custom-weather.sunnyDay        { color: #c2ca76; }
+#custom-weather.clearNight      { color: #cad3f5; }
+#custom-weather.cloudyFoggyDay,
+#custom-weather.cloudyFoggyNight { color: #c2ddda; }
+#custom-weather.rainyDay,
+#custom-weather.rainyNight      { color: #5aaca5; }
+#custom-weather.showyIcyDay,
+#custom-weather.snowyIcyNight   { color: #d6e7e5; }
+#custom-weather.default         { color: #dbd9d8; }
 
-
-#backlight {
-  color: #ecd3a0;
-  padding-right: 5px;
-  padding-left: 8px;
-  font-size: 21.2px;
-}
-
-#network {
-  color: #5E81AC;
-  border-radius: 8px 0px 0px 8px;
-  padding-left: 14px;
-  padding-right: 14px;
-  font-size: 20px;
-}
-
-#network.disconnected {
-  color: #fb958b;
-}
-
-#bluetooth {
-  color: #5E81AC;
-  border-radius: 8px;
-  margin-right: 6px;
-  padding-left: 14px;
-  padding-right: 14px;
-  font-size: 20px;
-}
-
-#bluetooth.disconnected {
-  color: #fb958b;
-}
-
-
-#battery {
-  color: #8fbcbb;
-  border-radius: 0px 8px 8px 0px;
-  padding-right: 2px;
-  font-size: 22px;
-}
-
-#battery.critical,
-#battery.warning,
-#battery.full,
-#battery.plugged {
-  color: #8fbcbb;
-  padding-left: 6px;
-  padding-right: 12px;
-  font-size: 22px;
-}
-
-#battery.charging {
-  font-size: 18px;
-  padding-right: 13px;
-  padding-left: 4px;
-}
-
-#battery.full,
-#battery.plugged {
-  font-size: 22.5px;
-  padding-right: 10px;
-}
-
-@keyframes blink {
-  to {
-    background-color: rgba(30, 34, 42, 0.5);
-    color: #abb2bf;
-  }
-}
-
-#battery.warning {
-  color: #ecd3a0;
-}
-
-#battery.critical:not(.charging) {
-  color: #fb958b;
-}
+#mpris,
+#custom-spotify { color: #abb2bf; }
 
 #custom-lock {
   color: #ecd3a0;
-  padding: 0 15px 0 15px;
+  padding: 0 15px;
   margin-left: 7px;
-  margin-top: 7px;
-  margin-bottom: 7px;
 }
 
+/* Launcher */
+#custom-launcher {
+  background-color: #252733;
+  border-radius: 8px;
+  font-size: 22px;
+  color: #7a95c9;
+  padding: 0 18px 0 14px;
+  margin: 8.5px 4px 8.5px 12px;
+}
+
+/* Workspaces – zero padding on buttons so the hover box = icon size,
+ * eliminating any room for the label to sit off-centre. */
+#workspaces {
+  padding: 2px 10px;
+}
+
+#workspaces button {
+  background: transparent;
+  color: #7a95c9;
+  padding: 0;
+  margin: 0 4px;
+  min-height: 0;
+  min-width: 0;
+  box-shadow: none;
+  border: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+#workspaces button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+#workspaces button.active {
+  background: transparent;
+  color: #ecd3a0;
+  font-weight: bold;
+}
+
+.modules-left  > widget:first-child > #workspaces { margin-left: 0; }
+.modules-right > widget:last-child  > #workspaces { margin-right: 0; }
+
+/* Clock */
 #clock {
+  background-color: #252733;
+  border-radius: 8px;
   color: #8a909e;
   font-family: Iosevka Nerd Font;
   font-weight: bold;
-  margin-top: 7px;
-  margin-bottom: 7px;
+  font-size: 16px;
+  padding: 2px 10px;
+  margin: 7px 4px;
 }
+
+/* ── Right-side icon pills ─────────────────────────────────────────────────── */
+/*
+ * Single shared container style. All icon modules get identical sizing.
+ * Only color and border-radius are overridden per module.
+ *
+ * Visual groups (modules that share one elongated pill):
+ *   bluetooth                        – standalone
+ *   network | custom-tailscale       – group
+ *   wireplumber | backlight | power-profiles-daemon | battery  – group
+ *   idle_inhibitor                   – standalone
+ */
+
+#bluetooth,
+#network,
+#custom-tailscale,
+#custom-waynergy,
+#wireplumber,
+#backlight,
+#power-profiles-daemon,
+#battery,
+#idle_inhibitor {
+  background-color: #252733;
+  font-size: 20px;
+  padding: 2px 12px;
+  margin: 7px 0;
+  border-radius: 8px;
+}
+
+/* standalone – bluetooth */
+#bluetooth              { color: #5E81AC; margin-right: 6px; }
+#bluetooth.disconnected { color: #fb958b; }
+
+/* group – network | tailscale */
+#network                { color: #5E81AC; border-radius: 8px 0 0 8px; }
+#network.disconnected   { color: #fb958b; }
+#custom-tailscale       { color: #8a909e; border-radius: 0 8px 8px 0; margin-right: 6px; }
+
+/* standalone – waynergy */
+#custom-waynergy        { color: #8a909e; margin-right: 6px; }
+
+/* group – wireplumber | backlight | power-profiles-daemon | battery */
+#wireplumber            { color: #81A1C1; border-radius: 8px 0 0 8px; }
+#wireplumber.muted      { color: #fb958b; }
+#backlight              { color: #ecd3a0; border-radius: 0; }
+#power-profiles-daemon  { color: #ecd3a0; border-radius: 0; }
+#power-profiles-daemon.performance  { color: #fb958b; }
+#power-profiles-daemon.power-saver  { color: #a1c999; }
+#battery                { color: #8fbcbb; border-radius: 0 8px 8px 0; }
+#battery.warning        { color: #ecd3a0; }
+#battery.critical:not(.charging) { color: #fb958b; }
+
+/* standalone – idle inhibitor */
+#idle_inhibitor           { background-color: #242933; color: #8a909e; border-radius: 8px; margin-right: 6px; }
+#idle_inhibitor.activated { background-color: #ecf0f1; color: #2d3436; }
+
+/* ── Tray ──────────────────────────────────────────────────────────────────── */
+
+#tray {
+  background-color: #252733;
+  border-radius: 8px;
+  padding: 2px 8px;
+  margin: 7px 6px 7px 0;
+}
+#tray > .passive       { -gtk-icon-effect: dim; }
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: #eb4d4b;
+}
+
+/* ── group – wallpaper | power-menu ───────────────────────────────────────── */
 
 #custom-wallpaper,
-#language,
 #custom-power-menu {
   background-color: #252733;
-  padding: 0em 2em;
-
+  color: #8a909e;
   font-size: 17px;
-
-  padding-left: 7.5px;
-  padding-right: 7.5px;
-
-  padding-top: 3px;
-  padding-bottom: 3px;
-
-  margin-top: 7px;
-  margin-bottom: 7px;
+  padding: 2px 10px;
+  margin: 8.5px 0;
 }
 
+#custom-wallpaper  { border-radius: 8px 0 0 8px; padding-left: 14px; }
+#custom-power-menu { border-radius: 0 8px 8px 0; padding-right: 18px; margin-right: 12px; }
+
+/* ── Language ──────────────────────────────────────────────────────────────── */
+
 #language {
+  background-color: #252733;
   color: #8a909e;
   font-family: Iosevka Nerd Font;
   font-weight: bold;
   border-radius: 8px 0 0 8px;
-  margin-top: 7px;
-  margin-bottom: 7px;
+  padding: 2px 10px;
+  margin: 7px 0;
 }
 
-#custom-power-menu {
-  color: #8a909e;
-  border-radius: 0 8px 8px 0;
-  padding-left: 7.5px;
-  padding-right: 18px;
-  margin-right: 12px;
-  margin-top: 8.5px;
-  margin-bottom: 8.5px;
-}
-
-#custom-wallpaper {
-  color: #8a909e;
-  border-radius: 8px 0 0 8px;
-  padding-left: 14px;
-  padding-right: 7.5px;
-  margin-top: 8.5px;
-  margin-bottom: 8.5px;
-}
+/* ── Tooltips ──────────────────────────────────────────────────────────────── */
 
 tooltip {
   font-family: Iosevka Nerd Font;
@@ -352,70 +241,11 @@ label:focus {
   background-color: #1f232b;
 }
 
-#tray {
-  margin-right: 8px;
-  margin-top: 7px;
-  margin-bottom: 7px;
-  font-size: 30px;
+/* ── Animations ────────────────────────────────────────────────────────────── */
 
-}
-
-#tray>.passive {
-  -gtk-icon-effect: dim;
-}
-
-#tray>.needs-attention {
-  -gtk-icon-effect: highlight;
-  background-color: #eb4d4b;
-}
-
-#idle_inhibitor {
-  background-color: #242933;
-}
-
-#idle_inhibitor.activated {
-  background-color: #ecf0f1;
-  color: #2d3436;
-}
-
-#mpris,
-#custom-spotify {
-  color: #abb2bf;
-}
-
-#custom-weather {
-  font-family: Iosevka Nerd Font;
-  font-size: 19px;
-  color: #8a909e;
-}
-
-#custom-weather.severe {
-  color: #eb937d;
-}
-
-#custom-weather.sunnyDay {
-  color: #c2ca76;
-}
-
-#custom-weather.clearNight {
-  color: #cad3f5;
-}
-
-#custom-weather.cloudyFoggyDay,
-#custom-weather.cloudyFoggyNight {
-  color: #c2ddda;
-}
-
-#custom-weather.rainyDay,
-#custom-weather.rainyNight {
-  color: #5aaca5;
-}
-
-#custom-weather.showyIcyDay,
-#custom-weather.snowyIcyNight {
-  color: #d6e7e5;
-}
-
-#custom-weather.default {
-  color: #dbd9d8;
+@keyframes blink {
+  to {
+    background-color: rgba(30, 34, 42, 0.5);
+    color: #abb2bf;
+  }
 }

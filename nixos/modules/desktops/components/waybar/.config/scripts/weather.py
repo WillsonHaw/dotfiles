@@ -1,9 +1,14 @@
-#!/usr/bin/env nix-shell
-#!nix-shell -i python -p python3 python310Packages.hjson python310Packages.requests
+#!/usr/bin/env python3
 
 import json
-import requests
+import sys
 from datetime import datetime
+
+try:
+    import requests
+except ImportError:
+    print(json.dumps({"text": "?°", "tooltip": "requests not available"}))
+    sys.exit(0)
 
 WEATHER_CODES = {
     '113': '☀️',
@@ -15,11 +20,11 @@ WEATHER_CODES = {
     '179': '🌧️',
     '182': '🌧️',
     '185': '🌧️',
-    '200': '⛈️ ',
+    '200': '⛈️',
     '227': '🌨️',
     '230': '🌨️',
-    '248': '☁️ ',
-    '260': '☁️ ',
+    '248': '☁️',
+    '260': '☁️',
     '263': '🌧️',
     '266': '🌧️',
     '281': '🌧️',
@@ -36,10 +41,10 @@ WEATHER_CODES = {
     '320': '🌨️',
     '323': '🌨️',
     '326': '🌨️',
-    '329': '❄️ ',
-    '332': '❄️ ',
-    '335': '❄️ ',
-    '338': '❄️ ',
+    '329': '❄️',
+    '332': '❄️',
+    '335': '❄️',
+    '338': '❄️',
     '350': '🌧️',
     '353': '🌧️',
     '356': '🌧️',
@@ -53,13 +58,8 @@ WEATHER_CODES = {
     '386': '🌨️',
     '389': '🌨️',
     '392': '🌧️',
-    '395': '❄️ '
+    '395': '❄️',
 }
-
-data = {}
-
-
-weather = requests.get("https://wttr.in/kuwait?format=j1").json()
 
 
 def format_time(time):
@@ -67,7 +67,7 @@ def format_time(time):
 
 
 def format_temp(temp):
-    return (hour['FeelsLikeC']+"°").ljust(3)
+    return (temp + "°").ljust(3)
 
 
 def format_chances(hour):
@@ -79,38 +79,48 @@ def format_chances(hour):
         "chanceofsnow": "Snow",
         "chanceofsunshine": "Sunshine",
         "chanceofthunder": "Thunder",
-        "chanceofwindy": "Wind"
-    
-        }
+        "chanceofwindy": "Wind",
+    }
     conditions = []
-    for event in chances.keys():
-        if int(hour[event]) > 0:
-            conditions.append(chances[event]+" "+hour[event]+"%")
+    for event, label in chances.items():
+        if int(hour.get(event, 0)) > 0:
+            conditions.append(label + " " + hour[event] + "%")
     return ", ".join(conditions)
 
 
-data['text'] = WEATHER_CODES[weather['current_condition'][0]['weatherCode']] + \
-    " "+weather['current_condition'][0]['FeelsLikeC']+"°"
+try:
+    weather = requests.get("https://wttr.in/?format=j1", timeout=10).json()
+    cur = weather['current_condition'][0]
 
-data['tooltip'] = f"<b>{weather['current_condition'][0]['weatherDesc'][0]['value']} {weather['current_condition'][0]['temp_C']}°C</b>\n"
-data['tooltip'] += f"Feels like: {weather['current_condition'][0]['FeelsLikeC']}°C\n"
-data['tooltip'] += f"Wind: {weather['current_condition'][0]['windspeedKmph']}Km/h\n"
-data['tooltip'] += f"Humidity: {weather['current_condition'][0]['humidity']}%\n"
-for i, day in enumerate(weather['weather']):
-    data['tooltip'] += f"\n<b>"
-    if i == 0:
-        data['tooltip'] += "Today, "
-    if i == 1:
-        data['tooltip'] += "Tomorrow, "
-    data['tooltip'] += f"{day['date']}</b>\n"
-    data['tooltip'] += f"⬆️ {day['maxtempC']}° ⬇️ {day['mintempC']}° "
-    data['tooltip'] += f"🌅 {day['astronomy'][0]['sunrise']} 🌇 {day['astronomy'][0]['sunset']}\n"
-    for hour in day['hourly']:
+    data = {}
+    data['text'] = WEATHER_CODES.get(cur['weatherCode'], '?') + " " + cur['FeelsLikeC'] + "°"
+
+    data['tooltip'] = f"<b>{cur['weatherDesc'][0]['value']} {cur['temp_C']}°C</b>\n"
+    data['tooltip'] += f"Feels like: {cur['FeelsLikeC']}°C\n"
+    data['tooltip'] += f"Wind: {cur['windspeedKmph']} km/h\n"
+    data['tooltip'] += f"Humidity: {cur['humidity']}%\n"
+
+    for i, day in enumerate(weather['weather']):
+        data['tooltip'] += "\n<b>"
         if i == 0:
-            if int(format_time(hour['time'])) < datetime.now().hour-2:
+            data['tooltip'] += "Today, "
+        elif i == 1:
+            data['tooltip'] += "Tomorrow, "
+        data['tooltip'] += f"{day['date']}</b>\n"
+        data['tooltip'] += f"⬆️ {day['maxtempC']}° ⬇️ {day['mintempC']}°  "
+        data['tooltip'] += f"🌅 {day['astronomy'][0]['sunrise']}  🌇 {day['astronomy'][0]['sunset']}\n"
+        for hour in day['hourly']:
+            if i == 0 and int(format_time(hour['time'])) < datetime.now().hour - 2:
                 continue
-        data['tooltip'] += f"{format_time(hour['time'])} {WEATHER_CODES[hour['weatherCode']]} {format_temp(hour['FeelsLikeC'])} {hour['weatherDesc'][0]['value']}, {format_chances(hour)}\n"
+            data['tooltip'] += (
+                f"{format_time(hour['time'])} "
+                f"{WEATHER_CODES.get(hour['weatherCode'], '?')} "
+                f"{format_temp(hour['FeelsLikeC'])} "
+                f"{hour['weatherDesc'][0]['value']}, "
+                f"{format_chances(hour)}\n"
+            )
 
+    print(json.dumps(data))
 
-print(json.dumps(data))
-
+except Exception as e:
+    print(json.dumps({"text": "⚠️", "tooltip": str(e)}))

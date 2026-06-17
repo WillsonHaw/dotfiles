@@ -57,6 +57,15 @@
 
   services.power-profiles-daemon.enable = true;
 
+  # Remap F20 (macro key) to Super so it triggers Niri compositor shortcuts.
+  services.keyd = {
+    enable = true;
+    keyboards.default = {
+      ids = [ "*" ];
+      settings.main.f20 = "leftmeta";
+    };
+  };
+
   networking.hostName = "slumpy-laptop-komodo";
 
   system.stateVersion = "25.11";
@@ -75,7 +84,7 @@
       #antigravity.enable = true;
       #cursor.enable = true;
       #godot.enable = true;
-
+      waynergy.enable = true;
     };
 
     desktops.environment = "niri";

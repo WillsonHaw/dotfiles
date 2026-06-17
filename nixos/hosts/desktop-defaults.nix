@@ -44,6 +44,11 @@
       };
     }
 
+    # Defaults for laptops
+    (lib.mkIf config.noodles.device.is-laptop {
+      noodles.system.presentation.enable = lib.mkDefault true;
+    })
+
     # Defaults for desktop-class machines (non-laptops)
     (lib.mkIf (!config.noodles.device.is-laptop) {
       zramSwap.enable = true;
