@@ -11,7 +11,7 @@
     ../dev-base.nix
     ../desktop-defaults.nix
     ./hardware-configuration.nix
-#    ./graphics.nix
+    #    ./graphics.nix
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
@@ -86,6 +86,27 @@
       #godot.enable = true;
       waynergy.enable = true;
     };
+
+    system.display.externalDisplays = [
+      {
+        # Samsung Odyssey G93SC connected via Thunderbolt (currently DP-8).
+        # Trailing * matches the serial suffix in the description; run
+        # `niri msg outputs` to see the full string.
+        criteria = "Samsung Electric Company Odyssey G93SC *";
+        # Preferred mode is 1680x1440; no explicit mode needed.
+        logicalWidth = 1680;
+        disableInternal = true;
+      }
+      {
+        # RayNeo XR glasses.  Run `niri msg outputs` while connected to
+        # confirm the make/model string and replace "DP-1" if needed.
+        criteria = "DP-1";
+        mode = "1920x1080";
+        # Glasses replace the laptop screen rather than extending it.
+        disableInternal = true;
+        # logicalWidth auto-derived from mode: 1920
+      }
+    ];
 
     desktops.environment = "niri";
 

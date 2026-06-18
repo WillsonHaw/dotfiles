@@ -16,7 +16,7 @@
   sops = {
     defaultSopsFile = ../secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
-    
+
     age.keyFile = "/home/${config.noodles.user}/.config/sops/age/keys.txt";
 
     secrets = {
@@ -56,6 +56,13 @@
   ];
 
   users.mutableUsers = false;
+
+  # Allow sudo without a TTY so tools like Claude Code can run sudo commands.
+  # Still requires cached credentials — run `sudo -v` once per session.
+  security.sudo.extraConfig = ''
+    Defaults !requiretty
+    Defaults timestamp_type=global
+  '';
 
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 

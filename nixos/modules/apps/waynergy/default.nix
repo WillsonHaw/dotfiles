@@ -7,6 +7,16 @@
 }:
 let
   hostName = config.networking.hostName;
+  waynergy-patched = pkgs.waynergy.overrideAttrs (old: {
+    # Reduce UINPUT_KEY_MAX from 256 to 247 to exclude BTN_0 (evdev 256) from
+    # the uinput keyboard device's key bit field.  Without this, libinput
+    # misclassifies the device as having pointer capability, dropping all
+    # keyboard events and breaking compositor shortcuts (Super+key in Niri).
+    postPatch = (old.postPatch or "") + ''
+      substituteInPlace src/wl_input_uinput.c \
+        --replace-fail '#define UINPUT_KEY_MAX 256' '#define UINPUT_KEY_MAX 247'
+    '';
+  });
 in
 {
   options = {
@@ -14,23 +24,35 @@ in
   };
 
   config = lib.mkIf config.noodles.apps.waynergy.enable {
-    environment.systemPackages = [
-      # Patched: reduce UINPUT_KEY_MAX from 256 to 247 to exclude BTN_0
-      # (evdev 256) from the uinput keyboard device's key bit field.
-      # Without this, libinput misclassifies the device as having pointer
-      # capability, dropping all keyboard events and breaking compositor
-      # shortcuts (Super+key bindings in Niri).
-      (pkgs.waynergy.overrideAttrs (old: {
-        postPatch = (old.postPatch or "") + ''
-          substituteInPlace src/wl_input_uinput.c \
-            --replace-fail '#define UINPUT_KEY_MAX 256' '#define UINPUT_KEY_MAX 247'
-        '';
-      }))
-    ];
+    environment.systemPackages = [ waynergy-patched ];
+
+    # Tell kanshi to restart waynergy on every profile change so it re-queries
+    # the active outputs and reports the correct screen dimensions to the
+    # Synergy server.  Only wired up when the display module is also enabled.
+    noodles.system.display.profileChangeExec =
+      lib.mkIf config.noodles.system.display.enable
+        [ "systemctl --user restart waynergy.service" ];
 
     home-manager.users.${config.noodles.user} =
       { config, ... }:
       {
+        # Managed as a systemd user service so kanshi can restart it on display
+        # profile changes (which alter the bounding box waynergy reports to the
+        # Synergy server).
+        systemd.user.services.waynergy = {
+          Unit = {
+            Description = "Waynergy Synergy protocol client";
+            PartOf = [ "graphical-session.target" ];
+            After = [ "graphical-session.target" ];
+          };
+          Service = {
+            ExecStart = "${waynergy-patched}/bin/waynergy";
+            Restart = "on-failure";
+            RestartSec = "3";
+          };
+          Install.WantedBy = [ "graphical-session.target" ];
+        };
+
         home.file."${config.xdg.configHome}/xkb/keycodes/win".source = lib.mkForce ./keycodes;
 
         home.file."${config.xdg.configHome}/waynergy/xkb_keymap".text = lib.mkForce ''

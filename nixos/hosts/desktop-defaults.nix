@@ -47,6 +47,10 @@
     # Defaults for laptops
     (lib.mkIf config.noodles.device.is-laptop {
       noodles.system.presentation.enable = lib.mkDefault true;
+      noodles.system.display.enable = lib.mkDefault true;
+
+      # Authorize Thunderbolt devices (docks, displays) automatically.
+      services.hardware.bolt.enable = true;
     })
 
     # Defaults for desktop-class machines (non-laptops)
