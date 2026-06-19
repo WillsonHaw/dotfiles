@@ -1,142 +1,168 @@
-.bar-window {
-  background-color: $background;
-  padding: $bar-spacing;
-  font-family: 'JetbrainsMono Nerd Font Mono';
+@use '../variables' as *;
+
+// ── Bar window ────────────────────────────────────────────────────────────────
+
+.bar {
+  background-color: rgba(30, 30, 46, 0.85);
+  font-family: "JetBrainsMono Nerd Font Mono";
+  padding: 0 8px;
+  min-height: 40px;
 }
 
-.group {
-  border-radius: $border-radius;
-  background-color: $gray;
-  padding: $v-padding $h-padding;
+.bar-left,
+.bar-right {
+  min-height: 40px;
 }
 
-.widget {
-  min-width: 2rem;
-  min-height: 2rem;
+// ── Shared pill button ────────────────────────────────────────────────────────
+// All interactive modules are .pill-btn. .pill containers group them with zero
+// gap so they share one continuous background, forming a visual pill.
 
-  .icon {
-    font-size: 1rem;
-  }
+.pill-btn {
+  background-color: $mocha-surface0;
+  color: $mocha-overlay2;
+  font-size: 18px;
+  padding: 2px 8px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  border-radius: 0;
 
-  .icon.medium {
-    font-size: 1.5rem;
-  }
-
-  .icon.large {
-    font-size: 2rem;
-  }
-
-  .icon.x-large {
-    font-size: 3rem;
-  }
-
-  .icon.small {
-    font-size: 0.5rem;
-  }
+  label { font-size: 18px; }
+  &:hover { background-color: $mocha-surface1; }
 }
 
-.section {
-  &.top .group {
-    margin-bottom: $bar-spacing;
-  }
+.pill-start { border-radius: 8px 0 0 8px; padding-left: 12px; }
+.pill-end   { border-radius: 0 8px 8px 0; padding-right: 12px; }
+.pill-only  { border-radius: 8px; padding-left: 12px; padding-right: 12px; }
 
-  &.bottom .group {
-    margin-top: $bar-spacing;
-  }
+.pill { margin: 0 3px; }
+
+// ── Launcher ──────────────────────────────────────────────────────────────────
+
+.launcher-btn {
+  color: $mocha-sapphire;
+  font-size: 20px;
+  margin-right: 3px;
 }
 
-// Launcher
-.launcher .widget {
-  color: $cyan;
-  font-family: 'Font Awesome 6 Free';
-  font-size: 1.5rem;
+// ── Workspaces ────────────────────────────────────────────────────────────────
+
+.workspaces-pill { margin-right: 6px; }
+
+.workspace-btn {
+  background-color: $mocha-surface0;
+  color: $mocha-overlay1;
+  font-size: 16px;
+  padding: 2px 8px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  border-radius: 0;
+
+  &:first-child { border-radius: 8px 0 0 8px; padding-left: 10px; }
+  &:last-child  { border-radius: 0 8px 8px 0; padding-right: 10px; }
+  &:only-child  { border-radius: 8px; padding: 2px 10px; }
+  &:hover       { background-color: $mocha-surface1; }
+
+  &.occupied { color: $mocha-subtext0; }
+  &.active   { color: $mocha-yellow; }
 }
 
-// Workspaces
-.workspaces {
-  color: $background;
-  font-family: 'JetbrainsMono Nerd Font Mono';
+// ── Hardware stats ────────────────────────────────────────────────────────────
 
-  .workspace {
-    font-size: 3rem;
-    margin: -0.5rem 0;
-  }
-
-  .occupied {
-    color: $white;
-  }
-
-  .active {
-    color: $yellow;
-  }
+.stats-btn {
+  color: $mocha-subtext0;
+  font-size: 13px;
+  label { font-size: 13px; }
 }
 
-// Controls
-.controls {
-  @mixin controlWidget($color) {
-    $darkColor: $background; // darken($color, 60);
+// ── Weather ───────────────────────────────────────────────────────────────────
 
-    .circular-progress {
-      background-color: $darkColor;
-      color: $color;
-      min-width: 28px;
-      min-height: 44px;
-      font-size: 2px;
-    }
+.weather-btn {
+  background-color: transparent;
+  color: $mocha-subtext1;
+  font-size: 14px;
+  padding: 2px 6px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  border-radius: 6px;
 
-    .disabled {
-      color: $darkColor;
-    }
-
-    .bar {
-      // Remove marks
-      .top {
-        font-size: 0;
-      }
-
-      trough {
-        background-color: $darkColor;
-        border-radius: $border-radius;
-        min-height: 6rem;
-        min-width: 0.75rem;
-        margin: 0.3rem 0 0.3rem 0;
-
-        highlight {
-          background-color: $color;
-          border-radius: $border-radius;
-        }
-      }
-    }
-  }
-
-  .widget {
-    &.network {
-      @include controlWidget($green);
-    }
-
-    &.battery {
-      @include controlWidget($yellow);
-    }
-
-    &.brightness {
-      @include controlWidget($blue);
-    }
-
-    &.volume {
-      @include controlWidget($mauve);
-    }
-  }
+  label { font-size: 14px; }
+  &:hover { background-color: $mocha-surface0; }
 }
 
-.power {
-  color: $red;
+// ── Clock ─────────────────────────────────────────────────────────────────────
+
+.clock-btn {
+  color: $mocha-subtext1;
+  font-family: "Iosevka Nerd Font";
+  font-weight: bold;
+  font-size: 15px;
+
+  label     { font-size: 15px; }
+  .clock-sep { color: $mocha-overlay0; }
 }
 
-// Clock
-.clock {
-  font-family: Comic Mono;
-  font-weight: normal;
-  font-size: 1.2rem;
-  color: $white;
-  padding: ($v-padding * 1.4) 0 $v-padding 0;
+// ── Bluetooth | Network | Tailscale ──────────────────────────────────────────
+
+.bt-btn { color: $mocha-overlay2; }
+.net-btn { color: $mocha-overlay2; }
+
+.bt-btn.connected,
+.net-btn.connected { color: $mocha-blue; }
+
+.bt-btn.disabled,
+.net-btn.disconnected { color: $mocha-red; }
+
+.ts-btn.connected { color: $mocha-blue; }
+
+// ── Waynergy | Idle inhibitor | Wallpaper ─────────────────────────────────────────────────
+
+.wy-btn        { color: $mocha-overlay2; }
+.wy-btn.active { color: $mocha-green; }
+
+.ii-btn           { color: $mocha-overlay2; }
+.ii-btn.activated { color: $mocha-yellow; }
+
+.wp-btn { color: $mocha-mauve; }
+
+// ── Volume | Brightness | Power profile | Battery ─────────────────────────────
+
+.vol-btn          { color: $mocha-mauve; }
+.vol-btn.muted    { color: $mocha-red; }
+
+.bright-btn       { color: $mocha-yellow; }
+
+.pp-btn           { color: $mocha-yellow; }
+.pp-performance   { color: $mocha-red; }
+.pp-power-saver   { color: $mocha-green; }
+.pp-balanced      { color: $mocha-yellow; }
+
+.bat-btn          { color: $mocha-teal; }
+.bat-btn.warning  { color: $mocha-yellow; }
+.bat-btn.critical { color: $mocha-red; }
+
+
+// ── System tray ───────────────────────────────────────────────────────────────
+
+.tray-pill { margin: 0 3px; }
+
+.tray-item {
+  background-color: $mocha-surface0;
+  padding: 2px 8px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  border-radius: 0;
+
+  &:first-child { border-radius: 8px 0 0 8px; padding-left: 10px; }
+  &:last-child  { border-radius: 0 8px 8px 0; padding-right: 10px; }
+  &:only-child  { border-radius: 8px; padding: 2px 10px; }
+  &:hover       { background-color: $mocha-surface1; }
+}
+
+// ── Power button ──────────────────────────────────────────────────────────────
+
+.power-btn {
+  color: $mocha-red;
+  font-size: 18px;
+  margin-left: 3px;
 }

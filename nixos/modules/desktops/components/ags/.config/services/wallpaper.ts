@@ -1,78 +1,97 @@
-import { createState, createComputed } from "ags"
+import { createState } from "ags"
 import { exec } from "ags/process"
 import { monitorFile } from "ags/file"
 import { timeout } from "ags/time"
+import GLib from "gi://GLib"
 
-const DEFAULT_TRANSITION_TIME = 1000 * 60 * 5
+const HOME = GLib.get_home_dir()
+const DEFAULT_DISPLAY_TIME = 1000 * 60 * 5
 
 interface WallpaperFolder {
   path: string
+  label: string
   enabled: boolean
   wallpapers: string[]
 }
 
+const FOLDER_DEFS = [
+  { path: `${HOME}/Wallpapers/sfw`, label: "SFW", defaultEnabled: true },
+  { path: `${HOME}/Wallpapers/sketchy`, label: "Sketchy", defaultEnabled: false },
+  { path: `${HOME}/Wallpapers/nsfw`, label: "NSFW", defaultEnabled: false },
+]
+
+const IMAGE_RE = /\.(jpe?g|png|webp|gif|bmp|avif)$/i
+
 const [folders, setFolders] = createState<WallpaperFolder[]>([])
 const [currentWallpaper, setCurrentWallpaper] = createState<string | null>(null)
+const [displayTime, setDisplayTime] = createState(DEFAULT_DISPLAY_TIME)
 
-let _displayTime = DEFAULT_TRANSITION_TIME
 let _timer: { cancel(): void } | null = null
 
 function loadFiles(folder: string): string[] {
-  const files = exec(`ls -A1 ${folder}`)
-  return files.split("\n").filter(Boolean).map((file) => `${folder}/${file}`)
+  try {
+    return exec(`ls -A1 "${folder}"`)
+      .split("\n")
+      .filter(f => IMAGE_RE.test(f))
+      .map(f => `${folder}/${f}`)
+  } catch {
+    return []
+  }
 }
 
 function startTimer() {
   if (_timer) _timer.cancel()
-  _timer = timeout(_displayTime, () => random())
+  _timer = timeout(displayTime(), () => random())
 }
 
 function random() {
-  const enabled = folders().filter((f) => f.enabled)
-
+  const enabled = folders().filter(f => f.enabled && f.wallpapers.length > 0)
   if (enabled.length === 0) return
 
-  const folderIndex = Math.floor(enabled.length * Math.random())
-  const wallpapers = enabled[folderIndex].wallpapers
-  const fileIndex = Math.floor(wallpapers.length * Math.random())
-  const next = wallpapers[fileIndex]
+  const folder = enabled[Math.floor(Math.random() * enabled.length)]
+  const next = folder.wallpapers[Math.floor(Math.random() * folder.wallpapers.length)]
 
-  if (next === currentWallpaper() && (enabled.length > 1 || wallpapers.length > 1)) {
+  if (next === currentWallpaper() && (enabled.length > 1 || folder.wallpapers.length > 1)) {
     random()
-  } else {
-    setCurrentWallpaper(next)
-    exec(`awww img --resize fit -t random ${next}`)
-    startTimer()
+    return
   }
+
+  setCurrentWallpaper(next)
+  exec(`awww img --resize fit -t random "${next}"`)
+  startTimer()
 }
 
-function enableFolder(folderPath: string) {
-  setFolders((prev) =>
-    prev.map((f) => (f.path === folderPath ? { ...f, enabled: true } : f)),
-  )
+function enableFolder(path: string) {
+  setFolders(prev => prev.map(f => f.path === path ? { ...f, enabled: true } : f))
 }
 
-function disableFolder(folderPath: string) {
-  setFolders((prev) =>
-    prev.map((f) => (f.path === folderPath ? { ...f, enabled: false } : f)),
-  )
-  if (currentWallpaper()?.startsWith(folderPath)) random()
+function disableFolder(path: string) {
+  setFolders(prev => prev.map(f => f.path === path ? { ...f, enabled: false } : f))
+  if (currentWallpaper()?.startsWith(path)) random()
 }
 
-function init(...wallpaperFolders: string[]) {
-  const initial: WallpaperFolder[] = wallpaperFolders.map((path) => ({
+function setDisplayTimeMinutes(minutes: number) {
+  setDisplayTime(Math.max(1, minutes) * 60 * 1000)
+  startTimer()
+}
+
+function getDisplayTimeMinutes(): number {
+  return Math.round(displayTime() / 60_000)
+}
+
+;(function init() {
+  const initial: WallpaperFolder[] = FOLDER_DEFS.map(({ path, label, defaultEnabled }) => ({
     path,
-    enabled: true,
+    label,
+    enabled: defaultEnabled,
     wallpapers: loadFiles(path),
   }))
 
-  wallpaperFolders.forEach((folder) => {
-    monitorFile(folder, () => {
-      setFolders((prev) =>
-        prev.map((f) =>
-          f.path === folder ? { ...f, wallpapers: loadFiles(folder) } : f,
-        ),
-      )
+  FOLDER_DEFS.forEach(({ path }) => {
+    monitorFile(path, () => {
+      setFolders(prev => prev.map(f =>
+        f.path === path ? { ...f, wallpapers: loadFiles(path) } : f,
+      ))
     })
   })
 
@@ -84,14 +103,15 @@ function init(...wallpaperFolders: string[]) {
   } catch {}
 
   startTimer()
-}
-
-init("/home/slumpy/Wallpapers/sfw", "/home/slumpy/Wallpapers/nsfw")
+})()
 
 export default {
   folders,
   currentWallpaper,
+  displayTime,
   random,
   enableFolder,
   disableFolder,
+  setDisplayTimeMinutes,
+  getDisplayTimeMinutes,
 }

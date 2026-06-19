@@ -37,10 +37,13 @@
         {
           imports = [ inputs.catppuccin.homeModules.catppuccin ];
 
-          home.file."${config.xdg.configHome}/hypr/hyprland".source = ./.config/hyprland;
-          home.file."${config.xdg.configHome}/hypr/hyprlock".source = ./.config/hyprlock;
+          home.file."${config.xdg.configHome}/hypr/hyprland".source =
+            config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/hyprland/.config/hyprland";
+          home.file."${config.xdg.configHome}/hypr/hyprlock".source =
+            config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/hyprland/.config/hyprlock";
 
-          home.file."${config.xdg.configHome}/hypr/hyprlock.conf".source = ./.config/hyprlock.conf;
+          home.file."${config.xdg.configHome}/hypr/hyprlock.conf".source =
+            config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/hyprland/.config/hyprlock.conf";
 
           services.kdeconnect.enable = true;
 

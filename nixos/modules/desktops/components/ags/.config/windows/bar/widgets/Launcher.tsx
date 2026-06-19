@@ -1,13 +1,15 @@
-import { exec } from "ags/process"
-import BarGroup from "../BarGroup"
-import BarWidget from "../BarWidget"
+import { execAsync } from "ags/process"
+import GLib from "gi://GLib"
+
+const launcherScript = `${GLib.get_home_dir()}/.config/ags/scripts/rofi-launcher`
 
 export default function Launcher() {
   return (
-    <BarGroup className="launcher">
-      <BarWidget onClicked={() => exec("/home/slumpy/.config/rofi/launchers/type-6/launcher.sh")}>
-        <label label="" />
-      </BarWidget>
-    </BarGroup>
+    <button
+      class="pill-btn pill-only launcher-btn"
+      onClicked={() => execAsync(["bash", launcherScript]).catch(() => {})}
+    >
+      <label label="󱄅" />
+    </button>
   )
 }

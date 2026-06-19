@@ -5,7 +5,7 @@ import Bar from "./windows/bar/Bar"
 import Calendar from "./windows/calendar/Calendar"
 import PowerMenu from "./windows/power-menu/PowerMenu"
 import WallpaperSettings from "./windows/wallpaper/WallpaperSettings"
-import WallpaperDetails from "./windows/wallpaper/WallpaperDetails"
+import WeatherPopup from "./windows/weather/WeatherPopup"
 
 app.start({
   css: style,
@@ -14,6 +14,6 @@ app.start({
     Calendar()
     PowerMenu()
     WallpaperSettings()
-    WallpaperDetails()
+    WeatherPopup()
   },
 })

@@ -30,8 +30,7 @@ export default function PowerMenu() {
       application={app}
       visible={false}
       onKeyPressEvent={(self: any, event: Gdk.EventKey) => {
-        const [, keyval] = event.get_keyval()
-        if (keyval === Gdk.KEY_Escape) self.visible = false
+        if (event.keyval === Gdk.KEY_Escape) self.visible = false
       }}
     >
       <box class="power-menu">

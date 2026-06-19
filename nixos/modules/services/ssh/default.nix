@@ -10,7 +10,8 @@
   home-manager.users.${config.noodles.user} =
     { config, ... }:
     {
-      home.file."${config.home.homeDirectory}/.ssh/config".source = ./.config/config;
+      home.file."${config.home.homeDirectory}/.ssh/config".source =
+        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/services/ssh/.config/config";
     };
 
   services.openssh = {

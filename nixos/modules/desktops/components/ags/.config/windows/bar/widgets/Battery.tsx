@@ -1,29 +1,35 @@
 import { createBinding, createComputed } from "ags"
 import AstalBattery from "gi://AstalBattery"
-import BarWidget from "../BarWidget"
 
 const battery = AstalBattery.get_default()
+const ICONS = ["󱊡", "󱊢", "󱊣"]
 
 export default function Battery() {
-  const isAvailable = createBinding(battery, "isPresent")
-  const percentage = createBinding(battery, "percentage")
-  const iconName = createBinding(battery, "iconName")
+  const present = createBinding(battery, "isPresent")
+  const pct = createBinding(battery, "percentage")
+  const charging = createBinding(battery, "charging")
 
-  const tooltipText = createComputed(() =>
-    isAvailable()
-      ? `Battery: ${Math.round(percentage() * 100)}% Remaining`
-      : "Plugged In",
+  const icon = createComputed(() => {
+    if (!present() || charging()) return "󰚥"
+    return ICONS[Math.min(Math.floor(pct() * 3), 2)]
+  })
+
+  const tooltip = createComputed(() =>
+    present() ? `Battery: ${Math.round(pct() * 100)}%${charging() ? " (charging)" : ""}` : "Plugged in"
   )
 
-  const value = createComputed(() => (isAvailable() ? percentage() : 1))
+  const cls = createComputed(() => {
+    let c = "pill-btn pill-end bat-btn"
+    if (present() && !charging()) {
+      if (pct() < 0.15) c += " critical"
+      else if (pct() < 0.20) c += " warning"
+    }
+    return c
+  })
 
   return (
-    <BarWidget className="battery">
-      <circularprogress class="circular-progress" rounded value={value} tooltipText={tooltipText}>
-        {isAvailable()
-          ? <icon icon={iconName} class="icon" />
-          : <label class="icon medium" label="" />}
-      </circularprogress>
-    </BarWidget>
+    <button class={cls} tooltipText={tooltip}>
+      <label label={icon} />
+    </button>
   )
 }

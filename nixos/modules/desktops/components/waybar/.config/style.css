@@ -1,3 +1,25 @@
+/* ── Color palette ─────────────────────────────────────────────────────────── */
+
+@define-color bg         #252733;
+@define-color bg-window  rgba(26, 27, 38, 0.5);
+@define-color bg-tooltip #1f232b;
+
+@define-color text       #e5e5e5;
+@define-color muted      #8a909e;
+@define-color subtle     #64727d;
+
+@define-color blue       #5E81AC;
+@define-color blue-light #81A1C1;
+@define-color blue-mid   #7a95c9;
+
+@define-color red        #fb958b;
+@define-color green      #a1c999;
+@define-color yellow     #ecd3a0;
+@define-color teal       #8fbcbb;
+@define-color grey-mid   #abb2bf;
+
+/* ── Global reset ──────────────────────────────────────────────────────────── */
+
 * {
   font-family: Material Design Icons, JetBrainsMono Nerd Font, Iosevka Nerd Font;
   font-size: 14px;
@@ -6,22 +28,20 @@
   min-height: 0;
 }
 
+/* ── Bar ───────────────────────────────────────────────────────────────────── */
+
 window#waybar {
-  background-color: rgba(26, 27, 38, 0.5);
+  background-color: @bg-window;
   color: #ffffff;
   transition-property: background-color;
   transition-duration: 0.5s;
 }
 
-window#waybar.hidden {
-  opacity: 0.1;
-}
+window#waybar.hidden { opacity: 0.1; }
 
-#window {
-  color: #64727d;
-}
+#window { color: @subtle; }
 
-/* ── Left/center pills ─────────────────────────────────────────────────────── */
+/* ── Left / center pills ───────────────────────────────────────────────────── */
 
 #cpu,
 #memory,
@@ -33,65 +53,60 @@ window#waybar.hidden {
 #workspaces,
 #mode,
 #custom-lock {
-  color: #e5e5e5;
-  background-color: #252733;
+  color: @text;
+  background-color: @bg;
   border-radius: 8px;
   font-size: 16px;
   padding: 2px 10px;
   margin: 8.5px 4px;
 }
 
-#temperature  { color: #7a95c9; }
-#cpu          { color: #fb958b; }
-#memory       { color: #a1c999; }
-#disk         { color: #a1c999; }
+#temperature { color: @blue-mid; }
+#cpu         { color: @red; }
+#memory      { color: @green; }
+#disk        { color: @green; }
 
 #custom-weather {
   font-family: Iosevka Nerd Font;
   font-size: 13px;
-  color: #8a909e;
+  color: @muted;
   padding: 2px 8px;
   margin: 8.5px 4px;
 }
-#custom-weather.severe          { color: #eb937d; }
-#custom-weather.sunnyDay        { color: #c2ca76; }
-#custom-weather.clearNight      { color: #cad3f5; }
+#custom-weather.severe            { color: #eb937d; }
+#custom-weather.sunnyDay          { color: #c2ca76; }
+#custom-weather.clearNight        { color: #cad3f5; }
 #custom-weather.cloudyFoggyDay,
-#custom-weather.cloudyFoggyNight { color: #c2ddda; }
+#custom-weather.cloudyFoggyNight  { color: #c2ddda; }
 #custom-weather.rainyDay,
-#custom-weather.rainyNight      { color: #5aaca5; }
+#custom-weather.rainyNight        { color: #5aaca5; }
 #custom-weather.showyIcyDay,
-#custom-weather.snowyIcyNight   { color: #d6e7e5; }
-#custom-weather.default         { color: #dbd9d8; }
+#custom-weather.snowyIcyNight     { color: #d6e7e5; }
+#custom-weather.default           { color: #dbd9d8; }
 
 #mpris,
-#custom-spotify { color: #abb2bf; }
+#custom-spotify { color: @grey-mid; }
 
 #custom-lock {
-  color: #ecd3a0;
+  color: @yellow;
   padding: 0 15px;
   margin-left: 7px;
 }
 
-/* Launcher */
 #custom-launcher {
-  background-color: #252733;
+  background-color: @bg;
   border-radius: 8px;
   font-size: 22px;
-  color: #7a95c9;
+  color: @blue-mid;
   padding: 0 18px 0 14px;
   margin: 8.5px 4px 8.5px 12px;
 }
 
-/* Workspaces – zero padding on buttons so the hover box = icon size,
- * eliminating any room for the label to sit off-centre. */
-#workspaces {
-  padding: 2px 10px;
-}
+#workspaces { padding: 2px 10px; }
 
 #workspaces button {
   background: transparent;
-  color: #7a95c9;
+  color: @blue-mid;
   padding: 0;
   margin: 0 4px;
   min-height: 0;
@@ -109,18 +124,17 @@ window#waybar.hidden {
 
 #workspaces button.active {
   background: transparent;
-  color: #ecd3a0;
+  color: @yellow;
   font-weight: bold;
 }
 
 .modules-left  > widget:first-child > #workspaces { margin-left: 0; }
 .modules-right > widget:last-child  > #workspaces { margin-right: 0; }
 
-/* Clock */
 #clock {
-  background-color: #252733;
+  background-color: @bg;
   border-radius: 8px;
-  color: #8a909e;
+  color: @muted;
   font-family: Iosevka Nerd Font;
   font-weight: bold;
   font-size: 16px;
@@ -130,14 +144,13 @@ window#waybar.hidden {
 
 /* ── Right-side icon pills ─────────────────────────────────────────────────── */
 /*
- * Single shared container style. All icon modules get identical sizing.
- * Only color and border-radius are overridden per module.
+ * Shared base: all icon modules use 8px horizontal padding.
+ * Pill caps override padding-left / padding-right with 12px.
  *
- * Visual groups (modules that share one elongated pill):
- *   bluetooth                        – standalone
- *   network | custom-tailscale       – group
- *   wireplumber | backlight | power-profiles-daemon | battery  – group
- *   idle_inhibitor                   – standalone
+ * Groups:
+ *   bluetooth | network | custom-tailscale
+ *   custom-waynergy | idle_inhibitor
+ *   wireplumber | backlight | power-profiles-daemon | battery
  */
 
 #bluetooth,
@@ -149,60 +162,53 @@ window#waybar.hidden {
 #power-profiles-daemon,
 #battery,
 #idle_inhibitor {
-  background-color: #252733;
+  background-color: @bg;
   font-size: 20px;
-  padding: 2px 12px;
+  padding: 2px 8px;
   margin: 7px 0;
   border-radius: 8px;
 }
 
-/* standalone – bluetooth */
-#bluetooth              { color: #5E81AC; margin-right: 6px; }
-#bluetooth.disconnected { color: #fb958b; }
+/* group – bluetooth | network | tailscale */
+#bluetooth              { color: @blue;  border-radius: 8px 0 0 8px; padding-left: 12px; }
+#bluetooth.disconnected { color: @red; }
+#network                { color: @blue;  border-radius: 0; }
+#network.disconnected   { color: @red; }
+#custom-tailscale       { color: @muted; border-radius: 0 8px 8px 0; padding-right: 12px; margin-right: 6px; }
 
-/* group – network | tailscale */
-#network                { color: #5E81AC; border-radius: 8px 0 0 8px; }
-#network.disconnected   { color: #fb958b; }
-#custom-tailscale       { color: #8a909e; border-radius: 0 8px 8px 0; margin-right: 6px; }
-
-/* standalone – waynergy */
-#custom-waynergy        { color: #8a909e; margin-right: 6px; }
+/* group – waynergy | idle_inhibitor */
+#custom-waynergy          { color: @muted; border-radius: 8px 0 0 8px; padding-left: 12px; }
+#idle_inhibitor           { color: @muted; border-radius: 0 8px 8px 0; padding-right: 12px; margin-right: 6px; }
+#idle_inhibitor.activated { background-color: #ecf0f1; color: #2d3436; }
 
 /* group – wireplumber | backlight | power-profiles-daemon | battery */
-#wireplumber            { color: #81A1C1; border-radius: 8px 0 0 8px; }
-#wireplumber.muted      { color: #fb958b; }
-#backlight              { color: #ecd3a0; border-radius: 0; }
-#power-profiles-daemon  { color: #ecd3a0; border-radius: 0; }
-#power-profiles-daemon.performance  { color: #fb958b; }
-#power-profiles-daemon.power-saver  { color: #a1c999; }
-#battery                { color: #8fbcbb; border-radius: 0 8px 8px 0; }
-#battery.warning        { color: #ecd3a0; }
-#battery.critical:not(.charging) { color: #fb958b; }
-
-/* standalone – idle inhibitor */
-#idle_inhibitor           { background-color: #242933; color: #8a909e; border-radius: 8px; margin-right: 6px; }
-#idle_inhibitor.activated { background-color: #ecf0f1; color: #2d3436; }
+#wireplumber                       { color: @blue-light; border-radius: 8px 0 0 8px; padding-left: 12px; }
+#wireplumber.muted                 { color: @red; }
+#backlight                         { color: @yellow; border-radius: 0; }
+#power-profiles-daemon             { color: @yellow; border-radius: 0; }
+#power-profiles-daemon.performance { color: @red; }
+#power-profiles-daemon.power-saver { color: @green; }
+#battery                           { color: @teal; border-radius: 0 8px 8px 0; padding-right: 12px; }
+#battery.warning                   { color: @yellow; }
+#battery.critical:not(.charging)   { color: @red; }
 
 /* ── Tray ──────────────────────────────────────────────────────────────────── */
 
 #tray {
-  background-color: #252733;
+  background-color: @bg;
   border-radius: 8px;
   padding: 2px 8px;
   margin: 7px 6px 7px 0;
 }
-#tray > .passive       { -gtk-icon-effect: dim; }
-#tray > .needs-attention {
-  -gtk-icon-effect: highlight;
-  background-color: #eb4d4b;
-}
+#tray > .passive         { -gtk-icon-effect: dim; }
+#tray > .needs-attention { -gtk-icon-effect: highlight; background-color: #eb4d4b; }
 
 /* ── group – wallpaper | power-menu ───────────────────────────────────────── */
 
 #custom-wallpaper,
 #custom-power-menu {
-  background-color: #252733;
-  color: #8a909e;
+  background-color: @bg;
+  color: @muted;
   font-size: 17px;
   padding: 2px 10px;
   margin: 8.5px 0;
@@ -214,8 +220,8 @@ window#waybar.hidden {
 /* ── Language ──────────────────────────────────────────────────────────────── */
 
 #language {
-  background-color: #252733;
-  color: #8a909e;
+  background-color: @bg;
+  color: @muted;
   font-family: Iosevka Nerd Font;
   font-weight: bold;
   border-radius: 8px 0 0 8px;
@@ -229,23 +235,18 @@ tooltip {
   font-family: Iosevka Nerd Font;
   border-radius: 15px;
   padding: 15px;
-  background-color: #1f232b;
+  background-color: @bg-tooltip;
 }
 
-tooltip label {
-  font-family: Iosevka Nerd Font;
-  padding: 5px;
-}
+tooltip label { font-family: Iosevka Nerd Font; padding: 5px; }
 
-label:focus {
-  background-color: #1f232b;
-}
+label:focus { background-color: @bg-tooltip; }
 
 /* ── Animations ────────────────────────────────────────────────────────────── */
 
 @keyframes blink {
   to {
     background-color: rgba(30, 34, 42, 0.5);
-    color: #abb2bf;
+    color: @grey-mid;
   }
 }

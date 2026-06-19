@@ -1,27 +1,34 @@
 import { createPoll } from "ags/time"
+import { execAsync } from "ags/process"
 import app from "ags/gtk3/app"
-import BarGroup from "../BarGroup"
 
-const SECOND = 1000
-const MINUTE = 60 * SECOND
+const MINUTE = 60_000
 
-const clockHour = createPoll("", MINUTE, "date '+%H'")
-const clockMin = createPoll("", SECOND, "date '+%M'")
-const clockMonth = createPoll("", MINUTE, "date '+%a'")
-const clockDay = createPoll("", MINUTE, "date '+%d'")
+const hour = createPoll("--", MINUTE, async () => {
+  try { return (await execAsync("date '+%H'")).trim() } catch { return "--" }
+})
+const min = createPoll("--", MINUTE, async () => {
+  try { return (await execAsync("date '+%M'")).trim() } catch { return "--" }
+})
+const date = createPoll("", MINUTE, async () => {
+  try { return (await execAsync("date '+%a %d %b'")).trim() } catch { return "" }
+})
 
 export default function Clock() {
   return (
-    <BarGroup className="clock">
-      <button onClicked={() => { const w = app.get_window("calendar"); if (w) w.visible = !w.visible }}>
-        <box vertical>
-          <label label={clockHour} />
-          <label label={clockMin} />
-          <label label="••" />
-          <label label={clockMonth} />
-          <label label={clockDay} />
-        </box>
-      </button>
-    </BarGroup>
+    <button
+      class="pill-btn pill-only clock-btn"
+      tooltipText={date}
+      onClicked={() => {
+        const w = app.get_window("calendar")
+        if (w) w.visible = !w.visible
+      }}
+    >
+      <box spacing={2}>
+        <label label={hour} />
+        <label class="clock-sep" label=":" />
+        <label label={min} />
+      </box>
+    </button>
   )
 }

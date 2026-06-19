@@ -19,7 +19,9 @@
       {
         programs.vscode.enable = true;
 
-        home.file."${config.xdg.configHome}/Code/User/settings.json".source = lib.mkForce ./settings.json;
+        home.file."${config.xdg.configHome}/Code/User/settings.json".source = lib.mkForce (
+          config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/apps/vscode/settings.json"
+        );
       };
   };
 }

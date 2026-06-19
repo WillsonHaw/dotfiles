@@ -15,7 +15,8 @@
     home-manager.users.${config.noodles.user} =
       { config, ... }:
       {
-        home.file."${config.xdg.configHome}/fastfetch".source = ./.config;
+        home.file."${config.xdg.configHome}/fastfetch".source =
+          config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/apps/fastfetch/.config";
 
         programs.fastfetch.enable = true;
       };

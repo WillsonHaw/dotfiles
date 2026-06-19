@@ -1,45 +1,58 @@
-import { createBinding, createComputed } from "ags"
-import AstalHyprland from "gi://AstalHyprland"
-import BarGroup from "../BarGroup"
-import BarWidget from "../BarWidget"
+import { createComputed, For } from "ags"
+import { createPoll } from "ags/time"
+import { execAsync } from "ags/process"
 
-const hyprland = AstalHyprland.get_default()
-
-function dispatch(ws: number) {
-  hyprland.dispatch("workspace", ws.toString())
+interface NiriWorkspace {
+  id: number
+  idx: number
+  name: string | null
+  output: string
+  is_active: boolean
+  is_focused: boolean
+  active_window_id: number | null
 }
 
-function WorkspaceButton({ id }: { id: number }) {
-  const focusedId = createBinding(hyprland.focusedWorkspace, "id")
-  const isActive = createComputed(() => focusedId() === id)
+const raw = createPoll("[]", 1000, async () => {
+  try { return await execAsync("niri msg -j workspaces") }
+  catch { return "[]" }
+})
 
-  const workspaces = createBinding(hyprland, "workspaces")
-  const isOccupied = createComputed(() => {
-    const ws = workspaces().find((w: AstalHyprland.Workspace) => w.id === id)
-    return ws ? ws.get_clients().length > 0 : false
-  })
+const workspaces = createComputed((): NiriWorkspace[] => {
+  try {
+    const ws: NiriWorkspace[] = JSON.parse(raw())
+    if (ws.length === 0) return []
+    ws.sort((a, b) => a.idx - b.idx)
+    const maxIdx = ws[ws.length - 1].idx
+    const byIdx = new Map(ws.map(w => [w.idx, w]))
+    const result: NiriWorkspace[] = []
+    for (let i = 1; i <= maxIdx; i++) {
+      result.push(byIdx.get(i) ?? {
+        id: -i, idx: i, name: null, output: "",
+        is_active: false, is_focused: false, active_window_id: null,
+      })
+    }
+    return result
+  } catch { return [] }
+})
 
-  const label = createComputed(() => (isActive() ? "\u{F0444}" : "\u{F04C3}"))
-  const cls = createComputed(() => {
-    let c = `workspace ws-${id}`
-    if (isActive()) c += " active"
-    if (isOccupied()) c += " occupied"
-    return c
-  })
+function WorkspaceButton({ ws }: { ws: NiriWorkspace }) {
+  const label = ws.is_focused ? "●" : ws.active_window_id !== null ? "◉" : "○"
+  const cls = ["workspace-btn", ws.is_focused ? "active" : "", ws.active_window_id !== null ? "occupied" : ""]
+    .filter(Boolean).join(" ")
 
   return (
-    <BarWidget className={cls} onClicked={() => dispatch(id)}>
+    <button class={cls} onClicked={() => execAsync(`niri msg action focus-workspace ${ws.idx}`).catch(() => {})}>
       <label label={label} />
-    </BarWidget>
+    </button>
   )
 }
 
 export default function Workspaces() {
   return (
-    <BarGroup className="workspaces">
-      {Array.from({ length: 5 }, (_, i) => (
-        <WorkspaceButton id={i + 1} />
-      ))}
-    </BarGroup>
+    <box class="pill workspaces-pill" spacing={0}>
+      <For each={workspaces}>
+        {(ws: NiriWorkspace) => <WorkspaceButton ws={ws} />}
+      </For>
+    </box>
   )
 }

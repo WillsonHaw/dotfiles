@@ -44,8 +44,7 @@ export default function WallpaperDetails() {
       application={app}
       visible={false}
       onKeyPressEvent={(self: any, event: Gdk.EventKey) => {
-        const [, keyval] = event.get_keyval()
-        if (keyval === Gdk.KEY_Escape) self.visible = false
+        if (event.keyval === Gdk.KEY_Escape) self.visible = false
       }}
     >
       <box class="wallpaper-details" vertical>
@@ -75,10 +74,10 @@ export default function WallpaperDetails() {
                 <label class="code" label={remainingStr} />
               </box>
               <label valign={Gtk.Align.START} class="code" label={jsonStr} />
-            </box>
+            </box> as any
           }
           centerWidget={
-            <Gtk.Separator orientation={Gtk.Orientation.HORIZONTAL} halign={Gtk.Align.CENTER} className="separator" />
+            <Gtk.Separator orientation={Gtk.Orientation.HORIZONTAL} halign={Gtk.Align.CENTER} class="separator" /> as any
           }
           endWidget={
             <box class="right-panel" valign={Gtk.Align.START} vertical spacing={32}>
@@ -104,7 +103,7 @@ export default function WallpaperDetails() {
                   )}
                 </For>
               </box>
-            </box>
+            </box> as any
           }
         />
         <button class="button" onClicked={() => { const w = app.get_window("wallpaper-details-menu"); if (w) w.visible = false }}>

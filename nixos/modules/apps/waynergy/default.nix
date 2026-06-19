@@ -53,7 +53,9 @@ in
           Install.WantedBy = [ "graphical-session.target" ];
         };
 
-        home.file."${config.xdg.configHome}/xkb/keycodes/win".source = lib.mkForce ./keycodes;
+        home.file."${config.xdg.configHome}/xkb/keycodes/win".source = lib.mkForce (
+          config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/apps/waynergy/keycodes"
+        );
 
         home.file."${config.xdg.configHome}/waynergy/xkb_keymap".text = lib.mkForce ''
           xkb_keymap {

@@ -18,13 +18,11 @@ in
   config = lib.mkIf config.noodles.desktops.components.ags.enable {
     environment.systemPackages = with pkgs; [ adwaita-icon-theme ];
 
-    home-manager.users.${config.noodles.user} = {
+    home-manager.users.${config.noodles.user} = { config, ... }: {
       imports = [ inputs.ags.homeManagerModules.default ];
 
       programs.ags = {
         enable = true;
-        configDir = ./.config;
-
         extraPackages = with agsPackages; [
           hyprland
           battery
@@ -33,6 +31,10 @@ in
           tray
         ];
       };
+
+      xdg.configFile."ags".source =
+        config.lib.file.mkOutOfStoreSymlink
+          "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/components/ags/.config";
     };
   };
 }

@@ -18,7 +18,7 @@
     in
     lib.mkIf (config.noodles.desktops.environment == "niri") {
       noodles.desktops.components = {
-        waybar.enable = true;
+        ags.enable = true;
         rofi.enable = true;
         mako.enable = true;
         thunar.enable = true;
@@ -164,7 +164,8 @@
             }
           '';
 
-          home.file."${config.xdg.configHome}/niri/config.kdl".source = ./config.kdl;
+          home.file."${config.xdg.configHome}/niri/config.kdl".source =
+            config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/niri/config.kdl";
 
           # Use specified GPU for niri
           home.file."${config.xdg.configHome}/niri/card" = lib.mkIf (

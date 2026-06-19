@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Launch rofi on the Wayland backend and auto-close it when focus moves away.
+# rofi 2.0.0 (davatorium) uses xdg-shell on Wayland, so click-to-exit doesn't
+# work. We monitor niri's focused-window IPC and kill rofi on focus change.
+
+LAUNCHER="$HOME/.config/rofi/launchers/type-6"
+THEME="style-1"
+
+env -u DISPLAY rofi -show drun -theme "$LAUNCHER/$THEME.rasi" &
+ROFI_PID=$!
+
+# Wait until rofi becomes the focused window (max 3s)
+for _ in $(seq 1 30); do
+    sleep 0.1
+    app=$(niri msg --json focused-window 2>/dev/null | jq -r '.app_id // empty' 2>/dev/null)
+    [ "$app" = "rofi" ] && break
+    kill -0 "$ROFI_PID" 2>/dev/null || exit 0
+done
+
+# Kill rofi as soon as something else gains focus
+while kill -0 "$ROFI_PID" 2>/dev/null; do
+    sleep 0.1
+    app=$(niri msg --json focused-window 2>/dev/null | jq -r '.app_id // empty' 2>/dev/null)
+    if [ -n "$app" ] && [ "$app" != "rofi" ]; then
+        kill "$ROFI_PID" 2>/dev/null
+        break
+    fi
+done

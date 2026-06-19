@@ -1,37 +1,30 @@
-import { createState, createComputed } from "ags"
-import Gtk from "gi://Gtk?version=3.0"
+import { createComputed } from "ags"
 import { screenValue, setScreenValue, hasInterface } from "../../../services/brightness"
 
+const ICONS = ["󱩎", "󱩏", "󱩐", "󱩑", "󱩒", "󱩓", "󱩔", "󱩕", "󱩖", "󰛨"]
+
+const icon = createComputed(() => {
+  if (!hasInterface) return "󰹏"
+  const idx = Math.min(Math.floor(screenValue() * ICONS.length), ICONS.length - 1)
+  return ICONS[idx]
+})
+
+const tooltip = createComputed(() =>
+  hasInterface ? `Brightness: ${Math.round(screenValue() * 100)}%` : "Brightness: N/A"
+)
+
 export default function Brightness() {
-  const [showBar, setShowBar] = createState(false)
-
-  const tooltipText = createComputed(() =>
-    hasInterface ? `Brightness: ${Math.round(screenValue() * 100)}%` : "Brightness: N/A",
-  )
-
-  const value = createComputed(() => (hasInterface ? screenValue() : 1))
-
   return (
     <eventbox
-      class="widget brightness"
-      onHover={() => setShowBar(hasInterface)}
-      onHoverLost={() => setShowBar(false)}
+      onScroll={(_self: any, event: any) => {
+        if (!hasInterface) return
+        const delta = event.delta_y > 0 ? -0.05 : 0.05
+        setScreenValue(screenValue() + delta)
+      }}
     >
-      <box vertical>
-        <revealer class="bar" revealChild={showBar} transitionType={Gtk.RevealerTransitionType.SLIDE_UP}>
-          <slider
-            vertical
-            inverted
-            value={screenValue}
-            min={0}
-            max={1}
-            onDragged={(self: any) => setScreenValue(self.value)}
-          />
-        </revealer>
-        <circularprogress class="circular-progress" rounded value={value} tooltipText={tooltipText}>
-          <label class={`icon ${hasInterface ? "large" : "medium"}`} label={hasInterface ? "󰛨" : "󰹏"} />
-        </circularprogress>
-      </box>
+      <button class="pill-btn bright-btn" tooltipText={tooltip}>
+        <label label={icon} />
+      </button>
     </eventbox>
   )
 }

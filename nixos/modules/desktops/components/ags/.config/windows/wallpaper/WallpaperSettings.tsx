@@ -1,102 +1,96 @@
+import { createComputed } from "ags"
 import { Astal } from "ags/gtk3"
-import Gdk from "gi://Gdk?version=3.0"
+import Gtk from "gi://Gtk?version=3.0"
 import app from "ags/gtk3/app"
-import wallpaper from "../../services/wallhaven"
+import wallpaper from "../../services/wallpaper"
 
-type BooleanKey = "general" | "anime" | "people" | "sfw" | "sketchy" | "nsfw" | "useImageFill" | "useClearColor" | "useExactResolution"
+const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
-const setterMap: Record<BooleanKey, (v: boolean) => void> = {
-  general: wallpaper.setGeneral,
-  anime: wallpaper.setAnime,
-  people: wallpaper.setPeople,
-  sfw: wallpaper.setSfw,
-  sketchy: wallpaper.setSketchy,
-  nsfw: wallpaper.setNsfw,
-  useImageFill: wallpaper.setUseImageFill,
-  useClearColor: wallpaper.setUseClearColor,
-  useExactResolution: wallpaper.setUseExactResolution,
-}
-
-function Toggle({ prop, label }: { prop: BooleanKey; label: string }) {
-  const accessor = wallpaper[prop]
-  const setter = setterMap[prop]
+function FolderToggle({ path, label }: { path: string; label: string }) {
+  const enabled = createComputed(() =>
+    wallpaper.folders().find(f => f.path === path)?.enabled ?? false,
+  )
 
   return (
-    <box>
+    <box spacing={10} halign={Gtk.Align.START}>
       <switch
-        active={accessor}
-        onActivate={(self: any) => setter(self.active)}
+        active={enabled}
+        onActivate={(self: any) => {
+          if (self.active) wallpaper.enableFolder(path)
+          else wallpaper.disableFolder(path)
+        }}
       />
       <label label={label} />
     </box>
   )
 }
 
-function Input({ label, value, onChange }: { label: string; value: any; onChange: (text: string) => void }) {
-  return (
-    <box class="input">
-      <entry
-        class="entry"
-        text={value}
-        hexpand={false}
-        visibility
-        onFocusOutEvent={(self: any) => onChange(self.text)}
-      />
-      <label class="label" label={label} />
-    </box>
-  )
-}
-
 export default function WallpaperSettings() {
+  function dismiss() {
+    const w = app.get_window("wallpaper-settings-menu")
+    if (w) w.visible = false
+  }
+
+  const minutesLabel = createComputed(() => `${wallpaper.getDisplayTimeMinutes()} min`)
+  const currentLabel = createComputed(() => {
+    const w = wallpaper.currentWallpaper()
+    return w ? (w.split("/").pop() ?? "—") : "—"
+  })
+
   return (
     <window
       name="wallpaper-settings-menu"
+      anchor={TOP | BOTTOM | LEFT | RIGHT}
       layer={Astal.Layer.OVERLAY}
       keymode={Astal.Keymode.EXCLUSIVE}
       application={app}
       visible={false}
-      onKeyPressEvent={(self: any, event: Gdk.EventKey) => {
-        const [, keyval] = event.get_keyval()
-        if (keyval === Gdk.KEY_Escape) self.visible = false
-      }}
     >
-      <box class="wallpaper-settings" vertical>
-        <label class="title" label="Settings" />
-        <centerbox
-          startWidget={
-            <box vertical>
-              <Toggle prop="general" label="General" />
-              <Toggle prop="anime" label="Anime" />
-              <Toggle prop="people" label="People" />
+      <eventbox onClickRelease={dismiss}>
+        <box halign={Gtk.Align.CENTER} valign={Gtk.Align.START} marginTop={44}>
+          <eventbox>
+            <box class="wallpaper-popup" vertical spacing={16}>
+              <label class="wp-popup-title" label="Wallpapers" />
+
+              <box vertical spacing={8}>
+                {wallpaper.folders().map(f => (
+                  <FolderToggle path={f.path} label={f.label} />
+                ))}
+              </box>
+
+              <box class="wp-popup-separator" />
+
+              <box spacing={8} halign={Gtk.Align.CENTER}>
+                <label label="Rotate every" />
+                <button
+                  class="wp-step-btn"
+                  onClicked={() => wallpaper.setDisplayTimeMinutes(wallpaper.getDisplayTimeMinutes() - 1)}
+                >
+                  <label label="−" />
+                </button>
+                <label label={minutesLabel} />
+                <button
+                  class="wp-step-btn"
+                  onClicked={() => wallpaper.setDisplayTimeMinutes(wallpaper.getDisplayTimeMinutes() + 1)}
+                >
+                  <label label="+" />
+                </button>
+              </box>
+
+              <box class="wp-popup-separator" />
+
+              <box vertical spacing={4}>
+                <label class="wp-popup-current-label" label="Current" />
+                <label class="wp-popup-current" label={currentLabel} />
+              </box>
+
+              <button class="wp-next-btn" onClicked={() => wallpaper.random()}>
+                <label label="Next" />
+              </button>
             </box>
-          }
-          endWidget={
-            <box vertical>
-              <Toggle prop="sfw" label="SFW" />
-              <Toggle prop="sketchy" label="Sketchy" />
-              <Toggle prop="nsfw" label="NSFW" />
-            </box>
-          }
-        />
-        <Toggle prop="useImageFill" label="Resize to Fill" />
-        <Toggle prop="useClearColor" label="Use Clear Color" />
-        <Toggle prop="useExactResolution" label="Use Exact Resolution" />
-        <Input label="Search Term" value={wallpaper.searchTerm} onChange={(v) => wallpaper.setSearchTerm(v)} />
-        <Input label="Wallhaven API Key" value={wallpaper.apikey} onChange={(v) => wallpaper.setApikey(v)} />
-        <Input label="Wallhaven Username" value={wallpaper.username} onChange={(v) => wallpaper.setUsername(v)} />
-        <Input label="Wallhaven Collection" value={wallpaper.collection} onChange={(v) => wallpaper.setCollection(v)} />
-        <Input
-          label="Duration of each wallpaper (in minutes)"
-          value={wallpaper.displayTime}
-          onChange={(v) => {
-            const val = parseInt(v)
-            if (!isNaN(val) && val > 0) wallpaper.setDisplayTime(val)
-          }}
-        />
-        <button class="button" onClicked={() => { const w = app.get_window("wallpaper-settings-menu"); if (w) w.visible = false }}>
-          <label label="Close" />
-        </button>
-      </box>
+          </eventbox>
+        </box>
+      </eventbox>
     </window>
   )
 }

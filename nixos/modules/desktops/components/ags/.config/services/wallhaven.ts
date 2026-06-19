@@ -105,7 +105,13 @@ function startTimer() {
 
 function getMonitorResolution(): { width: number; height: number } | null {
   try {
-    const output = exec("hyprctl monitors -j")
+    const output = exec("niri msg -j outputs 2>/dev/null")
+    const outputs: Record<string, any> = JSON.parse(output)
+    const first = Object.values(outputs).find((o: any) => o.logical !== null)
+    if (first?.logical) return { width: first.logical.width, height: first.logical.height }
+  } catch {}
+  try {
+    const output = exec("hyprctl monitors -j 2>/dev/null")
     const monitors = JSON.parse(output)
     const focused = monitors.find((m: any) => m.focused)
     if (focused) return { width: focused.width, height: focused.height }

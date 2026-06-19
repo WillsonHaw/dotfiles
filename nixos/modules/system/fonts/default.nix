@@ -24,6 +24,8 @@
     fontDir.enable = true;
 
     packages = with pkgs; [
+      monaspace
+      nerd-fonts.symbols-only
       nerd-fonts.jetbrains-mono
       nerd-fonts.fira-code
       nerd-fonts.space-mono

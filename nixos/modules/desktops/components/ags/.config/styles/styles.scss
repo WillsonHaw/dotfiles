@@ -1,14 +1,15 @@
+@use 'variables' as *;
+@use 'tooltips';
+@use 'windows/bar';
+@use 'windows/calendar';
+@use 'windows/power-menu';
+@use 'windows/wallpaper-menu';
+@use 'windows/weather-popup';
+
 // Global
 * {
   all: unset;
 }
-
-@import '_variables.scss';
-@import '_tooltips.scss';
-@import 'windows/_bar';
-@import 'windows/_calendar';
-@import 'windows/_power-menu';
-@import 'windows/_wallpaper-menu';
 
 menu {
   background-color: $mocha-base;

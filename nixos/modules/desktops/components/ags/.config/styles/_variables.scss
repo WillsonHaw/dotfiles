@@ -1,4 +1,6 @@
-@import '_catppuccin.scss';
+@use 'sass:math';
+@forward 'catppuccin';
+@use 'catppuccin' as *;
 
 // Variable Color
 $background: $mocha-base;
@@ -17,5 +19,5 @@ $white: $foreground;
 
 $bar-spacing: 0.5rem;
 $v-padding: $bar-spacing;
-$h-padding: $bar-spacing / 2;
+$h-padding: math.div($bar-spacing, 2);
 $border-radius: 0.5rem;

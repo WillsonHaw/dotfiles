@@ -1,94 +1,70 @@
-// Wallpaper menu
-.wallpaper-settings,
-.wallpaper-details {
-  background-color: $background;
-  border-radius: $border-radius;
-  padding: 2rem;
+@use '../variables' as *;
 
-  > * {
-    margin-top: 1rem;
-  }
+// Wallpaper popup (local folder manager)
+.wallpaper-popup {
+  background-color: $mocha-base;
+  border-radius: 12px;
+  padding: 16px 20px;
+  min-width: 220px;
+  border: 1px solid $mocha-surface1;
 
-  .title {
-    font-size: 1.5rem;
+  .wp-popup-title {
+    font-size: 14px;
     font-weight: bold;
-    margin-bottom: 1rem;
+    color: $mocha-text;
+    margin-bottom: 4px;
   }
 
-  .right-panel {
-    min-width: 25rem;
+  .wp-popup-separator {
+    background-color: $mocha-surface1;
+    min-height: 1px;
+    margin: 2px 0;
   }
 
-  .code {
+  .wp-popup-current-label {
+    font-size: 11px;
+    color: $mocha-overlay1;
+  }
+
+  .wp-popup-current {
+    font-size: 12px;
+    color: $mocha-subtext0;
     font-family: monospace;
-    padding: 0.75rem;
-    border-radius: $border-radius;
-    background-color: $mocha-crust;
   }
 
-  .color-tiles {
-    margin-top: 2rem;
+  .wp-step-btn {
+    background-color: $mocha-surface0;
+    color: $mocha-text;
+    border-radius: 6px;
+    padding: 2px 10px;
+    min-width: 28px;
+    &:hover { background-color: $mocha-surface1; }
   }
 
-  .tag {
-    padding: 0.5rem 0.75rem;
-    margin: 0.25rem;
-    border-radius: $border-radius;
-    color: $mocha-crust;
-
-    &.action {
-      background-color: $mocha-mauve;
-      margin-bottom: 2rem;
-    }
-
-    &.nsfw {
-      background-color: $mocha-pink;
-    }
-
-    &.sfw {
-      background-color: $mocha-sapphire;
-    }
-
-    &.sketchy {
-      background-color: $mocha-peach;
-    }
-
-    &.color-tile {
-      padding: 0;
-      min-width: 2.5rem;
-      min-height: 2.5rem;
-    }
-  }
-
-  .button {
-    background-color: $black;
-    color: $mauve;
-    border-radius: $border-radius;
-    padding: 0.5rem 0.25rem;
-    margin-top: 2rem;
-  }
-
-  .input {
-    .entry {
-      background-color: $gray;
-      border-radius: $border-radius;
-      padding: 0.5rem;
-      margin: 0 0.5rem;
-    }
+  .wp-next-btn {
+    background-color: $mocha-blue;
+    color: $mocha-base;
+    border-radius: 8px;
+    padding: 6px 16px;
+    margin-top: 4px;
+    &:hover { background-color: $mocha-sapphire; }
   }
 
   switch {
-    background-color: $black;
-    border-radius: $border-radius;
-    margin-right: 1rem;
+    background-color: $mocha-surface1;
+    border-radius: 8px;
+    min-width: 36px;
+    min-height: 20px;
 
     slider {
-      border-radius: $border-radius;
-      background-color: $gray;
+      border-radius: 6px;
+      background-color: $mocha-overlay1;
+      min-width: 14px;
+      min-height: 14px;
     }
 
-    &.active slider {
-      background-color: $mauve;
+    &:checked slider {
+      background-color: $mocha-blue;
     }
   }
 }

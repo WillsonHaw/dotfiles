@@ -1,0 +1,31 @@
+@use '../variables' as *;
+
+.weather-popup {
+  background-color: $mocha-base;
+  border-radius: $border-radius;
+  padding: 16px 20px;
+  min-width: 340px;
+}
+
+.wp-current {
+  .wp-icon  { font-size: 36px; margin-right: 4px; }
+  .wp-desc  { font-size: 15px; color: $mocha-text; font-weight: bold; }
+  .wp-temp  { font-size: 13px; color: $mocha-subtext1; }
+  .wp-details { font-size: 12px; color: $mocha-overlay1; }
+}
+
+.wp-separator {
+  background-color: $mocha-surface1;
+  min-height: 1px;
+}
+
+.wp-forecast {
+  .forecast-day {
+    min-width: 80px;
+
+    .forecast-name  { font-size: 12px; color: $mocha-overlay1; }
+    .forecast-icon  { font-size: 22px; margin: 2px 0; }
+    .forecast-range { font-size: 13px; color: $mocha-subtext0; }
+    .forecast-desc  { font-size: 11px; color: $mocha-overlay1; }
+  }
+}

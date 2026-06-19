@@ -11,7 +11,7 @@ const [screenValue, _setScreenValue] = createState(0)
 function setScreenValue(percent: number) {
   if (percent < 0) percent = 0
   if (percent > 1) percent = 1
-  execAsync(`brightnessctl set ${percent * 100}% -q`)
+  execAsync(`brightnessctl set ${percent * 100}% -q`).catch(() => {})
 }
 
 function onChange() {
