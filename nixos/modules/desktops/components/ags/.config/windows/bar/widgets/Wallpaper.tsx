@@ -5,7 +5,7 @@ import wallpaper from "../../../services/wallpaper"
 export default function Wallpaper() {
   const tooltip = createComputed(() => {
     const w = wallpaper.currentWallpaper()
-    return w ? (w.split("/").pop() ?? "Wallpaper") : "Wallpaper"
+    return w ? (w.path.split("/").pop() ?? "Wallpaper") : "Wallpaper"
   })
 
   return (

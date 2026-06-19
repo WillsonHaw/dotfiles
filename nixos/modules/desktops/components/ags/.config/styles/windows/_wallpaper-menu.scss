@@ -1,18 +1,16 @@
 @use '../variables' as *;
 
-// Wallpaper popup (local folder manager)
 .wallpaper-popup {
   background-color: $mocha-base;
   border-radius: 12px;
   padding: 16px 20px;
-  min-width: 220px;
+  min-width: 300px;
   border: 1px solid $mocha-surface1;
 
   .wp-popup-title {
     font-size: 14px;
     font-weight: bold;
     color: $mocha-text;
-    margin-bottom: 4px;
   }
 
   .wp-popup-separator {
@@ -32,6 +30,23 @@
     font-family: monospace;
   }
 
+  .wp-status {
+    font-size: 11px;
+    color: $mocha-overlay1;
+  }
+  .wp-status-ok   { color: $mocha-green; }
+  .wp-status-warn { color: $mocha-yellow; }
+  .wp-status-err  { color: $mocha-red; }
+
+  .wp-entry {
+    background-color: $mocha-surface0;
+    border-radius: 6px;
+    padding: 4px 8px;
+    color: $mocha-text;
+    font-size: 13px;
+    &:focus { background-color: $mocha-surface1; }
+  }
+
   .wp-step-btn {
     background-color: $mocha-surface0;
     color: $mocha-text;
@@ -41,13 +56,21 @@
     &:hover { background-color: $mocha-surface1; }
   }
 
+  .wp-save-btn {
+    background-color: $mocha-surface0;
+    color: $mocha-green;
+    border-radius: 8px;
+    padding: 6px 16px;
+    &:hover { background-color: $mocha-surface1; }
+  }
+
   .wp-next-btn {
     background-color: $mocha-blue;
     color: $mocha-base;
     border-radius: 8px;
     padding: 6px 16px;
-    margin-top: 4px;
     &:hover { background-color: $mocha-sapphire; }
+    &:disabled { opacity: 0.5; }
   }
 
   switch {
@@ -66,5 +89,35 @@
     &:checked slider {
       background-color: $mocha-blue;
     }
+  }
+
+  label { color: $mocha-text; }
+
+  .wp-debug-toggle {
+    background: none;
+    color: $mocha-overlay1;
+    font-size: 11px;
+    padding: 0;
+    &:hover { color: $mocha-text; }
+    label { font-size: 11px; color: inherit; }
+  }
+
+  .wp-debug-url {
+    font-family: monospace;
+    font-size: 10px;
+    color: $mocha-subtext0;
+  }
+
+  .wp-debug-scroll {
+    min-height: 200px;
+    background-color: $mocha-mantle;
+    border-radius: 6px;
+    padding: 6px;
+  }
+
+  .wp-debug-response {
+    font-family: monospace;
+    font-size: 10px;
+    color: $mocha-subtext0;
   }
 }

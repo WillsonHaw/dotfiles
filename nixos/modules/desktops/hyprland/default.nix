@@ -29,6 +29,11 @@
         wlogout.enable = true;
       };
 
+      catppuccin = {
+        enable = true;
+        autoEnable = false;
+      };
+
       home-manager.users.${config.noodles.user} =
         {
           config,

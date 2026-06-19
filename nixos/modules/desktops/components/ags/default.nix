@@ -8,7 +8,7 @@
 }:
 
 let
-  agsPackages = inputs.ags.packages.${pkgs.system};
+  agsPackages = inputs.ags.packages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   options = {

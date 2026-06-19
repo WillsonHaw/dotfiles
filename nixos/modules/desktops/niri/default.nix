@@ -25,6 +25,11 @@
         wlogout.enable = true;
       };
 
+      catppuccin = {
+        enable = true;
+        autoEnable = false;
+      };
+
       programs.niri.enable = true;
 
       security.pam.services.hyprlock = { };
@@ -81,6 +86,11 @@
 
             cursors.enable = true;
             kvantum.enable = true;
+
+            # catppuccin/nix builds this extension from source with pnpm_10.override { inherit nodejs; }
+            # which triggers an evaluation warning. Disable the port to avoid it; the nixpkgs
+            # pre-built extension is added to programs.vscode below instead.
+            vscode.profiles.default.enable = false;
           };
 
           programs.zsh.initContent = lib.mkOrder 500 ''
