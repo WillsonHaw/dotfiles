@@ -23,7 +23,7 @@ export default function Tailscale() {
     <button
       class={cls}
       tooltipText={tooltip}
-      onClicked={() => execAsync(connected() ? "tailscale down" : "tailscale up").catch(() => {})}
+      onClicked={() => execAsync(connected() ? "tailscale down" : "tailscale up --accept-routes").catch(() => {})}
     >
       <Gtk.Image file={iconPath} />
     </button>

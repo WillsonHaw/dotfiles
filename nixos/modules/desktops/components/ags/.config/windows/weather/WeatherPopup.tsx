@@ -1,4 +1,4 @@
-import { createComputed } from "ags"
+import { Accessor, createComputed } from "ags"
 import { Astal } from "ags/gtk3"
 import Gtk from "gi://Gtk?version=3.0"
 import Gdk from "gi://Gdk?version=3.0"
@@ -12,7 +12,7 @@ function getDayName(dateStr: string): string {
   return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date(y, m - 1, d).getDay()]
 }
 
-function parse<T>(fn: (d: any) => T, fallback: T): () => T {
+function parse<T>(fn: (d: any) => T, fallback: T): Accessor<T> {
   return createComputed(() => {
     if (!rawWeather()) return fallback
     try { return fn(JSON.parse(rawWeather())) } catch { return fallback }

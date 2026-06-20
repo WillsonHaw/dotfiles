@@ -29,7 +29,7 @@ function TextInput({ placeholder, value, onCommit }: {
       placeholderText={placeholder}
       text={value()}
       hexpand
-      onChanged={(self: any) => {
+      onNotifyText={(self: any) => {
         if (debounce) debounce.cancel()
         debounce = timeout(3000, () => { debounce = null; onCommit(self.text) })
       }}
