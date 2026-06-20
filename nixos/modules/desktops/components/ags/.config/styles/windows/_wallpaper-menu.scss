@@ -3,9 +3,18 @@
 .wallpaper-popup {
   background-color: $mocha-base;
   border-radius: 12px;
-  padding: 16px 20px;
-  min-width: 300px;
+  min-width: 500px;
   border: 1px solid $mocha-surface1;
+  transition: opacity 200ms ease;
+
+  .wp-scroll {
+    background: transparent;
+    border-radius: 12px;
+
+    > viewport {
+      background: transparent;
+    }
+  }
 
   .wp-popup-title {
     font-size: 14px;
@@ -119,5 +128,24 @@
     font-family: monospace;
     font-size: 10px;
     color: $mocha-subtext0;
+  }
+
+  .wp-image-tags {
+    .wp-tag {
+      background-color: $mocha-surface0;
+      border-radius: 10px;
+      padding: 2px 8px;
+
+      label { font-size: 11px; color: $mocha-subtext0; }
+
+      &:hover {
+        background-color: $mocha-surface1;
+        label { color: $mocha-text; }
+      }
+
+      &.wp-tag-sfw label    { color: $mocha-green; }
+      &.wp-tag-sketchy label { color: $mocha-yellow; }
+      &.wp-tag-nsfw label   { color: $mocha-mauve; }
+    }
   }
 }

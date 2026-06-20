@@ -1,8 +1,8 @@
 import { Accessor, createComputed } from "ags"
-import { Astal } from "ags/gtk3"
-import Gtk from "gi://Gtk?version=3.0"
-import Gdk from "gi://Gdk?version=3.0"
-import app from "ags/gtk3/app"
+import { Astal } from "ags/gtk4"
+import Gtk from "gi://Gtk?version=4.0"
+import Gdk from "gi://Gdk?version=4.0"
+import app from "ags/gtk4/app"
 import { rawWeather, weatherIcon } from "../../services/weather"
 
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
@@ -26,7 +26,7 @@ function ForecastDay({ index }: { index: number }) {
   const desc  = parse(d => (d.weather[index].hourly.find((h: any) => h.time === "1200") ?? d.weather[index].hourly[4]).weatherDesc[0]?.value ?? "", "")
 
   return (
-    <box class="forecast-day" vertical spacing={6}>
+    <box class="forecast-day" orientation={Gtk.Orientation.VERTICAL} spacing={6}>
       <label class="forecast-name" label={name} />
       <label class="forecast-icon" label={icon} />
       <label class="forecast-range" label={range} />
@@ -43,6 +43,8 @@ export default function WeatherPopup() {
 
   const dismiss = () => { const w = app.get_window("weather-popup"); if (w) w.visible = false }
 
+  let popup: any = null
+
   return (
     <window
       name="weather-popup"
@@ -51,34 +53,51 @@ export default function WeatherPopup() {
       keymode={Astal.Keymode.EXCLUSIVE}
       application={app}
       visible={false}
-      onKeyPressEvent={(_self: any, event: Gdk.EventKey) => {
-        if (event.keyval === Gdk.KEY_Escape) dismiss()
+      $={(win: any) => {
+        const key = new Gtk.EventControllerKey()
+        key.connect("key-pressed", (_c: any, keyval: number) => {
+          if (keyval === Gdk.KEY_Escape) { dismiss(); return true }
+          return false
+        })
+        win.add_controller(key)
+
+        const click = new Gtk.GestureClick()
+        click.connect("released", (_c: any, _n: number, x: number, y: number) => {
+          if (!popup) { dismiss(); return }
+          const [ok, rect] = popup.compute_bounds(win)
+          if (!ok || x < rect.origin.x || x > rect.origin.x + rect.size.width ||
+              y < rect.origin.y || y > rect.origin.y + rect.size.height) {
+            dismiss()
+          }
+        })
+        win.add_controller(click)
       }}
     >
-      <eventbox onClickRelease={dismiss}>
-        <box halign={Gtk.Align.CENTER} valign={Gtk.Align.START} marginTop={44}>
-          <eventbox>
-            <box class="weather-popup" vertical spacing={16}>
-              <box class="wp-current" vertical spacing={6}>
-                <box spacing={10}>
-                  <label class="wp-icon" label={curIcon} />
-                  <box vertical>
-                    <label class="wp-desc" label={curDesc} xalign={0} />
-                    <label class="wp-temp" label={curTemp} xalign={0} />
-                    <label class="wp-details" label={curDetails} xalign={0} />
-                  </box>
-                </box>
-              </box>
-              <box class="wp-separator" />
-              <box class="wp-forecast" homogeneous spacing={24}>
-                <ForecastDay index={0} />
-                <ForecastDay index={1} />
-                <ForecastDay index={2} />
+      <box
+        halign={Gtk.Align.CENTER}
+        valign={Gtk.Align.START}
+        marginTop={44}
+        $={(box: any) => { popup = box }}
+      >
+        <box class="weather-popup" orientation={Gtk.Orientation.VERTICAL} spacing={16}>
+          <box class="wp-current" orientation={Gtk.Orientation.VERTICAL} spacing={6}>
+            <box spacing={10}>
+              <label class="wp-icon" label={curIcon} />
+              <box orientation={Gtk.Orientation.VERTICAL}>
+                <label class="wp-desc" label={curDesc} xalign={0} />
+                <label class="wp-temp" label={curTemp} xalign={0} />
+                <label class="wp-details" label={curDetails} xalign={0} />
               </box>
             </box>
-          </eventbox>
+          </box>
+          <box class="wp-separator" />
+          <box class="wp-forecast" homogeneous spacing={24}>
+            <ForecastDay index={0} />
+            <ForecastDay index={1} />
+            <ForecastDay index={2} />
+          </box>
         </box>
-      </eventbox>
+      </box>
     </window>
   )
 }

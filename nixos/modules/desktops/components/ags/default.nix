@@ -29,6 +29,7 @@ in
           network
           wireplumber
           tray
+          pkgs.libadwaita
         ];
       };
 

@@ -1,6 +1,7 @@
 import { createBinding, createComputed } from "ags"
 import { exec } from "ags/process"
 import AstalWp from "gi://AstalWp"
+import Gtk from "gi://Gtk?version=4.0"
 
 const wp = AstalWp.get_default()!
 const speaker = wp.audio.defaultSpeaker!
@@ -22,19 +23,26 @@ export default function Volume() {
   )
 
   return (
-    <eventbox
-      onClickRelease={(self: any, event: any) => {
-        if (event.button === 1) speaker.mute = !speaker.mute
-        if (event.button === 3) exec("pavucontrol")
-      }}
-      onScroll={(_self: any, event: any) => {
-        const delta = event.delta_y > 0 ? -0.02 : 0.02
-        speaker.volume = Math.max(0, Math.min(1.5, speaker.volume + delta))
+    <button
+      class={cls}
+      tooltipText={tooltip}
+      onClicked={() => { speaker.mute = !speaker.mute }}
+      $={(btn: any) => {
+        const rightClick = new Gtk.GestureClick({ button: 3 })
+        rightClick.connect("released", () => exec("pavucontrol"))
+        btn.add_controller(rightClick)
+
+        const scroll = new Gtk.EventControllerScroll()
+        scroll.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
+        scroll.connect("scroll", (_c: any, _dx: number, dy: number) => {
+          const delta = dy > 0 ? -0.02 : 0.02
+          speaker.volume = Math.max(0, Math.min(1.5, speaker.volume + delta))
+          return true
+        })
+        btn.add_controller(scroll)
       }}
     >
-      <button class={cls} tooltipText={tooltip}>
-        <label label={icon} />
-      </button>
-    </eventbox>
+      <label label={icon} />
+    </button>
   )
 }

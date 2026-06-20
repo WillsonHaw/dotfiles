@@ -1,5 +1,5 @@
 import { createComputed } from "ags"
-import app from "ags/gtk3/app"
+import app from "ags/gtk4/app"
 import wallpaper from "../../../services/wallpaper"
 
 export default function Wallpaper() {

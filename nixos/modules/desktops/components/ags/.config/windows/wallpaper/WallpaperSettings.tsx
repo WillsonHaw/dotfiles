@@ -1,12 +1,14 @@
-import { Accessor, createComputed, createState } from "ags"
+import { Accessor, createComputed, createState, For } from "ags"
 import { timeout } from "ags/time"
-import { Astal } from "ags/gtk3"
-import Gtk from "gi://Gtk?version=3.0"
-import Gdk from "gi://Gdk?version=3.0"
-import app from "ags/gtk3/app"
+import { Astal } from "ags/gtk4"
+import Gtk from "gi://Gtk?version=4.0"
+import Gdk from "gi://Gdk?version=4.0"
+import Adw from "gi://Adw"
+import app from "ags/gtk4/app"
 import wallpaper from "../../services/wallpaper"
 
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
+const WrapBox = (Adw as any).WrapBox as any
 
 function Toggle({ label, active, onToggle }: { label: string; active: Accessor<boolean>; onToggle: (v: boolean) => void }) {
   return (
@@ -27,7 +29,7 @@ function TextInput({ placeholder, value, onCommit }: {
     <entry
       class="wp-entry"
       placeholderText={placeholder}
-      text={value()}
+      text={createComputed(value) as any}
       hexpand
       onNotifyText={(self: any) => {
         if (debounce) debounce.cancel()
@@ -96,6 +98,8 @@ export default function WallpaperSettings() {
     try { return JSON.stringify(JSON.parse(raw), null, 2) } catch { return raw }
   })
 
+  let popup: any = null
+
   return (
     <window
       name="wallpaper-settings-menu"
@@ -104,19 +108,59 @@ export default function WallpaperSettings() {
       keymode={Astal.Keymode.EXCLUSIVE}
       application={app}
       visible={false}
-      onKeyPressEvent={(_: any, event: Gdk.EventKey) => {
-        if (event.keyval === Gdk.KEY_Escape) dismiss()
+      $={(win: any) => {
+        const key = new Gtk.EventControllerKey()
+        key.connect("key-pressed", (_c: any, keyval: number) => {
+          if (keyval === Gdk.KEY_Escape) { dismiss(); return true }
+          return false
+        })
+        win.add_controller(key)
+
+        const click = new Gtk.GestureClick()
+        click.connect("released", (_c: any, _n: number, x: number, y: number) => {
+          if (!popup) { dismiss(); return }
+          const [ok, rect] = popup.compute_bounds(win)
+          if (!ok || x < rect.origin.x || x > rect.origin.x + rect.size.width ||
+              y < rect.origin.y || y > rect.origin.y + rect.size.height) {
+            dismiss()
+          }
+        })
+        win.add_controller(click)
       }}
     >
-      <eventbox onClickRelease={dismiss}>
-        <box halign={Gtk.Align.CENTER} valign={Gtk.Align.START} marginTop={44}>
-          <eventbox onButtonReleaseEvent={() => true}>
-            <box class="wallpaper-popup" vertical spacing={14}>
+      <box halign={Gtk.Align.CENTER} valign={Gtk.Align.START} marginTop={44}>
+        <box
+          class="wallpaper-popup"
+          orientation={Gtk.Orientation.VERTICAL}
+          widthRequest={500}
+          $={(box: any) => {
+            popup = box
+
+            const motion = new Gtk.EventControllerMotion()
+            motion.connect("enter", () => { box.opacity = 1.0 })
+            motion.connect("leave", () => { box.opacity = 0.3 })
+            box.add_controller(motion)
+          }}
+        >
+          <scrolledwindow
+            class="wp-scroll"
+            vscrollbarPolicy={Gtk.PolicyType.AUTOMATIC}
+            hscrollbarPolicy={Gtk.PolicyType.NEVER}
+            heightRequest={620}
+          >
+            <box
+              orientation={Gtk.Orientation.VERTICAL}
+              spacing={14}
+              marginTop={16}
+              marginBottom={16}
+              marginStart={20}
+              marginEnd={20}
+            >
 
               <label class="wp-popup-title" label="Wallpapers" halign={Gtk.Align.START} />
 
               {/* Purity flags */}
-              <box vertical spacing={6}>
+              <box orientation={Gtk.Orientation.VERTICAL} spacing={6}>
                 <label class="wp-popup-current-label" label="Purity" halign={Gtk.Align.START} />
                 <box spacing={16}>
                   <Toggle label="SFW" active={wallpaper.sfw} onToggle={wallpaper.setSfw} />
@@ -132,7 +176,7 @@ export default function WallpaperSettings() {
               </box>
 
               {/* Tags */}
-              <box vertical spacing={4}>
+              <box orientation={Gtk.Orientation.VERTICAL} spacing={4}>
                 <label class="wp-popup-current-label" label="Tags / Keywords" halign={Gtk.Align.START} />
                 <TextInput placeholder="e.g. nature landscape" value={wallpaper.tags} onCommit={wallpaper.setTags} />
                 <label
@@ -162,9 +206,30 @@ export default function WallpaperSettings() {
               <box class="wp-popup-separator" />
 
               {/* Current + actions */}
-              <box vertical spacing={6}>
+              <box orientation={Gtk.Orientation.VERTICAL} spacing={6}>
                 <label class="wp-popup-current-label" label="Current" halign={Gtk.Align.START} />
                 <label class="wp-popup-current" label={currentLabel} halign={Gtk.Align.START} wrap />
+                <WrapBox
+                  class="wp-image-tags"
+                  childSpacing={4}
+                  lineSpacing={4}
+                  hexpand
+                  visible={createComputed(() => wallpaper.currentImageTags().length > 0)}
+                >
+                  <For each={wallpaper.currentImageTags}>
+                    {(tag: any) => (
+                      <button
+                        class={`wp-tag wp-tag-${tag.purity}`}
+                        onClicked={() => {
+                          wallpaper.setTags(`id:${tag.id}`)
+                          wallpaper.random().catch(() => {})
+                        }}
+                      >
+                        <label label={tag.name} />
+                      </button>
+                    )}
+                  </For>
+                </WrapBox>
                 <box spacing={8} marginTop={4}>
                   <button class="wp-save-btn" onClicked={save}>
                     <label label={saveBtnLabel} />
@@ -182,7 +247,7 @@ export default function WallpaperSettings() {
               <box class="wp-popup-separator" />
 
               {/* API key */}
-              <box vertical spacing={4}>
+              <box orientation={Gtk.Orientation.VERTICAL} spacing={4}>
                 <label class="wp-popup-current-label" label="Wallhaven API Key (required for NSFW)" halign={Gtk.Align.START} />
                 <TextInput placeholder="your-api-key" value={wallpaper.apikey} onCommit={wallpaper.setApikey} />
               </box>
@@ -190,7 +255,7 @@ export default function WallpaperSettings() {
               <box class="wp-popup-separator" />
 
               {/* Debug panel */}
-              <box vertical spacing={8}>
+              <box orientation={Gtk.Orientation.VERTICAL} spacing={8}>
                 <button
                   class="wp-debug-toggle"
                   onClicked={() => setDebugOpen(!debugOpen())}
@@ -201,7 +266,7 @@ export default function WallpaperSettings() {
                   />
                 </button>
                 <box
-                  vertical
+                  orientation={Gtk.Orientation.VERTICAL}
                   spacing={6}
                   visible={debugOpen}
                 >
@@ -214,7 +279,7 @@ export default function WallpaperSettings() {
                     selectable
                   />
                   <label class="wp-popup-current-label" label="Response" halign={Gtk.Align.START} />
-                  <scrollable class="wp-debug-scroll" vscrollbarPolicy={Gtk.PolicyType.AUTOMATIC} hscrollbarPolicy={Gtk.PolicyType.NEVER}>
+                  <scrolledwindow class="wp-debug-scroll" vscrollbarPolicy={Gtk.PolicyType.AUTOMATIC} hscrollbarPolicy={Gtk.PolicyType.NEVER}>
                     <label
                       class="wp-debug-response"
                       label={debugResponse}
@@ -222,14 +287,14 @@ export default function WallpaperSettings() {
                       valign={Gtk.Align.START}
                       selectable
                     />
-                  </scrollable>
+                  </scrolledwindow>
                 </box>
               </box>
 
             </box>
-          </eventbox>
+          </scrolledwindow>
         </box>
-      </eventbox>
+      </box>
     </window>
   )
 }

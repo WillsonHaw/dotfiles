@@ -1,4 +1,4 @@
-import app from "ags/gtk3/app"
+import app from "ags/gtk4/app"
 import style from "./styles/styles.scss"
 
 import Bar from "./windows/bar/Bar"

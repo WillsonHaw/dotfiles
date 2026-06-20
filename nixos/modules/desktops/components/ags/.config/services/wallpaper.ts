@@ -13,6 +13,12 @@ const WALLHAVEN_API = "https://wallhaven.cc/api/v1/search"
 try { exec(["mkdir", "-p", TMP_DIR]) } catch {}
 try { exec(["mkdir", "-p", `${HOME}/Wallpapers`]) } catch {}
 
+interface Tag {
+  id: number
+  name: string
+  purity: string
+}
+
 interface WallpaperInfo {
   path: string
   purity: "sfw" | "sketchy" | "nsfw"
@@ -37,6 +43,7 @@ const [searchTotal, setSearchTotal] = createState<number | null>(null)
 const [fetchStatus, setFetchStatus] = createState<"idle" | "ok" | "no-results" | "offline" | "api-error">("idle")
 const [lastDebugUrl, setLastDebugUrl] = createState<string | null>(null)
 const [lastDebugResponse, setLastDebugResponse] = createState<string | null>(null)
+const [currentImageTags, setCurrentImageTags] = createState<Tag[]>([])
 
 // --- Config ---
 function saveConfig() {
@@ -96,6 +103,17 @@ function randomLocal(): WallpaperInfo | null {
 // --- Wallhaven API (via curl) ---
 function purityEnabled(p: string): boolean {
   return (p === "sfw" && sfw()) || (p === "sketchy" && sketchy()) || (p === "nsfw" && nsfw())
+}
+
+async function fetchTagsForId(id: string): Promise<Tag[]> {
+  const key = apikey()
+  let url = `https://wallhaven.cc/api/v1/w/${id}`
+  if (key) url += `?apikey=${encodeURIComponent(key)}`
+  try {
+    const out = await execAsync(["curl", "-s", "--max-time", "10", url])
+    const json = JSON.parse(out)
+    return json?.data?.tags ?? []
+  } catch { return [] }
 }
 
 async function fetchWallhaven(): Promise<{ url: string; purity: string; id: string } | null> {
@@ -170,8 +188,12 @@ async function prefetchNext(retries = 0): Promise<void> {
 // --- Apply & random ---
 function applyWallpaper(info: WallpaperInfo) {
   setCurrentWallpaper(info)
+  setCurrentImageTags([])
   execAsync(["awww", "img", "--resize", "fit", "-t", "random", info.path]).catch(() => {})
   startTimer()
+  if (info.id) {
+    fetchTagsForId(info.id).then(setCurrentImageTags).catch(() => {})
+  }
 }
 
 let _busy = false
@@ -262,6 +284,7 @@ export default {
   currentWallpaper, nextWallpaper, isDownloading,
   searchTotal, fetchStatus,
   lastDebugUrl, lastDebugResponse,
+  currentImageTags,
   random, saveCurrentWallpaper,
   setTags, setSfw, setSketchy, setNsfw, setGeneral, setAnime, setPeople,
   setApikey, setLocalOnly, setDisplayTimeMinutes, getDisplayTimeMinutes,

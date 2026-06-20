@@ -1,6 +1,7 @@
-import { Astal } from "ags/gtk3"
-import Gdk from "gi://Gdk?version=3.0"
-import app from "ags/gtk3/app"
+import { Astal } from "ags/gtk4"
+import Gtk from "gi://Gtk?version=4.0"
+import Gdk from "gi://Gdk?version=4.0"
+import app from "ags/gtk4/app"
 import { exec } from "ags/process"
 
 function PowerAction({ icon, label, action }: { icon: string; label: string; action: () => void }) {
@@ -13,7 +14,7 @@ function PowerAction({ icon, label, action }: { icon: string; label: string; act
         if (w) w.visible = false
       }}
     >
-      <box vertical>
+      <box orientation={Gtk.Orientation.VERTICAL}>
         <label class="icon x-large" label={icon} />
         <label class="label" label={label} />
       </box>
@@ -29,8 +30,13 @@ export default function PowerMenu() {
       keymode={Astal.Keymode.EXCLUSIVE}
       application={app}
       visible={false}
-      onKeyPressEvent={(self: any, event: Gdk.EventKey) => {
-        if (event.keyval === Gdk.KEY_Escape) self.visible = false
+      $={(win: any) => {
+        const key = new Gtk.EventControllerKey()
+        key.connect("key-pressed", (_c: any, keyval: number) => {
+          if (keyval === Gdk.KEY_Escape) { win.visible = false; return true }
+          return false
+        })
+        win.add_controller(key)
       }}
     >
       <box class="power-menu">

@@ -21,7 +21,7 @@
           };
 
           chiaki.enable = true;
-          capture.flameshot.enable = true;
+          # capture.flameshot.enable = true;
           capture.grimblast.enable = true;
           gimp.enable = true;
           gparted.enable = true;
@@ -36,7 +36,7 @@
         services = {
           wallpaper = {
             awww.enable = true;
-            variety.enable = true;
+            # variety.enable = true;
           };
           nextcloud.enable = true;
           remmina.enable = true;

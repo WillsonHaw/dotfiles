@@ -1,7 +1,7 @@
 import { createComputed } from "ags"
 import { createPoll } from "ags/time"
 import { execAsync } from "ags/process"
-import Gtk from "gi://Gtk?version=3.0"
+import Gtk from "gi://Gtk?version=4.0"
 import GLib from "gi://GLib"
 
 const homeDir = GLib.get_home_dir()

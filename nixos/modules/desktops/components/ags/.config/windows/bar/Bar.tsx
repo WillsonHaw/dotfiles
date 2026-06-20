@@ -1,6 +1,6 @@
-import { Astal } from "ags/gtk3"
-import app from "ags/gtk3/app"
-import Gtk from "gi://Gtk?version=3.0"
+import { Astal } from "ags/gtk4"
+import app from "ags/gtk4/app"
+import Gtk from "gi://Gtk?version=4.0"
 
 import Launcher from "./widgets/Launcher"
 import Workspaces from "./widgets/Workspaces"

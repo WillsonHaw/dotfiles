@@ -1,6 +1,6 @@
 import { createPoll } from "ags/time"
 import { execAsync } from "ags/process"
-import app from "ags/gtk3/app"
+import app from "ags/gtk4/app"
 
 const MINUTE = 60_000
 
