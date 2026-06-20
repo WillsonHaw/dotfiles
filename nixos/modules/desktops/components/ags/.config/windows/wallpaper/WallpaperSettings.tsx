@@ -64,7 +64,10 @@ export default function WallpaperSettings() {
     const w = wallpaper.currentWallpaper()
     if (!w) return "—"
     const name = w.path.split("/").pop() ?? "—"
-    return `[${w.purity}] ${name}`
+    const idx = wallpaper.currentIndex()
+    const total = wallpaper.currentTotal()
+    const counter = (idx !== null && total !== null) ? `(${idx}/${total}) ` : ""
+    return `${counter}[${w.purity}] ${name}`
   })
 
   const nextBtnLabel = createComputed(() =>

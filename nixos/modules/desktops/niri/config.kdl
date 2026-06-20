@@ -571,6 +571,7 @@ binds {
     // The allow-inhibiting=false property can be applied to other binds as well,
     // which ensures niri always processes them, even when an inhibitor is active.
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    Alt+Escape allow-inhibiting=false { spawn "ags" "request" "panic-wallpaper"; }
 
     // The quit action will show a confirmation dialog to avoid accidental exits.
     Mod+Shift+E { quit; }
@@ -580,4 +581,6 @@ binds {
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
 
+    // Views next wallpaper
+    Super+N hotkey-overlay-title="Next Wallpaper" { spawn "ags" "request" "next-wallpaper"; }
 }

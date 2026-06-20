@@ -44,6 +44,8 @@ const [fetchStatus, setFetchStatus] = createState<"idle" | "ok" | "no-results" |
 const [lastDebugUrl, setLastDebugUrl] = createState<string | null>(null)
 const [lastDebugResponse, setLastDebugResponse] = createState<string | null>(null)
 const [currentImageTags, setCurrentImageTags] = createState<Tag[]>([])
+const [currentIndex, setCurrentIndex] = createState<number | null>(null)
+const [currentTotal, setCurrentTotal] = createState<number | null>(null)
 
 // --- Config ---
 function saveConfig() {
@@ -90,14 +92,23 @@ function loadLocalFiles(purity: "sfw" | "sketchy" | "nsfw"): string[] {
   } catch { return [] }
 }
 
+// --- Viewed tracking ---
+// Keyed by Wallhaven ID for remote images, path for local ones.
+// Cleared when settings change (new search) or when the full set has been cycled through.
+const _viewedIds = new Set<string>()
+let _localTotal = 0
+
 function randomLocal(): WallpaperInfo | null {
   const all: WallpaperInfo[] = [
     ...(sfw() ? loadLocalFiles("sfw").map(path => ({ path, purity: "sfw" as const, id: null })) : []),
     ...(sketchy() ? loadLocalFiles("sketchy").map(path => ({ path, purity: "sketchy" as const, id: null })) : []),
     ...(nsfw() ? loadLocalFiles("nsfw").map(path => ({ path, purity: "nsfw" as const, id: null })) : []),
   ]
+  _localTotal = all.length
   if (all.length === 0) return null
-  return all[Math.floor(Math.random() * all.length)]
+  let pool = all.filter(w => !_viewedIds.has(w.path))
+  if (pool.length === 0) { _viewedIds.clear(); pool = all }
+  return pool[Math.floor(Math.random() * pool.length)]
 }
 
 // --- Wallhaven API (via curl) ---
@@ -116,12 +127,31 @@ async function fetchTagsForId(id: string): Promise<Tag[]> {
   } catch { return [] }
 }
 
+// Pagination state — seed keeps the random ordering consistent across pages so
+// we can walk through all results without repeats. Cleared on any settings change.
+let _apiSeed = ""
+let _apiPage = 1
+let _apiQueue: Array<{ url: string; purity: string; id: string }> = []
+let _apiConsumedCount = 0
+
+function resetApiPagination() {
+  _apiSeed = Math.random().toString(36).substring(2, 8)
+  _apiPage = 1
+  _apiQueue = []
+  _apiConsumedCount = 0
+}
+
 async function fetchWallhaven(): Promise<{ url: string; purity: string; id: string } | null> {
+  // Serve from queue if we have items left from the last page fetch.
+  if (_apiQueue.length > 0) { _apiConsumedCount++; return _apiQueue.shift()! }
+
   const purity = `${sfw() ? "1" : "0"}${sketchy() ? "1" : "0"}${nsfw() ? "1" : "0"}`
   const categories = `${general() ? "1" : "0"}${anime() ? "1" : "0"}${people() ? "1" : "0"}`
   if (purity === "000" || categories === "000") return null
 
-  let url = `${WALLHAVEN_API}?sorting=random&purity=${purity}&categories=${categories}`
+  if (!_apiSeed) resetApiPagination()
+
+  let url = `${WALLHAVEN_API}?sorting=random&seed=${_apiSeed}&page=${_apiPage}&purity=${purity}&categories=${categories}`
   if (tags()) url += `&q=${encodeURIComponent(tags())}`
   if (apikey()) url += `&apikey=${encodeURIComponent(apikey())}`
 
@@ -142,10 +172,17 @@ async function fetchWallhaven(): Promise<{ url: string; purity: string; id: stri
     const json = JSON.parse(out)
     if (!Array.isArray(json?.data)) { setFetchStatus("api-error"); return null }
     setSearchTotal(json.meta?.total ?? null)
-    if (json.data.length === 0) { setFetchStatus("no-results"); return null }
+    if (json.data.length === 0) {
+      // Exhausted all pages — start a fresh cycle with a new seed.
+      resetApiPagination()
+      setFetchStatus("no-results")
+      return null
+    }
     setFetchStatus("ok")
-    const item = json.data[Math.floor(Math.random() * json.data.length)]
-    return { url: item.path, purity: item.purity, id: String(item.id) }
+    _apiPage++
+    _apiQueue = json.data.map((item: any) => ({ url: item.path, purity: item.purity, id: String(item.id) }))
+    _apiConsumedCount++
+    return _apiQueue.shift()!
   } catch { setFetchStatus("api-error"); return null }
 }
 
@@ -185,11 +222,56 @@ async function prefetchNext(retries = 0): Promise<void> {
   _prefetching = false
 }
 
+// Scale image down to fit the current screen (never upscale), pad remainder with black,
+// then hand the exact-sized image to awww with --resize no.
+// Screen dimensions are queried live so a display change is always reflected.
+function fitAndApply(srcPath: string, transition: string) {
+  let screenW = 0
+  let screenH = 0
+  try {
+    const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),/)
+    if (match) {
+      screenW = parseInt(match[1])
+      screenH = parseInt(match[2])
+    }
+  } catch {}
+
+  const name = srcPath.split("/").pop()!
+  const fitPath = `${TMP_DIR}/fit_${name}`
+
+  if (screenW > 0 && screenH > 0) {
+    const awwwArgs = transition
+      ? ["awww", "img", "--resize", "no", "-t", transition, fitPath]
+      : ["awww", "img", "--resize", "no", fitPath]
+    execAsync([
+      "magick", srcPath,
+      "-resize", `${screenW}x${screenH}>`,
+      "-gravity", "center",
+      "-background", "black",
+      "-extent", `${screenW}x${screenH}`,
+      fitPath,
+    ])
+      .then(() => execAsync(awwwArgs).catch(() => {}))
+      .catch(() => execAsync(["awww", "img", "--resize", "fit", "-t", "random", srcPath]).catch(() => {}))
+  } else {
+    execAsync(["awww", "img", "--resize", "fit", "-t", "random", srcPath]).catch(() => {})
+  }
+}
+
 // --- Apply & random ---
 function applyWallpaper(info: WallpaperInfo) {
+  _panicActive = false
   setCurrentWallpaper(info)
   setCurrentImageTags([])
-  execAsync(["awww", "img", "--resize", "fit", "-t", "random", info.path]).catch(() => {})
+  if (!info.id) {
+    _viewedIds.add(info.path)
+    setCurrentIndex(_viewedIds.size)
+    setCurrentTotal(_localTotal)
+  } else {
+    setCurrentIndex(_apiConsumedCount)
+    setCurrentTotal(searchTotal())
+  }
+  fitAndApply(info.path, "random")
   startTimer()
   if (info.id) {
     fetchTagsForId(info.id).then(setCurrentImageTags).catch(() => {})
@@ -232,6 +314,80 @@ async function random(): Promise<void> {
   }
 }
 
+// --- Panic: immediately apply a random SFW local wallpaper, no transition, no state changes ---
+// A second invocation while in panic mode restores the original wallpaper.
+// panic() intentionally never calls applyWallpaper(), so currentWallpaper() always
+// holds the pre-panic path and can be used for restoration.
+let _panicActive = false
+
+async function panicApply(srcPath: string): Promise<void> {
+  let screenW = 0, screenH = 0
+  try {
+    const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),/)
+    if (match) { screenW = parseInt(match[1]); screenH = parseInt(match[2]) }
+  } catch {}
+  const name = srcPath.split("/").pop()!
+  const fitPath = `${TMP_DIR}/panic_${name}`
+  if (screenW > 0 && screenH > 0) {
+    try {
+      await execAsync([
+        "magick", srcPath,
+        "-resize", `${screenW}x${screenH}>`,
+        "-gravity", "center",
+        "-background", "black",
+        "-extent", `${screenW}x${screenH}`,
+        fitPath,
+      ])
+      await execAsync(["awww", "img", "--resize", "no", "-t", "none", fitPath])
+    } catch {
+      execAsync(["awww", "img", "--resize", "fit", "-t", "none", srcPath]).catch(() => {})
+    }
+  } else {
+    execAsync(["awww", "img", "--resize", "fit", "-t", "none", srcPath]).catch(() => {})
+  }
+}
+
+async function panic(): Promise<void> {
+  if (_panicActive) {
+    // Restore: reuse the fit_ file that fitAndApply already created — no magick needed.
+    _panicActive = false
+    const prev = currentWallpaper()
+    if (prev) {
+      const name = prev.path.split("/").pop()!
+      const fitPath = `${TMP_DIR}/fit_${name}`
+      try {
+        exec(["test", "-f", fitPath])
+        execAsync(["awww", "img", "--resize", "no", "-t", "none", fitPath]).catch(() => {})
+      } catch {
+        // fit file missing — regenerate from source
+        await panicApply(prev.path).catch(() => {})
+      }
+    }
+    return
+  }
+
+  const files = loadLocalFiles("sfw")
+  if (files.length === 0) {
+    // No SFW wallpapers — blank the screen with a black image
+    _panicActive = true
+    let screenW = 1920, screenH = 1080
+    try {
+      const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),/)
+      if (match) { screenW = parseInt(match[1]); screenH = parseInt(match[2]) }
+    } catch {}
+    const blackPath = `${TMP_DIR}/panic_black.png`
+    try {
+      await execAsync(["magick", "-size", `${screenW}x${screenH}`, "xc:black", blackPath])
+      await execAsync(["awww", "img", "--resize", "no", "-t", "none", blackPath])
+    } catch {}
+    return
+  }
+
+  _panicActive = true
+  const srcPath = files[Math.floor(Math.random() * files.length)]
+  await panicApply(srcPath).catch(() => {})
+}
+
 // --- Save ---
 function saveCurrentWallpaper() {
   const cur = currentWallpaper()
@@ -247,8 +403,11 @@ function saveCurrentWallpaper() {
 // --- Settings with side effects ---
 function onSettingsChange() {
   saveConfig()
-  // Always discard stale prefetch and restart with new settings
+  _viewedIds.clear()
+  resetApiPagination()
   setNextWallpaper(null)
+  setCurrentIndex(null)
+  setCurrentTotal(null)
   _prefetching = false
   if (!localOnly() && (sfw() || sketchy() || nsfw()) && (general() || anime() || people())) {
     prefetchNext().catch(() => {})
@@ -275,6 +434,12 @@ function getDisplayTimeMinutes(): number {
 
 ;(function init() {
   loadConfig()
+  // Re-apply the daemon's restored wallpaper with correct scaling on startup.
+  try {
+    const query = exec(["awww", "query"])
+    const path = query.split(": ").pop()?.trim()
+    if (path && path !== "") fitAndApply(path, "")
+  } catch {}
   startTimer()
   prefetchNext().catch(() => {})
 })()
@@ -285,7 +450,8 @@ export default {
   searchTotal, fetchStatus,
   lastDebugUrl, lastDebugResponse,
   currentImageTags,
-  random, saveCurrentWallpaper,
+  currentIndex, currentTotal,
+  random, panic, saveCurrentWallpaper,
   setTags, setSfw, setSketchy, setNsfw, setGeneral, setAnime, setPeople,
   setApikey, setLocalOnly, setDisplayTimeMinutes, getDisplayTimeMinutes,
 }

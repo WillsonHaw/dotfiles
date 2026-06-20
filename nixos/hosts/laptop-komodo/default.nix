@@ -22,6 +22,7 @@
   boot.kernelParams = [
     "xe.enable_psr=0"
     "xe.enable_panel_replay=0"
+    "resume_offset=246552576"
   ];
 
   boot.loader = {
@@ -30,8 +31,7 @@
     efi.canTouchEfiVariables = true;
   };
 
-  # TODO: Set `boot.resumeDevice` to the swap partition UUID once this host is
-  # installed on real hardware. See hosts/laptop/default.nix for reference.
+  boot.resumeDevice = "/dev/disk/by-uuid/2527fdc0-04be-4c92-80e9-bc6784e70bfa";
 
   # Disable USB and other devices from waking the system
   # (prevents immediate wake after hibernate/suspend)

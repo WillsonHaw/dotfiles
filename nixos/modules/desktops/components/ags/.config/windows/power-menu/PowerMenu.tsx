@@ -40,10 +40,10 @@ export default function PowerMenu() {
       }}
     >
       <box class="power-menu">
-        <PowerAction icon="" label="Reload Hyprland" action={() => exec("hyprctl reload")} />
+        <PowerAction icon="󰒲" label="Hibernate" action={() => exec("systemctl hibernate")} />
         <PowerAction icon="󰤄" label="Suspend" action={() => exec("sleep 0.1 && systemctl suspend || loginctl suspend")} />
-        <PowerAction icon="" label="Reboot" action={() => exec("reboot")} />
-        <PowerAction icon="" label="Lock" action={() => exec("hyprlock")} />
+        <PowerAction icon="󰑓" label="Reboot" action={() => exec("reboot")} />
+        <PowerAction icon="󰌾" label="Lock" action={() => exec("hyprlock")} />
         <PowerAction icon="󰍃" label="Logout" action={() => exec("wlogout")} />
         <PowerAction icon="⏻" label="Shutdown" action={() => exec("shutdown now")} />
       </box>
