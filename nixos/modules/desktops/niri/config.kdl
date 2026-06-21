@@ -320,6 +320,7 @@ binds {
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+Grave hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
+    Mod+E hotkey-overlay-title="Open File Manager: thunar" { spawn "thunar"; }
     Mod+Space hotkey-overlay-title="Run an Application: rofi" { spawn-sh "$HOME/.config/ags/scripts/rofi-launcher"; }
     Mod+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
     Mod+P hotkey-overlay-title="Presentation Mode: display switcher" { spawn "presentation-mode"; }
