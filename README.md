@@ -33,17 +33,18 @@ That's it. [`nixos/install.sh`](nixos/install.sh) handles partitioning (UEFI/GPT
 
 ```bash
 reboot
-# log in as slumpy
+# Password is locked until SOPS is set up — SSH in with an existing authorized key
+ssh slumpy@<machine-ip>
 sudo mv /etc/nixos/dotfiles ~/dotfiles
 sudo chown -R slumpy:users ~/dotfiles      # repo was cloned as root during install
-git init-keys     # generate SSH + GPG, paste to github.com/settings/keys
+git init-keys     # generate SSH + GPG for this machine, paste to github.com/settings/keys
 ```
 
-`nixos-install` runs with `--no-root-passwd` because `users.mutableUsers = false` and the user's `hashedPassword` is set declaratively. Make sure that hash matches a password you remember — once installed there's no `passwd` recovery path (your declared SSH key in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix) is the backup).
+Then set up SOPS so the password activates on the next rebuild (see [Update sops keys](#update-sops-keys) below).
+
+> **No password on first boot.** The user account is created with a locked password (`!`). Login via SSH using any of the authorized keys already declared in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix). Once SOPS is set up and you rebuild, the password from the encrypted secret is applied automatically.
 
 > **BIOS, LUKS, btrfs, or multi-disk setups?** The script assumes a single-disk UEFI install with no encryption. For anything else, partition/mount manually and run the latter half of the script by hand (or see the [NixOS manual](https://nixos.org/manual/nixos/stable/#sec-installation)). The `dev-*` hosts enable `zramSwap` so an on-disk swap partition is only needed for hibernation.
-
-`--no-root-passwd` is required: `users.mutableUsers = false` and the user's `hashedPassword` is set declaratively. Make sure that hash matches a password you remember — once installed there's no `passwd` recovery path (your declared SSH key in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix) is the backup).
 
 ## After install
 
@@ -54,6 +55,8 @@ git init-keys
 ```
 
 Signed commits and tags are on by default ([`commit.gpgsign`](nixos/modules/services/git/default.nix), `tag.gpgsign`). The dynamic `user.signingkey` is written by `git-init-keys` to `~/.config/git/config.local`.
+
+Then follow the SOPS key setup below to unlock the password for local login.
 
 ## Day-to-day
 
@@ -88,21 +91,28 @@ For another machine that should share an existing **role** (e.g. another dev box
 
 ### Update sops keys
 
-1. Generate an SSH key if one hasn't alerady been generated
-2. Create age keys:
+This is required after a fresh install to unlock the user password for local login. Run on the new machine after `git init-keys`:
+
+1. Derive an age key from the new SSH key:
    ```bash
    mkdir -p ~/.config/sops/age
    nix-shell -p ssh-to-age --run 'ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt'
    ```
-3. Get publlic key
+2. Get the age public key to add to `.sops.yaml`:
    ```bash
    nix-shell -p age --run 'age-keygen -y ~/.config/sops/age/keys.txt'
    ```
-4. Update .sops.yaml with the new public key
-5. Update keys from a host that has already been set up
+3. On an existing machine that can decrypt secrets, add the new public key to `nixos/.sops.yaml` and re-encrypt:
    ```bash
-   nix-shell -p sops --run 'sops updatekeys ./secrets/secrets.yaml'
+   nix-shell -p sops --run 'sops updatekeys nixos/secrets/secrets.yaml'
+   git commit -am "sops: add <hostname> age key" && git push
    ```
+4. Back on the new machine, pull and rebuild:
+   ```bash
+   git pull && rebuild
+   ```
+
+After the rebuild, `sops-apply-user-password.service` applies the decrypted password hash and local login works.
 
 ## Adding an optional service
 

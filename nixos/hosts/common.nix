@@ -20,7 +20,7 @@
     age.keyFile = "/home/${config.noodles.user}/.config/sops/age/keys.txt";
 
     secrets = {
-      hashed_host_pw.neededForUsers = true;
+      hashed_host_pw = { };
       host_pw = {
         owner = config.noodles.user;
       };

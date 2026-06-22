@@ -22,7 +22,7 @@ if ! curl -sSf -m 5 https://cache.nixos.org >/dev/null; then
   exit 1
 fi
 
-# --- Pick host --------------------------------------------------------------
+# --- Select base host -------------------------------------------------------
 mapfile -t hosts < <(
   find "$SCRIPT_DIR/hosts" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
 )
@@ -31,12 +31,44 @@ if [[ ${#hosts[@]} -eq 0 ]]; then
   exit 1
 fi
 
-echo "Available hosts:"
-PS3="Select host: "
-select target in "${hosts[@]}"; do
-  [[ -n "${target:-}" ]] && break
+echo "Select a host to base the new host on:"
+PS3="Base host: "
+select base in "${hosts[@]}"; do
+  [[ -n "${base:-}" ]] && break
 done
-HOST="slumpy-${target}"
+
+# --- New host name ----------------------------------------------------------
+while true; do
+  read -rp "Enter a name for this host (letters, digits, hyphens): " new_name
+  new_name="${new_name// /-}"
+  if [[ -z "$new_name" ]]; then
+    echo "Name cannot be empty." >&2
+  elif [[ "$new_name" =~ [^a-zA-Z0-9-] ]]; then
+    echo "Name must contain only letters, digits, and hyphens." >&2
+  elif [[ -d "$SCRIPT_DIR/hosts/$new_name" ]]; then
+    echo "Host '$new_name' already exists. Choose a different name." >&2
+  else
+    break
+  fi
+done
+
+# --- Create new host from base ----------------------------------------------
+cp -r "$SCRIPT_DIR/hosts/$base" "$SCRIPT_DIR/hosts/$new_name"
+
+# Update networking.hostName in the copied default.nix
+sed -i "s|networking\.hostName = \"[^\"]*\";|networking.hostName = \"slumpy-${new_name}\";|" \
+  "$SCRIPT_DIR/hosts/$new_name/default.nix"
+
+# Register the new host in flake.nix
+awk -v entry="        slumpy-${new_name} = mkHost \"${new_name}\" { };" '
+  /nixosConfigurations = \{/ { in_block=1 }
+  in_block && /^      \};/ { print entry; in_block=0 }
+  { print }
+' "$SCRIPT_DIR/flake.nix" > "$SCRIPT_DIR/flake.nix.tmp" \
+  && mv "$SCRIPT_DIR/flake.nix.tmp" "$SCRIPT_DIR/flake.nix"
+
+target="$new_name"
+HOST="slumpy-${new_name}"
 
 # --- Pick disk --------------------------------------------------------------
 mapfile -t disks < <(
@@ -116,9 +148,15 @@ cat <<EOF
 Install complete.
 
   1. reboot
-  2. log in as slumpy
+  2. SSH in with an existing authorized key (password is locked until SOPS is set up):
+       ssh slumpy@<machine-ip>
   3. sudo mv /etc/nixos/dotfiles ~/dotfiles
   4. sudo chown -R slumpy:users ~/dotfiles
-  5. git init-keys     # generate SSH + GPG, then paste to github.com/settings/keys
+  5. git init-keys     # generate SSH + GPG for this machine, paste to github.com/settings/keys
+
+Then set up SOPS to unlock local login — see "Update sops keys" in README.md:
+  a. Derive age key from the new SSH key and get its public key.
+  b. On an existing machine: add the public key to .sops.yaml, run 'sops updatekeys', push.
+  c. On this machine: git pull && rebuild
 
 EOF
