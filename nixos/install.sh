@@ -67,6 +67,11 @@ awk -v entry="        slumpy-${new_name} = mkHost \"${new_name}\" { };" '
 ' "$SCRIPT_DIR/flake.nix" > "$SCRIPT_DIR/flake.nix.tmp" \
   && mv "$SCRIPT_DIR/flake.nix.tmp" "$SCRIPT_DIR/flake.nix"
 
+# Stage the new host and updated flake so Nix sees them as tracked files
+git -C "$REPO_DIR" add \
+  "nixos/hosts/$new_name" \
+  "nixos/flake.nix"
+
 target="$new_name"
 HOST="slumpy-${new_name}"
 
