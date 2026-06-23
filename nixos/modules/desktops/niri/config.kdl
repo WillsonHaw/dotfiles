@@ -318,7 +318,7 @@ window-rule {
 
 window-rule {
     match is-focused=true
-    opacity 0.8
+    opacity 0.85
 }
 
 
@@ -376,6 +376,7 @@ binds {
     // or do a four-finger swipe up on a touchpad.
     Mod+O repeat=false { toggle-overview; }
     Mod+0 repeat=false hotkey-overlay-title="Toggle Opaque: focused window" { toggle-window-rule-opacity; }
+    Mod+Shift+Ctrl+0 repeat=false hotkey-overlay-title="Toggle Opacity: all windows" { spawn-sh r#"niri msg -j windows | jq -r '.[].id' | while read id; do niri msg action toggle-window-rule-opacity --id "$id"; done"#; }
 
     Mod+W repeat=false { close-window; }
     Alt+F4 repeat=false { close-window; }

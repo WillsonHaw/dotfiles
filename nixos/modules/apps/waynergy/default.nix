@@ -29,9 +29,9 @@ in
     # Tell kanshi to restart waynergy on every profile change so it re-queries
     # the active outputs and reports the correct screen dimensions to the
     # Synergy server.  Only wired up when the display module is also enabled.
-    noodles.system.display.profileChangeExec =
-      lib.mkIf config.noodles.system.display.enable
-        [ "systemctl --user restart waynergy.service" ];
+    noodles.system.display.profileChangeExec = lib.mkIf config.noodles.system.display.enable [
+      "systemctl --user restart waynergy.service"
+    ];
 
     home-manager.users.${config.noodles.user} =
       { config, ... }:
@@ -56,6 +56,30 @@ in
         home.file."${config.xdg.configHome}/xkb/keycodes/win".source = lib.mkForce (
           config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/apps/waynergy/keycodes"
         );
+
+        home.file."${config.xdg.configHome}/xkb/symbols/highfnkeys".text = ''
+          default partial function_keys
+          xkb_symbols "highfnkeys" {
+            key <FK13> { [ F13 ] };
+            key <FK14> { [ F14 ] };
+            key <FK15> { [ F15 ] };
+            key <FK16> { [ F16 ] };
+            key <FK17> { [ F17 ] };
+            key <FK18> { [ F18 ] };
+            key <FK19> { [ F19 ] };
+            key <FK20> { [ F20 ] };
+            key <FK21> { [ F21 ] };
+            key <FK22> { [ F22 ] };
+            key <FK23> { [ F23 ] };
+            key <FK24> { [ F24 ] };
+          };
+        '';
+
+        home.file."${config.xdg.configHome}/xkb/rules/evdev".text = ''
+          ! include %S/evdev
+          ! model = symbols
+            * = +highfnkeys(highfnkeys)
+        '';
 
         home.file."${config.xdg.configHome}/waynergy/xkb_keymap".text = lib.mkForce ''
           xkb_keymap {
@@ -82,6 +106,20 @@ in
           ; Values here are XKB keycodes (evdev + 8). offset_on_explicit=0 prevents
           ; double-offsetting these explicit entries.
           offset_on_explicit=0
+          ; F13-F24 use PS/2 scan codes 100-111 (0x64-0x6F). Adding offset 8 puts them
+          ; in the navigation key range (e.g. F20=107+8=115=End), so map them explicitly.
+          100=191
+          101=192
+          102=193
+          103=194
+          104=195
+          105=196
+          106=197
+          107=198
+          108=199
+          109=200
+          110=201
+          111=202
           347=133
           508=134
           312=108
