@@ -41,11 +41,13 @@ ssh slumpy@<machine-ip>
 # 1. Generate SSH + GPG keys for this machine, add them to GitHub
 git init-keys
 
-# 2. Set up SOPS to unlock the password (see "Update sops keys" below)
+# 2. Move the repo to preferred location
+sudo mv /etc/nixos/dotfiles ~/dotfiles
+
+# 3. Set up SOPS to unlock the password (see "Update sops keys" below)
 #    sudo works passwordlessly (wheel group) so you can rebuild once SOPS is ready
 
-# 3. After rebuilding with SOPS working, move the repo out of /etc/nixos
-sudo mv /etc/nixos/dotfiles ~/dotfiles
+# 4. After rebuilding with SOPS working, fix file ownership
 sudo chown -R slumpy:users ~/dotfiles
 ```
 
@@ -111,7 +113,8 @@ This is required after a fresh install to unlock the user password for local log
    ```
 3. On an existing machine that can decrypt secrets, add the new public key to `nixos/.sops.yaml` and re-encrypt:
    ```bash
-   nix-shell -p sops --run 'sops updatekeys nixos/secrets/secrets.yaml'
+   cd nixos
+   nix-shell -p sops --run 'sops updatekeys secrets/secrets.yaml'
    git commit -am "sops: add <hostname> age key" && git push
    ```
 4. Back on the new machine, pull and rebuild:
