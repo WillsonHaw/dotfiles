@@ -58,8 +58,12 @@
 
   users.mutableUsers = false;
 
+  # Wheel users can sudo without a password. Safe because the only login path
+  # is SSH key auth (PasswordAuthentication = false). Required on fresh machines
+  # before SOPS has decrypted the user password for the first time.
+  security.sudo.wheelNeedsPassword = false;
+
   # Allow sudo without a TTY so tools like Claude Code can run sudo commands.
-  # Still requires cached credentials — run `sudo -v` once per session.
   security.sudo.extraConfig = ''
     Defaults !requiretty
     Defaults timestamp_type=global

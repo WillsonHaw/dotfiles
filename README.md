@@ -27,22 +27,29 @@ nix-shell -p git --run \
 
 /tmp/dotfiles/nixos/install.sh
 # ↑ prompts for which host to install; auto-picks the disk if there's only one
+
+# Remove install media and ensure correct boot device. Then:
+reboot
 ```
 
 That's it. [`nixos/install.sh`](nixos/install.sh) handles partitioning (UEFI/GPT), formatting, mounting, hardware-config generation, and `nixos-install`. After it finishes:
 
 ```bash
-reboot
 # Password is locked until SOPS is set up — SSH in with an existing authorized key
 ssh slumpy@<machine-ip>
+
+# 1. Generate SSH + GPG keys for this machine, add them to GitHub
+git init-keys
+
+# 2. Set up SOPS to unlock the password (see "Update sops keys" below)
+#    sudo works passwordlessly (wheel group) so you can rebuild once SOPS is ready
+
+# 3. After rebuilding with SOPS working, move the repo out of /etc/nixos
 sudo mv /etc/nixos/dotfiles ~/dotfiles
-sudo chown -R slumpy:users ~/dotfiles      # repo was cloned as root during install
-git init-keys     # generate SSH + GPG for this machine, paste to github.com/settings/keys
+sudo chown -R slumpy:users ~/dotfiles
 ```
 
-Then set up SOPS so the password activates on the next rebuild (see [Update sops keys](#update-sops-keys) below).
-
-> **No password on first boot.** The user account is created with a locked password (`!`). Login via SSH using any of the authorized keys already declared in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix). Once SOPS is set up and you rebuild, the password from the encrypted secret is applied automatically.
+> **No password on first boot.** The user account is created with a locked password (`!`). Login via SSH using any of the authorized keys already declared in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix). `sudo` works without a password (wheel is passwordless) so you can rebuild once SOPS is set up. The password from the encrypted secret is applied automatically after the rebuild.
 
 > **BIOS, LUKS, btrfs, or multi-disk setups?** The script assumes a single-disk UEFI install with no encryption. For anything else, partition/mount manually and run the latter half of the script by hand (or see the [NixOS manual](https://nixos.org/manual/nixos/stable/#sec-installation)). The `dev-*` hosts enable `zramSwap` so an on-disk swap partition is only needed for hibernation.
 

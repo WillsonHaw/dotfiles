@@ -152,16 +152,18 @@ cat <<EOF
 
 Install complete.
 
-  1. reboot
-  2. SSH in with an existing authorized key (password is locked until SOPS is set up):
+  1. reboot (remove install media, boot from disk)
+  2. SSH in using an existing authorized key — password is locked until SOPS is set up:
        ssh slumpy@<machine-ip>
-  3. sudo mv /etc/nixos/dotfiles ~/dotfiles
-  4. sudo chown -R slumpy:users ~/dotfiles
-  5. git init-keys     # generate SSH + GPG for this machine, paste to github.com/settings/keys
-
-Then set up SOPS to unlock local login — see "Update sops keys" in README.md:
-  a. Derive age key from the new SSH key and get its public key.
-  b. On an existing machine: add the public key to .sops.yaml, run 'sops updatekeys', push.
-  c. On this machine: git pull && rebuild
+  3. git init-keys     # generate SSH + GPG for this machine, paste to github.com/settings/keys
+  4. Set up SOPS to unlock local login (see README.md "Update sops keys"):
+       a. Derive age key:  mkdir -p ~/.config/sops/age
+                           nix-shell -p ssh-to-age --run 'ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt'
+       b. Get public key:  nix-shell -p age --run 'age-keygen -y ~/.config/sops/age/keys.txt'
+       c. On existing machine: add public key to .sops.yaml, run 'sops updatekeys nixos/secrets/secrets.yaml', push
+       d. Back here:       git pull && rebuild   (sudo is passwordless for wheel)
+  5. After rebuild (password now works):
+       sudo mv /etc/nixos/dotfiles ~/dotfiles
+       sudo chown -R slumpy:users ~/dotfiles
 
 EOF
