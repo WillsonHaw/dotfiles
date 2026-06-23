@@ -1,6 +1,6 @@
 # Read more about SSH config files: https://linux.die.net/man/5/ssh_config
 
-Host NoodleFish_Dev
+Host OldNoodleFish_Dev
 User slumpy
 HostName 10.0.0.100
 User user
@@ -9,5 +9,11 @@ IdentityFile ~/.ssh/id_ed25519
 Host Komodo_Dev
 User slumpy
 HostName 10.0.0.201
+User user
+IdentityFile ~/.ssh/id_ed25519
+
+Host NoodleFish_Dev
+User slumpy
+HostName 10.0.0.202
 User user
 IdentityFile ~/.ssh/id_ed25519

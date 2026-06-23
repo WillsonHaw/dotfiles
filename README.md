@@ -41,14 +41,22 @@ ssh slumpy@<machine-ip>
 # 1. Generate SSH + GPG keys for this machine, add them to GitHub
 git init-keys
 
-# 2. Move the repo to preferred location
+# 2. Move the repo to preferred location and fix ownership
 sudo mv /etc/nixos/dotfiles ~/dotfiles
+sudo chown -R slumpy:users ~/dotfiles
 
-# 3. Set up SOPS to unlock the password (see "Update sops keys" below)
+# 3. Fix git remote to use ssh
+git remote remove origin
+git remote add origin git@github.com:WillsonHaw/dotfiles.git
+git branch --set-upstream-to=origin/main main
+
+# 4. Push up new host and hardware config
+git commit -am 'Add new host <hostname>'
+git push
+
+# 5. Set up SOPS to unlock the password (see "Update sops keys" below)
 #    sudo works passwordlessly (wheel group) so you can rebuild once SOPS is ready
 
-# 4. After rebuilding with SOPS working, fix file ownership
-sudo chown -R slumpy:users ~/dotfiles
 ```
 
 > **No password on first boot.** The user account is created with a locked password (`!`). Login via SSH using any of the authorized keys already declared in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix). `sudo` works without a password (wheel is passwordless) so you can rebuild once SOPS is set up. The password from the encrypted secret is applied automatically after the rebuild.
