@@ -7,7 +7,7 @@
 
 {
   imports = [
-    ../common.nix
+    ../dev-base.nix
     ../desktop-defaults.nix
     ./hardware-configuration.nix
     ./graphics.nix

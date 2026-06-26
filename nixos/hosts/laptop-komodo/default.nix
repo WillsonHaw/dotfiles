@@ -15,6 +15,9 @@
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
+  # linux-zen packages the kernel as "vmlinuz" but its .target says "bzImage",
+  # causing the system builder to fail. Override until the nixpkgs package is fixed.
+  system.boot.loader.kernelFile = "vmlinuz";
 
   # Disable Panel Self-Refresh and Panel Replay on Intel Arc xe driver.
   # PSR defers display updates as a power-saving measure, causing visible
@@ -116,6 +119,7 @@
     };
 
     development = {
+      adb.enable = true;
       volta.enable = true;
     };
   };

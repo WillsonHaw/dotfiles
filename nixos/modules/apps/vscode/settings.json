@@ -33,7 +33,7 @@
       "mode": "auto"
     }
   ],
-  "diffEditor.renderSideBySide": true,
+  "diffEditor.renderSideBySide": false,
   "diffEditor.experimental.showMoves": true,
   "chat.agent.enabled": true,
   "geminicodeassist.enableTelemetry": false,
