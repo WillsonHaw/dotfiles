@@ -71,6 +71,21 @@
     border-radius: 8px;
     padding: 6px 16px;
     &:hover { background-color: $mocha-surface1; }
+
+    &--saved {
+      background-color: $mocha-green;
+      label { color: $mocha-base; }
+      &:hover { background-color: $mocha-teal; }
+    }
+  }
+
+  .wp-blacklist-btn {
+    background-color: $mocha-surface0;
+    color: $mocha-red;
+    border-radius: 8px;
+    padding: 6px 16px;
+    &:hover { background-color: $mocha-red; color: $mocha-base; }
+    &:disabled { opacity: 0.5; }
   }
 
   .wp-next-btn {
@@ -128,6 +143,12 @@
     font-family: monospace;
     font-size: 10px;
     color: $mocha-subtext0;
+  }
+
+  .wp-timer-toggle {
+    color: $mocha-overlay1;
+    font-size: 11px;
+    &:hover { color: $mocha-text; }
   }
 
   .wp-timer-bar {

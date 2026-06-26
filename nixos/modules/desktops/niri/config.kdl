@@ -296,6 +296,15 @@ match app-id=r#"^org\.keepassxc\.KeePassXC$"#
 
 }
 
+// UnrealEditor (SDL3 + XWayland): prevent transient popup windows (context menus,
+// dropdowns) from stealing XWayland focus away from the main editor window.
+// is-floating=true targets only SDL3 popup/menu windows (which niri opens floating
+// due to their X11 window type); the main editor window is tiled and unaffected.
+window-rule {
+    match app-id=r#"^UnrealEditor$"# is-floating=true
+    open-focused false
+}
+
 // Example: enable rounded corners for all windows.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {

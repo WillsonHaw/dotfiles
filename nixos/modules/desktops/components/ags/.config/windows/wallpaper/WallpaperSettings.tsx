@@ -50,12 +50,21 @@ export default function WallpaperSettings() {
   }
 
   const [saved, setSaved] = createState(false)
-  const saveBtnLabel = createComputed(() => saved() ? "Saved!" : "Save")
+  const saveBtnLabel = createComputed(() =>
+    wallpaper.isSaved() ? "✓ Saved" : saved() ? "Saved!" : "Save"
+  )
+  const saveClass = createComputed(() =>
+    wallpaper.isSaved() ? "wp-save-btn wp-save-btn--saved" : "wp-save-btn"
+  )
 
-  function save() {
-    wallpaper.saveCurrentWallpaper()
-    setSaved(true)
-    timeout(2000, () => setSaved(false))
+  function handleSave() {
+    if (wallpaper.isSaved()) {
+      wallpaper.deleteCurrentWallpaper()
+    } else {
+      wallpaper.saveCurrentWallpaper()
+      setSaved(true)
+      timeout(2000, () => setSaved(false))
+    }
   }
 
   const minutesLabel = createComputed(() => `${Math.round(wallpaper.displayTime() / 60_000)} min`)
@@ -194,6 +203,7 @@ export default function WallpaperSettings() {
 
               {/* Local only + timer */}
               <Toggle label="Saved wallpapers only (no downloads)" active={wallpaper.localOnly} onToggle={wallpaper.setLocalOnly} />
+              <Toggle label="Fill screen (crop)" active={wallpaper.coverMode} onToggle={wallpaper.setCoverMode} />
 
               <box spacing={8} halign={Gtk.Align.START}>
                 <label label="Rotate every" />
@@ -212,13 +222,24 @@ export default function WallpaperSettings() {
               <box orientation={Gtk.Orientation.VERTICAL} spacing={6}>
                 <label class="wp-popup-current-label" label="Current" halign={Gtk.Align.START} />
                 <label class="wp-popup-current" label={currentLabel} halign={Gtk.Align.START} wrap />
-                <levelbar
-                  class="wp-timer-bar"
-                  value={createComputed(() => wallpaper.timerProgress())}
-                  minValue={0}
-                  maxValue={1}
-                  hexpand
-                />
+                <box spacing={6}>
+                  <levelbar
+                    class="wp-timer-bar"
+                    value={createComputed(() => wallpaper.timerProgress())}
+                    minValue={0}
+                    maxValue={1}
+                    hexpand
+                  />
+                  <label
+                    class="wp-timer-toggle"
+                    label={createComputed(() => wallpaper.timerPaused() ? "▶" : "⏸")}
+                    $={(self: any) => {
+                      const click = new Gtk.GestureClick()
+                      click.connect("pressed", () => wallpaper.toggleTimer())
+                      self.add_controller(click)
+                    }}
+                  />
+                </box>
                 <WrapBox
                   class="wp-image-tags"
                   childSpacing={4}
@@ -241,7 +262,7 @@ export default function WallpaperSettings() {
                   </For>
                 </WrapBox>
                 <box spacing={8} marginTop={4}>
-                  <button class="wp-save-btn" onClicked={save}>
+                  <button class={saveClass} onClicked={handleSave}>
                     <label label={saveBtnLabel} />
                   </button>
                   <button
@@ -250,6 +271,20 @@ export default function WallpaperSettings() {
                     onClicked={() => wallpaper.random().catch(() => {})}
                   >
                     <label label={nextBtnLabel} />
+                  </button>
+                  <button
+                    class="wp-next-btn"
+                    sensitive={createComputed(() => wallpaper.currentWallpaper() !== null)}
+                    onClicked={() => wallpaper.refit()}
+                  >
+                    <label label="Refit" />
+                  </button>
+                  <button
+                    class="wp-blacklist-btn"
+                    sensitive={createComputed(() => wallpaper.currentWallpaper() !== null)}
+                    onClicked={() => wallpaper.blacklistCurrent()}
+                  >
+                    <label label="Block" />
                   </button>
                 </box>
               </box>

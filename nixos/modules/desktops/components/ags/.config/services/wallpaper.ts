@@ -47,6 +47,9 @@ const [lastDebugResponse, setLastDebugResponse] = createState<string | null>(nul
 const [currentImageTags, setCurrentImageTags] = createState<Tag[]>([])
 const [currentIndex, setCurrentIndex] = createState<number | null>(null)
 const [currentTotal, setCurrentTotal] = createState<number | null>(null)
+const [coverMode, _setCoverMode] = createState(false)
+const [blacklist, _setBlacklist] = createState<string[]>([])
+const [isSaved, _setIsSaved] = createState(false)
 
 // --- Config ---
 function saveConfig() {
@@ -55,6 +58,7 @@ function saveConfig() {
       tags: tags(), sfw: sfw(), sketchy: sketchy(), nsfw: nsfw(),
       general: general(), anime: anime(), people: people(),
       apikey: apikey(), localOnly: localOnly(), displayTimeMs: displayTime(),
+      coverMode: coverMode(), blacklist: blacklist(),
     }, null, 2))
   } catch {}
 }
@@ -72,6 +76,8 @@ function loadConfig() {
     if (c.apikey !== undefined) _setApikey(c.apikey)
     if (c.localOnly !== undefined) _setLocalOnly(c.localOnly)
     if (c.displayTimeMs !== undefined) _setDisplayTime(c.displayTimeMs)
+    if (c.coverMode !== undefined) _setCoverMode(c.coverMode)
+    if (c.blacklist !== undefined) _setBlacklist(c.blacklist)
   } catch {}
 }
 
@@ -79,6 +85,8 @@ function loadConfig() {
 let _timer: { cancel(): void } | null = null
 let _timerStartMs = 0
 let _progressSourceId: number | null = null
+let _pausedElapsedMs = 0
+const [timerPaused, _setTimerPaused] = createState(false)
 
 function stopProgressTicks() {
   if (_progressSourceId !== null) {
@@ -99,9 +107,26 @@ function startProgressTicks() {
 function startTimer() {
   if (_timer) _timer.cancel()
   _timerStartMs = GLib.get_monotonic_time() / 1000
+  _pausedElapsedMs = 0
   _setTimerProgress(0)
+  _setTimerPaused(false)
   startProgressTicks()
   _timer = timeout(displayTime(), () => { random().catch(() => {}) })
+}
+
+function toggleTimer() {
+  if (timerPaused()) {
+    // Resume: adjust start so elapsed picks up where it left off
+    _timerStartMs = GLib.get_monotonic_time() / 1000 - _pausedElapsedMs
+    startProgressTicks()
+    _timer = timeout(Math.max(1, displayTime() - _pausedElapsedMs), () => { random().catch(() => {}) })
+    _setTimerPaused(false)
+  } else {
+    _pausedElapsedMs = GLib.get_monotonic_time() / 1000 - _timerStartMs
+    if (_timer) { _timer.cancel(); _timer = null }
+    stopProgressTicks()
+    _setTimerPaused(true)
+  }
 }
 
 // --- Local folders ---
@@ -128,7 +153,7 @@ function randomLocal(): WallpaperInfo | null {
   ]
   _localTotal = all.length
   if (all.length === 0) return null
-  let pool = all.filter(w => !_viewedIds.has(w.path))
+  let pool = all.filter(w => !_viewedIds.has(w.path) && !blacklist().includes(w.path))
   if (pool.length === 0) { _viewedIds.clear(); pool = all }
   return pool[Math.floor(Math.random() * pool.length)]
 }
@@ -202,7 +227,9 @@ async function fetchWallhaven(): Promise<{ url: string; purity: string; id: stri
     }
     setFetchStatus("ok")
     _apiPage++
-    _apiQueue = json.data.map((item: any) => ({ url: item.path, purity: item.purity, id: String(item.id) }))
+    _apiQueue = json.data
+      .filter((item: any) => !blacklist().includes(String(item.id)))
+      .map((item: any) => ({ url: item.path, purity: item.purity, id: String(item.id) }))
     _apiConsumedCount++
     return _apiQueue.shift()!
   } catch { setFetchStatus("api-error"); return null }
@@ -248,13 +275,21 @@ async function prefetchNext(retries = 0): Promise<void> {
 // then hand the exact-sized image to awww with --resize no.
 // Screen dimensions are queried live so a display change is always reflected.
 function fitAndApply(srcPath: string, transition: string) {
+  if (coverMode()) {
+    const awwwArgs: string[] = ["awww", "img", "--resize", "crop"]
+    if (transition) awwwArgs.push("-t", transition)
+    awwwArgs.push(srcPath)
+    execAsync(awwwArgs).catch(() => {})
+    return
+  }
   let screenW = 0
   let screenH = 0
   try {
-    const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),/)
+    const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),\s+scale:\s+([\d.]+)/)
     if (match) {
-      screenW = parseInt(match[1])
-      screenH = parseInt(match[2])
+      const scale = parseFloat(match[3])
+      screenW = Math.round(parseInt(match[1]) * scale)
+      screenH = Math.round(parseInt(match[2]) * scale)
     }
   } catch {}
 
@@ -294,6 +329,7 @@ function applyWallpaper(info: WallpaperInfo) {
     setCurrentTotal(searchTotal())
   }
   fitAndApply(info.path, "random")
+  checkIsSaved()
   startTimer()
   if (info.id) {
     fetchTagsForId(info.id).then(setCurrentImageTags).catch(() => {})
@@ -345,8 +381,12 @@ let _panicActive = false
 async function panicApply(srcPath: string): Promise<void> {
   let screenW = 0, screenH = 0
   try {
-    const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),/)
-    if (match) { screenW = parseInt(match[1]); screenH = parseInt(match[2]) }
+    const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),\s+scale:\s+([\d.]+)/)
+    if (match) {
+      const scale = parseFloat(match[3])
+      screenW = Math.round(parseInt(match[1]) * scale)
+      screenH = Math.round(parseInt(match[2]) * scale)
+    }
   } catch {}
   const name = srcPath.split("/").pop()!
   const fitPath = `${TMP_DIR}/panic_${name}`
@@ -398,8 +438,12 @@ async function panic(): Promise<void> {
     _panicActive = true
     let screenW = 1920, screenH = 1080
     try {
-      const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),/)
-      if (match) { screenW = parseInt(match[1]); screenH = parseInt(match[2]) }
+      const match = exec(["awww", "query"]).match(/:\s+(\d+)x(\d+),\s+scale:\s+([\d.]+)/)
+      if (match) {
+        const scale = parseFloat(match[3])
+        screenW = Math.round(parseInt(match[1]) * scale)
+        screenH = Math.round(parseInt(match[2]) * scale)
+      }
     } catch {}
     const blackPath = `${TMP_DIR}/panic_black.png`
     try {
@@ -414,7 +458,16 @@ async function panic(): Promise<void> {
   await panicApply(srcPath).catch(() => {})
 }
 
-// --- Save ---
+// --- Save / delete / blacklist ---
+function checkIsSaved() {
+  const cur = currentWallpaper()
+  if (!cur) { _setIsSaved(false); return }
+  const filename = cur.path.split("/").pop()
+  if (!filename) { _setIsSaved(false); return }
+  try { exec(["test", "-f", `${HOME}/Wallpapers/${cur.purity}/${filename}`]); _setIsSaved(true) }
+  catch { _setIsSaved(false) }
+}
+
 function saveCurrentWallpaper() {
   const cur = currentWallpaper()
   if (!cur) return
@@ -423,7 +476,29 @@ function saveCurrentWallpaper() {
   const dest = `${HOME}/Wallpapers/${cur.purity}`
   execAsync(["mkdir", "-p", dest])
     .then(() => execAsync(["cp", cur.path, `${dest}/${filename}`]))
+    .then(() => _setIsSaved(true))
     .catch(() => {})
+}
+
+function deleteCurrentWallpaper() {
+  const cur = currentWallpaper()
+  if (!cur) return
+  const filename = cur.path.split("/").pop()
+  if (!filename) return
+  execAsync(["rm", "-f", `${HOME}/Wallpapers/${cur.purity}/${filename}`])
+    .then(() => _setIsSaved(false))
+    .catch(() => {})
+}
+
+function blacklistCurrent() {
+  const cur = currentWallpaper()
+  if (!cur) return
+  const key = cur.id ?? cur.path
+  if (!blacklist().includes(key)) {
+    _setBlacklist([...blacklist(), key])
+    saveConfig()
+  }
+  random().catch(() => {})
 }
 
 // --- Settings with side effects ---
@@ -449,6 +524,13 @@ function setAnime(v: boolean) { if (v === anime()) return; _setAnime(v); onSetti
 function setPeople(v: boolean) { if (v === people()) return; _setPeople(v); onSettingsChange() }
 function setApikey(v: string) { _setApikey(v); saveConfig() }
 function setLocalOnly(v: boolean) { if (v === localOnly()) return; _setLocalOnly(v); onSettingsChange() }
+function setCoverMode(v: boolean) {
+  if (v === coverMode()) return
+  _setCoverMode(v)
+  saveConfig()
+  const cur = currentWallpaper()
+  if (cur) fitAndApply(cur.path, "")
+}
 function setDisplayTimeMinutes(min: number) {
   _setDisplayTime(Math.max(1, min) * 60_000)
   saveConfig()
@@ -470,14 +552,21 @@ function getDisplayTimeMinutes(): number {
   prefetchNext().catch(() => {})
 })()
 
+function refit() {
+  const cur = currentWallpaper()
+  if (cur) fitAndApply(cur.path, "")
+}
+
 export default {
   tags, sfw, sketchy, nsfw, general, anime, people, apikey, localOnly, displayTime, timerProgress,
+  coverMode, isSaved, timerPaused,
   currentWallpaper, nextWallpaper, isDownloading,
   searchTotal, fetchStatus,
   lastDebugUrl, lastDebugResponse,
   currentImageTags,
   currentIndex, currentTotal,
-  random, panic, saveCurrentWallpaper,
+  random, panic, refit, toggleTimer,
+  saveCurrentWallpaper, deleteCurrentWallpaper, blacklistCurrent,
   setTags, setSfw, setSketchy, setNsfw, setGeneral, setAnime, setPeople,
-  setApikey, setLocalOnly, setDisplayTimeMinutes, getDisplayTimeMinutes,
+  setApikey, setLocalOnly, setDisplayTimeMinutes, getDisplayTimeMinutes, setCoverMode,
 }
