@@ -130,6 +130,29 @@
     color: $mocha-subtext0;
   }
 
+  .wp-timer-bar {
+    min-height: 4px;
+    border-radius: 2px;
+    margin: 2px 0;
+
+    trough {
+      background-color: $mocha-surface0;
+      border-radius: 2px;
+      min-height: 4px;
+
+      block.filled {
+        background-color: $mocha-blue;
+        border-radius: 2px;
+        min-height: 4px;
+      }
+
+      block.empty {
+        background-color: transparent;
+        min-height: 4px;
+      }
+    }
+  }
+
   .wp-image-tags {
     .wp-tag {
       background-color: $mocha-surface0;

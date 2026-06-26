@@ -1,5 +1,6 @@
 import { createComputed } from "ags"
 import app from "ags/gtk4/app"
+import Gtk from "gi://Gtk?version=4.0"
 import wallpaper from "../../../services/wallpaper"
 
 export default function Wallpaper() {
@@ -17,7 +18,16 @@ export default function Wallpaper() {
         if (w) w.visible = !w.visible
       }}
     >
-      <label label="󰸉" />
+      <box orientation={Gtk.Orientation.VERTICAL} spacing={2}>
+        <label class="wp-icon" label="󰸉" vexpand />
+        <levelbar
+          class="wp-bar-timer"
+          value={createComputed(() => wallpaper.timerProgress())}
+          minValue={0}
+          maxValue={1}
+          hexpand
+        />
+      </box>
     </button>
   )
 }

@@ -212,6 +212,13 @@ export default function WallpaperSettings() {
               <box orientation={Gtk.Orientation.VERTICAL} spacing={6}>
                 <label class="wp-popup-current-label" label="Current" halign={Gtk.Align.START} />
                 <label class="wp-popup-current" label={currentLabel} halign={Gtk.Align.START} wrap />
+                <levelbar
+                  class="wp-timer-bar"
+                  value={createComputed(() => wallpaper.timerProgress())}
+                  minValue={0}
+                  maxValue={1}
+                  hexpand
+                />
                 <WrapBox
                   class="wp-image-tags"
                   childSpacing={4}

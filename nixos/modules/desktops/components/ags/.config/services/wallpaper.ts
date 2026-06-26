@@ -36,6 +36,7 @@ const [people, _setPeople] = createState(true)
 const [apikey, _setApikey] = createState("")
 const [localOnly, _setLocalOnly] = createState(false)
 const [displayTime, _setDisplayTime] = createState(5 * 60_000)
+const [timerProgress, _setTimerProgress] = createState(0)
 const [currentWallpaper, setCurrentWallpaper] = createState<WallpaperInfo | null>(null)
 const [nextWallpaper, setNextWallpaper] = createState<WallpaperInfo | null>(null)
 const [isDownloading, setIsDownloading] = createState(false)
@@ -76,9 +77,30 @@ function loadConfig() {
 
 // --- Timer ---
 let _timer: { cancel(): void } | null = null
+let _timerStartMs = 0
+let _progressSourceId: number | null = null
+
+function stopProgressTicks() {
+  if (_progressSourceId !== null) {
+    GLib.source_remove(_progressSourceId)
+    _progressSourceId = null
+  }
+}
+
+function startProgressTicks() {
+  stopProgressTicks()
+  _progressSourceId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
+    const elapsed = GLib.get_monotonic_time() / 1000 - _timerStartMs
+    _setTimerProgress(Math.min(1, elapsed / displayTime()))
+    return true
+  })
+}
 
 function startTimer() {
   if (_timer) _timer.cancel()
+  _timerStartMs = GLib.get_monotonic_time() / 1000
+  _setTimerProgress(0)
+  startProgressTicks()
   _timer = timeout(displayTime(), () => { random().catch(() => {}) })
 }
 
@@ -363,10 +385,14 @@ async function panic(): Promise<void> {
         await panicApply(prev.path).catch(() => {})
       }
     }
+    startTimer()
     return
   }
 
   const files = loadLocalFiles("sfw")
+  if (_timer) { _timer.cancel(); _timer = null }
+  stopProgressTicks()
+  _setTimerProgress(0)
   if (files.length === 0) {
     // No SFW wallpapers — blank the screen with a black image
     _panicActive = true
@@ -445,7 +471,7 @@ function getDisplayTimeMinutes(): number {
 })()
 
 export default {
-  tags, sfw, sketchy, nsfw, general, anime, people, apikey, localOnly, displayTime,
+  tags, sfw, sketchy, nsfw, general, anime, people, apikey, localOnly, displayTime, timerProgress,
   currentWallpaper, nextWallpaper, isDownloading,
   searchTotal, fetchStatus,
   lastDebugUrl, lastDebugResponse,
