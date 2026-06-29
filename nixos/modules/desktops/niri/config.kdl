@@ -296,14 +296,13 @@ match app-id=r#"^org\.keepassxc\.KeePassXC$"#
 
 }
 
-// UnrealEditor (SDL3 + XWayland): prevent transient popup windows (context menus,
-// dropdowns) from stealing XWayland focus away from the main editor window.
-// is-floating=true targets only SDL3 popup/menu windows (which niri opens floating
-// due to their X11 window type); the main editor window is tiled and unaffected.
-window-rule {
-    match app-id=r#"^UnrealEditor$"# is-floating=true
-    open-focused false
-}
+// Note: open-focused false for UnrealEditor was removed.
+// SDL3 context menu popups are override-redirect X11 windows that bypass niri's
+// window management entirely — they never appear in niri's window list so a rule
+// cannot target them. The SDL_ShowMessageBox dialog (used for "Convert Project" etc.)
+// IS a regular X11 dialog window and needs niri to set X11 focus; blocking it with
+// open-focused false causes the dialog to render but be completely unresponsive
+// (XWayland windows receive no input at all without an explicit focus grant from niri).
 
 // Example: enable rounded corners for all windows.
 // (This example rule is commented out with a "/-" in front.)
@@ -328,6 +327,11 @@ window-rule {
 window-rule {
     match is-focused=true
     opacity 0.85
+}
+
+window-rule {
+    match app-id="^UnrealEditor$"
+    opacity 1.0
 }
 
 
