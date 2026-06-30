@@ -74,6 +74,21 @@
 
   system.stateVersion = "25.11";
 
+  boot.supportedFilesystems = [ "nfs" ];
+
+  fileSystems."/mnt/komodo" = {
+    device = "slumpy-dev-komodo:/home/${config.noodles.user}/repos";
+    fsType = "nfs";
+    options = [
+      "x-systemd.automount"
+      "noauto"
+      "x-systemd.idle-timeout=600"
+      "nfsvers=4.1"
+      "soft"
+      "timeo=15"
+    ];
+  };
+
   noodles = {
     device = {
       is-laptop = true;
@@ -89,6 +104,7 @@
       #cursor.enable = true;
       #godot.enable = true;
       waynergy.enable = true;
+      browsers.edge.enable = true;
     };
 
     system.display.externalDisplays = [
