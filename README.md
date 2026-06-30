@@ -4,15 +4,17 @@ NixOS flake for my machines, plus home-manager config. Single flake at `nixos/` 
 
 ## Hosts
 
-| Host                | Use                                         | DE       | Notes                                   |
-| ------------------- | ------------------------------------------- | -------- | --------------------------------------- |
-| `slumpy-laptop`     | Daily-driver laptop (MSI GS60)              | Niri     | TLP, mcontrolcenter, hibernate-on-sleep |
-| `slumpy-desktop`    | Workstation                                 | Hyprland | Godot, OBS, Razer                       |
-| `slumpy-gaming`     | Gaming box                                  | Hyprland | Steam, OBS                              |
-| `slumpy-dev-home`   | Home dev box, personal projects and scripts | none     | Shares the `dev` role + nginx           |
-| `slumpy-dev-komodo` | KOMODO dev box                              | none     | Shares the `dev` role + nginx           |
+| Host                   | Use                                         | DE       | Notes                                         |
+| ---------------------- | ------------------------------------------- | -------- | --------------------------------------------- |
+| `slumpy-laptop`        | Daily-driver laptop (MSI GS60)              | Niri     | TLP, mcontrolcenter, hibernate-on-sleep       |
+| `slumpy-laptop-komodo` | KOMODO laptop (Intel Arc)                   | Niri     | hibernate-on-sleep, NFS mount to vm-komodo    |
+| `slumpy-desktop`       | Workstation                                 | Hyprland | Godot, OBS, Razer                             |
+| `slumpy-gaming`        | Gaming box                                  | Hyprland | Steam, OBS                                    |
+| `slumpy-vm-home`       | Home VM, personal projects and scripts      | none     | Shares the `vm` role + nginx                  |
+| `slumpy-vm-komodo`     | KOMODO VM                                   | none     | Shares the `vm` role + nginx, NFS/Samba share |
+| `slumpy-vm-noodlefish` | Noodlefish VM                               | none     | Shares the `vm` role                          |
 
-The `dev-*` hosts both inherit from [`hosts/dev-base.nix`](nixos/hosts/dev-base.nix) (docker, gh, direnv, ripgrep/fd/fzf/bat/eza, headless). Each machine's own `default.nix` picks the hostname, hardware config, and any opt-in services like nginx.
+Desktop and laptop hosts inherit from [`hosts/desktop-base.nix`](nixos/hosts/desktop-base.nix) (GUI app bundle, Avahi mDNS resolver). The `vm-*` hosts inherit from [`hosts/vm-base.nix`](nixos/hosts/vm-base.nix) (docker, gh, direnv, ripgrep/fd/fzf/bat/eza, headless, Avahi host announcement). Each machine's own `default.nix` picks the hostname, hardware config, and any opt-in services.
 
 Pick the one that matches the machine you're installing.
 
@@ -61,7 +63,7 @@ git push
 
 > **No password on first boot.** The user account is created with a locked password (`!`). Login via SSH using any of the authorized keys already declared in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix). `sudo` works without a password (wheel is passwordless) so you can rebuild once SOPS is set up. The password from the encrypted secret is applied automatically after the rebuild.
 
-> **BIOS, LUKS, btrfs, or multi-disk setups?** The script assumes a single-disk UEFI install with no encryption. For anything else, partition/mount manually and run the latter half of the script by hand (or see the [NixOS manual](https://nixos.org/manual/nixos/stable/#sec-installation)). The `dev-*` hosts enable `zramSwap` so an on-disk swap partition is only needed for hibernation.
+> **BIOS, LUKS, btrfs, or multi-disk setups?** The script assumes a single-disk UEFI install with no encryption. For anything else, partition/mount manually and run the latter half of the script by hand (or see the [NixOS manual](https://nixos.org/manual/nixos/stable/#sec-installation)). The `vm-*` hosts enable `zramSwap` so an on-disk swap partition is only needed for hibernation.
 
 ## After install
 
@@ -88,7 +90,7 @@ sudo nixos-rebuild switch --flake ~/dotfiles/nixos#slumpy-desktop
 rebuild-all
 
 # Dry-build to validate without applying
-nix build .#nixosConfigurations.slumpy-dev-home.config.system.build.toplevel --dry-run
+nix build .#nixosConfigurations.slumpy-vm-komodo.config.system.build.toplevel --dry-run
 ```
 
 ## Adding a new host
@@ -96,14 +98,14 @@ nix build .#nixosConfigurations.slumpy-dev-home.config.system.build.toplevel --d
 For a standalone host:
 
 1. `mkdir nixos/hosts/<name>` with a `default.nix` importing `../common.nix` and `./hardware-configuration.nix`.
-2. Desktop machines also import `../desktop-defaults.nix` for the GUI app bundle.
+2. Desktop machines also import `../desktop-base.nix` for the GUI app bundle.
 3. Register it in [`nixos/flake.nix`](nixos/flake.nix): `slumpy-<name> = mkHost "<name>" { };`.
 4. Set `networking.hostName`, `system.stateVersion`, boot loader, and any `noodles.*` feature flags.
 
-For another machine that should share an existing **role** (e.g. another dev box):
+For another VM/headless machine:
 
-1. `mkdir nixos/hosts/dev-<name>` with a `default.nix` importing `../dev-base.nix` and `./hardware-configuration.nix`.
-2. Register `slumpy-dev-<name> = mkHost "dev-<name>" { };` in the flake.
+1. `mkdir nixos/hosts/vm-<name>` with a `default.nix` importing `../vm-base.nix` and `./hardware-configuration.nix`.
+2. Register `slumpy-vm-<name> = mkHost "vm-<name>" { };` in the flake.
 3. Toggle the optional `noodles.*` services this machine needs (e.g. `noodles.services.nginx.enable = true;`).
 
 ### Update sops keys

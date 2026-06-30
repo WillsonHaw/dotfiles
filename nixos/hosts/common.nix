@@ -90,7 +90,7 @@
   };
 
   # Headless-safe defaults — applied to every host.
-  # GUI/desktop defaults live in ./desktop-defaults.nix and are opted into by
+  # GUI/desktop defaults live in ./desktop-base.nix and are opted into by
   # each desktop-class host.
   noodles = {
     user = lib.mkDefault "slumpy";

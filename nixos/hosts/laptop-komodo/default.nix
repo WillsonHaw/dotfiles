@@ -9,7 +9,7 @@
 {
   imports = [
     ../dev-base.nix
-    ../desktop-defaults.nix
+    ../desktop-base.nix
     ./hardware-configuration.nix
     #    ./graphics.nix
   ];
@@ -74,7 +74,7 @@
   boot.supportedFilesystems = [ "nfs" ];
 
   fileSystems."/mnt/komodo" = {
-    device = "slumpy-dev-komodo:/home/${config.noodles.user}/repos";
+    device = "slumpy-vm-komodo.local:/home/${config.noodles.user}/repos";
     fsType = "nfs";
     options = [
       "x-systemd.automount"

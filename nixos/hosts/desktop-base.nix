@@ -8,6 +8,13 @@
 {
   config = lib.mkMerge [
     {
+      # Resolve .local mDNS hostnames (e.g. for NFS mounts to VM hosts).
+      services.avahi = {
+        enable = true;
+        nssmdns4 = true;
+        openFirewall = true;
+      };
+
       environment.systemPackages = with pkgs; [
         qdirstat
       ];
