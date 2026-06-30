@@ -45,7 +45,7 @@
   };
 
   fileSystems."/run/media/vm" = {
-    device = "//10.0.0.100/sambashare";
+    device = "//slumpy-vm-home/sambashare";
     fsType = "cifs";
     options =
       let

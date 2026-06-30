@@ -25,8 +25,8 @@
   "workbench.editor.wrapTabs": true,
   "window.density.editorTabHeight": "compact",
   "security.allowedUNCHosts": [
-    "10.0.0.100",
-    "10.0.0.201"
+    "slumpy-vm-home",
+    "slumpy-vm-komodo"
   ],
   "eslint.workingDirectories": [
     {

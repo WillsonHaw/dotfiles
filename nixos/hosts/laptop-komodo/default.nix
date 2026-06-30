@@ -74,7 +74,7 @@
   boot.supportedFilesystems = [ "nfs" ];
 
   fileSystems."/mnt/komodo" = {
-    device = "slumpy-vm-komodo.local:/home/${config.noodles.user}/repos";
+    device = "slumpy-vm-komodo:/home/${config.noodles.user}/repos";
     fsType = "nfs";
     options = [
       "x-systemd.automount"

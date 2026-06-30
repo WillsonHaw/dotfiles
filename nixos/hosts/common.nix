@@ -75,6 +75,12 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
+  networking.hosts = {
+    "10.0.0.100" = [ "slumpy-vm-home" "slumpy-vm-home.local" ];
+    "10.0.0.201" = [ "slumpy-vm-komodo" "slumpy-vm-komodo.local" ];
+    "10.0.0.202" = [ "slumpy-vm-noodlefish" "slumpy-vm-noodlefish.local" ];
+  };
+
   programs.mtr.enable = true;
   programs.gnupg.agent = {
     enable = true;
