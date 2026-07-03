@@ -25,7 +25,6 @@
 
     services.nginx = {
       enable = true;
-      appendConfig = "daemon off;";
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
@@ -34,13 +33,13 @@
 
     # Forcefully disable the systemd nginx service
     # systemd.services.nginx = {
-      # wantedBy = lib.mkForce [ ];
+    #   wantedBy = lib.mkForce [ ];
 
-      # serviceConfig = {
-      #   AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
-      #   CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
-      #   ProtectHome = false;
-      # };
+    #   serviceConfig = {
+    #     AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+    #     CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
+    #     ProtectHome = false;
+    #   };
     # };
 
     networking.firewall.allowedTCPPorts = [

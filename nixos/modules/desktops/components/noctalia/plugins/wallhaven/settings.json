@@ -1,0 +1,14 @@
+{
+  "tags": "model",
+  "sfw": false,
+  "sketchy": true,
+  "nsfw": true,
+  "general": true,
+  "anime": true,
+  "people": true,
+  "apikey": "HEADwFIclMtTZVfDSFeZdOhXL9LyLRzL",
+  "localOnly": false,
+  "displayTimeMs": 300000,
+  "coverMode": false,
+  "blacklist": []
+}

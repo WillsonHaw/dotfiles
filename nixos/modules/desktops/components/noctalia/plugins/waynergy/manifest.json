@@ -1,0 +1,13 @@
+{
+    "id": "waynergy",
+    "name": "Waynergy",
+    "version": "1.0.0",
+    "author": "local",
+    "description": "Waynergy KVM status and toggle",
+    "entryPoints": {
+        "barWidget": "BarWidget.qml"
+    },
+    "metadata": {
+        "iconColor": "none"
+    }
+}

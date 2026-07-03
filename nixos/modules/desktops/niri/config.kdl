@@ -222,8 +222,11 @@ layout {
 // which may be more convenient to use.
 // See the binds section below for more spawn examples.
 
-spawn-at-startup "ags" "run"
-spawn-at-startup "awww-daemon" "--format" "xrgb"
+spawn-at-startup "noctalia-shell"
+
+debug {
+    honor-xdg-activation-with-invalid-serial
+}
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -304,11 +307,9 @@ match app-id=r#"^org\.keepassxc\.KeePassXC$"#
 // open-focused false causes the dialog to render but be completely unresponsive
 // (XWayland windows receive no input at all without an explicit focus grant from niri).
 
-// Example: enable rounded corners for all windows.
-// (This example rule is commented out with a "/-" in front.)
-/-window-rule {
-geometry-corner-radius 12
-clip-to-geometry true
+window-rule {
+    geometry-corner-radius 8
+    clip-to-geometry true
 }
 
 // These apps ignore prefer-no-csd, so draw the focus ring around them
@@ -353,9 +354,11 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+Grave hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
     Mod+E hotkey-overlay-title="Open File Manager: thunar" { spawn "thunar"; }
-    Mod+Space hotkey-overlay-title="Run an Application: rofi" { spawn-sh "$HOME/.config/ags/scripts/rofi-launcher"; }
-    Mod+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+    Mod+Space repeat=false hotkey-overlay-title="Open Launcher" { spawn "app-launcher"; }
+    Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
     Mod+P hotkey-overlay-title="Presentation Mode: display switcher" { spawn "presentation-mode"; }
+    Mod+N repeat=false hotkey-overlay-title="Next Wallpaper" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "next"; }
+    Alt+Escape repeat=false allow-inhibiting=false { spawn "noctalia-shell" "ipc" "call" "wallhaven" "panic"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
@@ -606,7 +609,6 @@ binds {
     // The allow-inhibiting=false property can be applied to other binds as well,
     // which ensures niri always processes them, even when an inhibitor is active.
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
-    Alt+Escape allow-inhibiting=false { spawn "ags" "request" "panic-wallpaper"; }
 
     // The quit action will show a confirmation dialog to avoid accidental exits.
     Mod+Shift+E { quit; }
@@ -616,6 +618,4 @@ binds {
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
 
-    // Views next wallpaper
-    Super+N hotkey-overlay-title="Next Wallpaper" { spawn "ags" "request" "next-wallpaper"; }
 }

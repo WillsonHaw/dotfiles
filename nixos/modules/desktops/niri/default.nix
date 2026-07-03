@@ -15,12 +15,23 @@
   config =
     let
       rootConfig = config;
+
+      launcherCmd =
+        if config.noodles.desktops.components.noctalia.enable then
+          "noctalia-shell ipc call launcher toggle"
+        else if config.noodles.desktops.components.rofi.enable then
+          "rofi -show drun"
+        else
+          "true";
+
+      appLauncher = pkgs.writeShellApplication {
+        name = "app-launcher";
+        text = launcherCmd;
+      };
     in
     lib.mkIf (config.noodles.desktops.environment == "niri") {
       noodles.desktops.components = {
-        ags.enable = true;
-        rofi.enable = true;
-        mako.enable = true;
+        noctalia.enable = true;
         thunar.enable = true;
         wlogout.enable = true;
       };
@@ -55,15 +66,20 @@
         autostart.enable = true;
         portal = {
           enable = true;
-          extraPortals = [ pkgs.xdg-desktop-portal-gnome pkgs.xdg-desktop-portal-gtk ];
+          extraPortals = [
+            pkgs.xdg-desktop-portal-gnome
+            pkgs.xdg-desktop-portal-gtk
+          ];
           config.niri = {
-            default = [ "gnome" "gtk" ];
+            default = [
+              "gnome"
+              "gtk"
+            ];
             "org.freedesktop.impl.portal.RemoteDesktop" = [ "gnome" ];
             "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
           };
         };
       };
-
 
       home-manager.users.${config.noodles.user} =
         {
@@ -72,6 +88,8 @@
         }:
         {
           imports = [ inputs.catppuccin.homeModules.catppuccin ];
+
+          home.packages = [ appLauncher ];
 
           gtk = {
             enable = true;

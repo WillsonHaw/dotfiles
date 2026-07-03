@@ -1,0 +1,29 @@
+{
+    "id": "wallhaven",
+    "name": "Wallhaven",
+    "version": "1.0.0",
+    "author": "local",
+    "description": "Wallhaven wallpaper search and rotation",
+    "entryPoints": {
+        "barWidget": "BarWidget.qml",
+        "main": "Main.qml",
+        "panel": "Panel.qml"
+    },
+    "metadata": {
+        "iconColor": "none",
+        "defaultSettings": {
+            "tags": "",
+            "sfw": true,
+            "sketchy": false,
+            "nsfw": false,
+            "general": true,
+            "anime": true,
+            "people": true,
+            "apikey": "",
+            "localOnly": false,
+            "displayTimeMs": 300000,
+            "coverMode": false,
+            "blacklist": []
+        }
+    }
+}
