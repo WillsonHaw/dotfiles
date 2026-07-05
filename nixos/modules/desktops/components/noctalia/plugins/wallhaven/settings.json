@@ -1,8 +1,8 @@
 {
-  "tags": "model",
-  "sfw": false,
-  "sketchy": true,
-  "nsfw": true,
+  "tags": "dragon ball",
+  "sfw": true,
+  "sketchy": false,
+  "nsfw": false,
   "general": true,
   "anime": true,
   "people": true,
@@ -10,5 +10,7 @@
   "localOnly": false,
   "displayTimeMs": 300000,
   "coverMode": false,
-  "blacklist": []
+  "blacklist": [
+    "o5qokp"
+  ]
 }
