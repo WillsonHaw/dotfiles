@@ -1,8 +1,8 @@
 {
-  "tags": "dragon ball",
+  "tags": "woman",
   "sfw": true,
-  "sketchy": false,
-  "nsfw": false,
+  "sketchy": true,
+  "nsfw": true,
   "general": true,
   "anime": true,
   "people": true,
@@ -11,6 +11,7 @@
   "displayTimeMs": 300000,
   "coverMode": false,
   "blacklist": [
-    "o5qokp"
+    "o5qokp",
+    "vpxmjp"
   ]
 }

@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Quickshell
 import qs.Commons
 import qs.Services.UI
 import qs.Widgets
@@ -19,14 +20,18 @@ Item {
     property real contentPreferredWidth: 420
     property real contentPreferredHeight: 600
 
-    // Update a setting and notify the service to reset pagination
-    function updateSetting(key, value) {
+    // Update a setting and notify the service to reset pagination.
+    // Pass triggerSearch=true to immediately fetch a new wallpaper with the updated settings.
+    function updateSetting(key, value, triggerSearch) {
         if (!pluginApi) return
         var s = Object.assign({}, pluginApi.pluginSettings)
         s[key] = value
         pluginApi.pluginSettings = s
         pluginApi.saveSettings()
-        if (svc) svc.onSettingsChange()
+        if (svc) {
+            svc.onSettingsChange()
+            if (triggerSearch) svc.random()
+        }
     }
 
     // Tags debounce timer
@@ -37,6 +42,21 @@ Item {
         property string pending: ""
         onTriggered: {
             if (pending !== (settings.tags ?? "")) updateSetting("tags", pending)
+        }
+    }
+
+    // Copy menu for the Debug section
+    NContextMenu {
+        id: copyDebugMenu
+        parent: root
+        width: 200
+        model: [
+            { "label": "Copy Query URL", "action": "url" },
+            { "label": "Copy API Response", "action": "response" }
+        ]
+        onTriggered: function(action) {
+            var text = action === "url" ? (svc?.lastDebugUrl ?? "") : (svc?.lastDebugResponse ?? "")
+            if (text) Quickshell.execDetached(["wl-copy", text])
         }
     }
 
@@ -66,125 +86,11 @@ Item {
 
             NDivider { Layout.fillWidth: true }
 
-            // ── Purity ─────────────────────────────────────
+            // ── Purity / Categories ──────────────────────────
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.margins: Style.marginL
                 spacing: Style.marginS
-
-                Text {
-                    text: "Purity"
-                    font.pixelSize: Style.fontSizeL
-                    font.weight: Style.fontWeightSemiBold
-                    color: Color.mOnSurfaceVariant
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: Style.marginM
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Text {
-                            Layout.fillWidth: true
-                            text: "SFW"
-                            font.pixelSize: Style.fontSizeS
-                            color: Color.mOnSurface
-                        }
-                        NToggle {
-                            Layout.fillWidth: false
-                            label: ""
-                            checked: settings.sfw ?? true
-                            onToggled: function(c) { updateSetting("sfw", c) }
-                        }
-                    }
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Text {
-                            Layout.fillWidth: true
-                            text: "Sketchy"
-                            font.pixelSize: Style.fontSizeS
-                            color: Color.mOnSurface
-                        }
-                        NToggle {
-                            Layout.fillWidth: false
-                            label: ""
-                            checked: settings.sketchy ?? false
-                            onToggled: function(c) { updateSetting("sketchy", c) }
-                        }
-                    }
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Text {
-                            Layout.fillWidth: true
-                            text: "NSFW"
-                            font.pixelSize: Style.fontSizeS
-                            color: Color.mOnSurface
-                        }
-                        NToggle {
-                            Layout.fillWidth: false
-                            label: ""
-                            checked: settings.nsfw ?? false
-                            onToggled: function(c) { updateSetting("nsfw", c) }
-                        }
-                    }
-                }
-
-                Text {
-                    text: "Categories"
-                    font.pixelSize: Style.fontSizeL
-                    font.weight: Style.fontWeightSemiBold
-                    color: Color.mOnSurfaceVariant
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: Style.marginM
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Text {
-                            Layout.fillWidth: true
-                            text: "General"
-                            font.pixelSize: Style.fontSizeS
-                            color: Color.mOnSurface
-                        }
-                        NToggle {
-                            Layout.fillWidth: false
-                            label: ""
-                            checked: settings.general ?? true
-                            onToggled: function(c) { updateSetting("general", c) }
-                        }
-                    }
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Text {
-                            Layout.fillWidth: true
-                            text: "Anime"
-                            font.pixelSize: Style.fontSizeS
-                            color: Color.mOnSurface
-                        }
-                        NToggle {
-                            Layout.fillWidth: false
-                            label: ""
-                            checked: settings.anime ?? true
-                            onToggled: function(c) { updateSetting("anime", c) }
-                        }
-                    }
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Text {
-                            Layout.fillWidth: true
-                            text: "People"
-                            font.pixelSize: Style.fontSizeS
-                            color: Color.mOnSurface
-                        }
-                        NToggle {
-                            Layout.fillWidth: false
-                            label: ""
-                            checked: settings.people ?? true
-                            onToggled: function(c) { updateSetting("people", c) }
-                        }
-                    }
-                }
 
                 // Tags input
                 Text {
@@ -197,6 +103,7 @@ Item {
                 NTextInput {
                     Layout.fillWidth: true
                     label: ""
+                    fontSize: Style.fontSizeXXS
                     placeholderText: "e.g. nature landscape"
                     text: settings.tags ?? ""
                     onTextChanged: {
@@ -205,7 +112,7 @@ Item {
                     }
                     onAccepted: {
                         tagsDebounce.stop()
-                        updateSetting("tags", text)
+                        updateSetting("tags", text, true)
                     }
                     onEditingFinished: {
                         tagsDebounce.stop()
@@ -233,6 +140,33 @@ Item {
                         return Color.mOnSurfaceVariant
                     }
                 }
+
+                // Purity / Category groups
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.topMargin: Style.marginS * 3
+                    spacing: Style.marginL
+
+                    SegmentedGroup {
+                        Layout.fillWidth: true
+                        model: [
+                            { key: "sfw",     label: "SFW",     checked: settings.sfw ?? true },
+                            { key: "sketchy", label: "Sketchy", checked: settings.sketchy ?? false },
+                            { key: "nsfw",    label: "NSFW",    checked: settings.nsfw ?? false }
+                        ]
+                        onToggled: function(key, checked) { updateSetting(key, checked, true) }
+                    }
+
+                    SegmentedGroup {
+                        Layout.fillWidth: true
+                        model: [
+                            { key: "general", label: "General", checked: settings.general ?? true },
+                            { key: "anime",   label: "Anime",   checked: settings.anime ?? true },
+                            { key: "people",  label: "People",  checked: settings.people ?? true }
+                        ]
+                        onToggled: function(key, checked) { updateSetting(key, checked, true) }
+                    }
+                }
             }
 
             NDivider { Layout.fillWidth: true }
@@ -245,6 +179,13 @@ Item {
 
                 RowLayout {
                     Layout.fillWidth: true
+                    NToggle {
+                        Layout.fillWidth: false
+                        label: ""
+                        baseSize: Math.round(Style.baseWidgetSize * 0.6 * Style.uiScaleRatio)
+                        checked: settings.localOnly ?? false
+                        onToggled: function(c) { updateSetting("localOnly", c) }
+                    }
                     Text {
                         Layout.fillWidth: true
                         text: "Saved wallpapers only (no downloads)"
@@ -252,31 +193,26 @@ Item {
                         color: Color.mOnSurface
                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     }
-                    NToggle {
-                        Layout.fillWidth: false
-                        label: ""
-                        checked: settings.localOnly ?? false
-                        onToggled: function(c) { updateSetting("localOnly", c) }
-                    }
                 }
 
                 RowLayout {
                     Layout.fillWidth: true
-                    Text {
-                        Layout.fillWidth: true
-                        text: "Fill screen (crop)"
-                        font.pixelSize: Style.fontSizeS
-                        color: Color.mOnSurface
-                    }
                     NToggle {
                         Layout.fillWidth: false
                         label: ""
+                        baseSize: Math.round(Style.baseWidgetSize * 0.6 * Style.uiScaleRatio)
                         checked: settings.coverMode ?? false
                         onToggled: function(c) {
                             updateSetting("coverMode", c)
                             if (!svc) return
                             Settings.data.wallpaper.fillMode = c ? "crop" : "fit"
                         }
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        text: "Fill screen (crop)"
+                        font.pixelSize: Style.fontSizeS
+                        color: Color.mOnSurface
                     }
                 }
 
@@ -293,6 +229,7 @@ Item {
 
                     NButton {
                         text: "−"
+                        fontSize: Style.fontSizeXXS
                         backgroundColor: Color.mSurfaceVariant
                         textColor: Color.mOnSurface
                         onClicked: {
@@ -308,6 +245,7 @@ Item {
 
                     NButton {
                         text: "+"
+                        fontSize: Style.fontSizeXXS
                         backgroundColor: Color.mSurfaceVariant
                         textColor: Color.mOnSurface
                         onClicked: {
@@ -384,8 +322,8 @@ Item {
                 // Image tags
                 Flow {
                     Layout.fillWidth: true
-                    Layout.topMargin: 4
-                    Layout.bottomMargin: 4
+                    Layout.topMargin: Style.marginM
+                    Layout.bottomMargin: Style.marginM
                     spacing: 4
                     visible: (svc?.currentImageTags?.length ?? 0) > 0
 
@@ -431,6 +369,7 @@ Item {
 
                     NButton {
                         text: (svc?.isSaved ?? false) ? "✓ Saved" : "Save"
+                        fontSize: Style.fontSizeXXS
                         backgroundColor: (svc?.isSaved ?? false) ? Color.mSurfaceVariant : Color.mPrimary
                         textColor: (svc?.isSaved ?? false) ? Color.mSecondary : Color.mOnPrimary
                         onClicked: {
@@ -442,6 +381,7 @@ Item {
 
                     NButton {
                         text: (svc?.isDownloading ?? false) ? "Downloading…" : "Next"
+                        fontSize: Style.fontSizeXXS
                         enabled: !(svc?.isDownloading ?? false)
                         backgroundColor: Color.mSurfaceVariant
                         textColor: Color.mOnSurface
@@ -450,6 +390,7 @@ Item {
 
                     NButton {
                         text: "Block"
+                        fontSize: Style.fontSizeXXS
                         enabled: (svc?.currentWallpaper ?? null) !== null
                         backgroundColor: Color.mSurfaceVariant
                         textColor: Color.mError
@@ -477,10 +418,134 @@ Item {
                 NTextInput {
                     Layout.fillWidth: true
                     label: ""
+                    fontSize: Style.fontSizeXXS
                     placeholderText: "your-api-key"
                     text: settings.apikey ?? ""
                     onEditingFinished: updateSetting("apikey", text)
                     onAccepted: updateSetting("apikey", text)
+                }
+            }
+
+            NDivider { Layout.fillWidth: true }
+
+            // ── Debug ──────────────────────────────────────
+            ColumnLayout {
+                id: debugSection
+                Layout.fillWidth: true
+                Layout.margins: Style.marginL
+                Layout.bottomMargin: Style.marginL
+                spacing: Style.marginS
+
+                property bool expanded: false
+
+                Item {
+                    Layout.fillWidth: true
+                    implicitHeight: debugHeaderRow.implicitHeight
+
+                    RowLayout {
+                        id: debugHeaderRow
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: Style.marginXS
+
+                        NIcon {
+                            icon: "chevron-right"
+                            pointSize: Style.fontSizeS
+                            color: Color.mOnSurfaceVariant
+                            rotation: debugSection.expanded ? 90 : 0
+                            Behavior on rotation { NumberAnimation { duration: Style.animationFast } }
+                        }
+
+                        Text {
+                            text: "Debug"
+                            font.pixelSize: Style.fontSizeS
+                            font.weight: Style.fontWeightSemiBold
+                            color: Color.mOnSurfaceVariant
+                        }
+
+                        Item { Layout.fillWidth: true }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: debugSection.expanded = !debugSection.expanded
+                    }
+                }
+
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    visible: debugSection.expanded
+                    spacing: Style.marginS
+
+                    Item {
+                        Layout.fillWidth: true
+                        implicitHeight: copyDebugButton.implicitHeight
+
+                        NIcon {
+                            id: copyDebugButton
+                            anchors.right: parent.right
+                            icon: "copy"
+                            pointSize: Style.fontSizeS
+                            color: copyDebugArea.containsMouse ? Color.mPrimary : Color.mOnSurfaceVariant
+
+                            MouseArea {
+                                id: copyDebugArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: copyDebugMenu.openAtItem(copyDebugButton, copyDebugButton.width - copyDebugMenu.width, copyDebugButton.height)
+                            }
+                        }
+                    }
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: "Last query"
+                        font.pixelSize: Style.fontSizeS
+                        font.weight: Style.fontWeightSemiBold
+                        color: Color.mOnSurfaceVariant
+                    }
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: svc?.lastDebugUrl || "—"
+                        font.pixelSize: Style.fontSizeXS
+                        color: Color.mOnSurface
+                        wrapMode: Text.WrapAnywhere
+                        textFormat: Text.PlainText
+                    }
+
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.topMargin: Style.marginS
+                        text: "Last response"
+                        font.pixelSize: Style.fontSizeS
+                        font.weight: Style.fontWeightSemiBold
+                        color: Color.mOnSurfaceVariant
+                    }
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 180
+                        color: Color.mSurfaceVariant
+                        radius: Style.iRadiusS
+
+                        ScrollView {
+                            anchors.fill: parent
+                            anchors.margins: Style.marginS
+                            clip: true
+
+                            Text {
+                                width: parent.width
+                                text: svc?.lastDebugResponse || "—"
+                                font.pixelSize: Style.fontSizeXS
+                                color: Color.mOnSurface
+                                wrapMode: Text.WrapAnywhere
+                                textFormat: Text.PlainText
+                            }
+                        }
+                    }
                 }
             }
         }
