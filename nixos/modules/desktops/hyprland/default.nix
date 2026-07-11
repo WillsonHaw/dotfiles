@@ -52,6 +52,8 @@
 
           services.kdeconnect.enable = true;
 
+          home.pointerCursor.enable = true;
+
           gtk = {
             enable = true;
             gtk4.theme = null;

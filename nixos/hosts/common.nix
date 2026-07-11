@@ -47,11 +47,23 @@
   nixpkgs.config.allowUnfree = true;
 
   # Workaround: openldap test017 is flaky on nixpkgs-unstable
+  # Workaround: patool's test suite fails on python3.14 (missing bzip2/xz/lzma
+  # support in the sandbox), breaking bottles which depends on it
   nixpkgs.overlays = [
     (final: prev: {
       openldap = prev.openldap.overrideAttrs (old: {
         doCheck = false;
       });
+
+      python3 = prev.python3.override {
+        packageOverrides = pyFinal: pyPrev: {
+          patool = pyPrev.patool.overrideAttrs (old: {
+            doCheck = false;
+            doInstallCheck = false;
+          });
+        };
+      };
+      python3Packages = final.python3.pkgs;
 
     })
   ];

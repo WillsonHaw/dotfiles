@@ -15,6 +15,7 @@ Item {
     property string section: ""
     property int sectionWidgetIndex: -1
     property int sectionWidgetsCount: 0
+    property var pluginApi  // injected by BarWidgetLoader; unused, we look up the API via PluginService instead
 
     property var widgetMetadata: BarWidgetRegistry.widgetMetadata[widgetId] ?? {}
     readonly property string screenName: screen ? screen.name : ""

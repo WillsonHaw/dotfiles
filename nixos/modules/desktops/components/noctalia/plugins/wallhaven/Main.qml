@@ -10,26 +10,59 @@ Item {
 
     property var pluginApi  // injected by PluginService
 
-    // Config reads — functions so Main.qml always has fresh values at action time
-    function tags()          { return pluginApi?.pluginSettings?.tags          ?? "" }
-    function sfw()           { return pluginApi?.pluginSettings?.sfw           ?? true }
-    function sketchy()       { return pluginApi?.pluginSettings?.sketchy       ?? false }
-    function nsfw()          { return pluginApi?.pluginSettings?.nsfw          ?? false }
-    function general()       { return pluginApi?.pluginSettings?.general       ?? true }
-    function anime()         { return pluginApi?.pluginSettings?.anime         ?? true }
-    function people()        { return pluginApi?.pluginSettings?.people        ?? true }
-    function apikey()        { return pluginApi?.pluginSettings?.apikey        ?? "" }
-    function localOnly()     { return pluginApi?.pluginSettings?.localOnly     ?? false }
-    function displayTimeMs() { return pluginApi?.pluginSettings?.displayTimeMs ?? 300000 }
-    function coverMode()     { return pluginApi?.pluginSettings?.coverMode     ?? false }
-    function blacklist()     { return pluginApi?.pluginSettings?.blacklist      ?? [] }
+    // Settings shared across all profiles — everything else lives per-profile.
+    readonly property var sharedKeys: ["apikey", "blacklist"]
 
+    // Profile plumbing
+    function profiles()            { return pluginApi?.pluginSettings?.profiles ?? [] }
+    function activeProfileIndex()  { return pluginApi?.pluginSettings?.activeProfile ?? 0 }
+    function activeProfile()       { return profiles()[activeProfileIndex()] ?? {} }
+
+    // Config reads — functions so Main.qml always has fresh values at action time
+    function tags()          { return activeProfile().tags          ?? "" }
+    function sfw()           { return activeProfile().sfw           ?? true }
+    function sketchy()       { return activeProfile().sketchy       ?? false }
+    function nsfw()          { return activeProfile().nsfw          ?? false }
+    function general()       { return activeProfile().general       ?? true }
+    function anime()         { return activeProfile().anime         ?? true }
+    function people()        { return activeProfile().people        ?? true }
+    function localOnly()     { return activeProfile().localOnly     ?? false }
+    function displayTimeMs() { return activeProfile().displayTimeMs ?? 300000 }
+    function coverMode()     { return activeProfile().coverMode     ?? false }
+
+    // Shared across all profiles
+    function apikey()    { return pluginApi?.pluginSettings?.apikey    ?? "" }
+    function blacklist() { return pluginApi?.pluginSettings?.blacklist ?? [] }
+
+    // Writes `key` to the active profile, unless it's a shared key (see sharedKeys above).
     function setConfig(key, value) {
         if (!pluginApi) return
         var s = Object.assign({}, pluginApi.pluginSettings)
-        s[key] = value
+        if (sharedKeys.indexOf(key) >= 0) {
+            s[key] = value
+        } else {
+            var profs = (s.profiles || []).slice()
+            var idx = s.activeProfile ?? 0
+            profs[idx] = Object.assign({}, profs[idx])
+            profs[idx][key] = value
+            s.profiles = profs
+        }
         pluginApi.pluginSettings = s
         pluginApi.saveSettings()
+    }
+
+    // Switch the active profile — resets search pagination and immediately
+    // fetches/displays a wallpaper matching the new profile's settings.
+    function switchProfile(index) {
+        if (!pluginApi) return
+        if (index < 0 || index >= profiles().length) return
+        if (index === activeProfileIndex()) return
+        var s = Object.assign({}, pluginApi.pluginSettings)
+        s.activeProfile = index
+        pluginApi.pluginSettings = s
+        pluginApi.saveSettings()
+        onSettingsChange()
+        _random()
     }
 
     // --- Runtime state (read by Panel.qml via pluginApi.mainInstance) ---
@@ -353,6 +386,11 @@ Item {
         target: "wallhaven"
         function next() { root.random() }
         function panic() { root.panic() }
+        // 1-based to match the Mod+F1/F2/F3 shortcuts
+        function setProfile(index: string) {
+            var i = parseInt(index, 10)
+            if (!isNaN(i)) root.switchProfile(i - 1)
+        }
     }
 
     // --- Public: save / delete / blacklist ---

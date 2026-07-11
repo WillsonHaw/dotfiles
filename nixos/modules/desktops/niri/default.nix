@@ -91,6 +91,8 @@
 
           home.packages = [ appLauncher ];
 
+          home.pointerCursor.enable = true;
+
           gtk = {
             enable = true;
             gtk4.theme = null;

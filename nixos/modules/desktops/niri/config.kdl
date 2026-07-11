@@ -359,6 +359,9 @@ binds {
     Mod+P hotkey-overlay-title="Presentation Mode: display switcher" { spawn "presentation-mode"; }
     Mod+N repeat=false hotkey-overlay-title="Next Wallpaper" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "next"; }
     Alt+Escape repeat=false allow-inhibiting=false { spawn "noctalia-shell" "ipc" "call" "wallhaven" "panic"; }
+    Mod+F1 repeat=false hotkey-overlay-title="Wallpaper Profile 1" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "setProfile" "1"; }
+    Mod+F2 repeat=false hotkey-overlay-title="Wallpaper Profile 2" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "setProfile" "2"; }
+    Mod+F3 repeat=false hotkey-overlay-title="Wallpaper Profile 3" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "setProfile" "3"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.

@@ -12,18 +12,50 @@
     "metadata": {
         "iconColor": "none",
         "defaultSettings": {
-            "tags": "",
-            "sfw": true,
-            "sketchy": false,
-            "nsfw": false,
-            "general": true,
-            "anime": true,
-            "people": true,
             "apikey": "",
-            "localOnly": false,
-            "displayTimeMs": 300000,
-            "coverMode": false,
-            "blacklist": []
+            "blacklist": [],
+            "activeProfile": 0,
+            "profiles": [
+                {
+                    "name": "Profile 1",
+                    "tags": "",
+                    "sfw": true,
+                    "sketchy": false,
+                    "nsfw": false,
+                    "general": true,
+                    "anime": true,
+                    "people": true,
+                    "localOnly": false,
+                    "displayTimeMs": 300000,
+                    "coverMode": false
+                },
+                {
+                    "name": "Profile 2",
+                    "tags": "",
+                    "sfw": true,
+                    "sketchy": false,
+                    "nsfw": false,
+                    "general": true,
+                    "anime": true,
+                    "people": true,
+                    "localOnly": false,
+                    "displayTimeMs": 300000,
+                    "coverMode": false
+                },
+                {
+                    "name": "Profile 3",
+                    "tags": "",
+                    "sfw": true,
+                    "sketchy": false,
+                    "nsfw": false,
+                    "general": true,
+                    "anime": true,
+                    "people": true,
+                    "localOnly": false,
+                    "displayTimeMs": 300000,
+                    "coverMode": false
+                }
+            ]
         }
     }
 }

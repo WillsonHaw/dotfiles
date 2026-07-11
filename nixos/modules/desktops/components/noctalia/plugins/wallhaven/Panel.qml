@@ -14,24 +14,56 @@ Item {
     // Runtime state from background service
     readonly property var svc: pluginApi?.mainInstance
 
-    // Reactive config — updates whenever pluginApi.saveSettings() replaces the object
-    readonly property var settings: pluginApi?.pluginSettings ?? {}
+    // Settings shared across all profiles — must match Main.qml's sharedKeys.
+    readonly property var sharedKeys: ["apikey", "blacklist"]
+
+    readonly property var rawSettings: pluginApi?.pluginSettings ?? {}
+    readonly property var profiles: rawSettings.profiles ?? []
+    readonly property int activeProfileIndex: rawSettings.activeProfile ?? 0
+
+    // Reactive config — active profile's settings merged with the shared keys.
+    // Updates whenever pluginApi.saveSettings() replaces the object.
+    readonly property var settings: Object.assign({}, profiles[activeProfileIndex] ?? {}, {
+        apikey: rawSettings.apikey,
+        blacklist: rawSettings.blacklist
+    })
 
     property real contentPreferredWidth: 420
     property real contentPreferredHeight: 600
 
-    // Update a setting and notify the service to reset pagination.
-    // Pass triggerSearch=true to immediately fetch a new wallpaper with the updated settings.
+    // Update a setting (in the active profile, unless it's a shared key) and notify
+    // the service to reset pagination. Pass triggerSearch=true to immediately fetch
+    // a new wallpaper with the updated settings.
     function updateSetting(key, value, triggerSearch) {
         if (!pluginApi) return
         var s = Object.assign({}, pluginApi.pluginSettings)
-        s[key] = value
+        if (sharedKeys.indexOf(key) >= 0) {
+            s[key] = value
+        } else {
+            var profs = (s.profiles || []).slice()
+            var idx = s.activeProfile ?? 0
+            profs[idx] = Object.assign({}, profs[idx])
+            profs[idx][key] = value
+            s.profiles = profs
+        }
         pluginApi.pluginSettings = s
         pluginApi.saveSettings()
         if (svc) {
             svc.onSettingsChange()
             if (triggerSearch) svc.random()
         }
+    }
+
+    // Switch the active profile via the service (keeps the switch logic in one place).
+    function switchProfile(index) {
+        if (svc) { svc.switchProfile(index); return }
+        // Service not ready yet — fall back to a direct settings write.
+        if (!pluginApi) return
+        var s = Object.assign({}, pluginApi.pluginSettings)
+        if ((s.activeProfile ?? 0) === index) return
+        s.activeProfile = index
+        pluginApi.pluginSettings = s
+        pluginApi.saveSettings()
     }
 
     // Tags debounce timer
@@ -81,6 +113,30 @@ Item {
                     font.pixelSize: Style.fontSizeL
                     font.weight: Style.fontWeightSemiBold
                     color: Color.mOnSurface
+                }
+            }
+
+            NDivider { Layout.fillWidth: true }
+
+            // ── Profile ────────────────────────────────────
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.margins: Style.marginL
+                spacing: Style.marginS
+
+                Text {
+                    text: "Profile"
+                    font.pixelSize: Style.fontSizeL
+                    font.weight: Style.fontWeightSemiBold
+                    color: Color.mOnSurfaceVariant
+                }
+
+                SegmentedGroup {
+                    Layout.fillWidth: true
+                    model: root.profiles.map(function(p, i) {
+                        return { key: i, label: p.name ?? ("Profile " + (i + 1)), checked: i === root.activeProfileIndex }
+                    })
+                    onToggled: function(key) { root.switchProfile(parseInt(key, 10)) }
                 }
             }
 
