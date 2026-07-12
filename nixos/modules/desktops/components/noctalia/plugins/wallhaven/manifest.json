@@ -12,7 +12,7 @@
     "metadata": {
         "iconColor": "none",
         "defaultSettings": {
-            "apikey": "",
+            "apiKeyFile": "/run/secrets/wallhaven_key",
             "blacklist": [],
             "activeProfile": 0,
             "profiles": [

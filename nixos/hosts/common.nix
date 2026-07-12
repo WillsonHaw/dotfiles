@@ -24,6 +24,9 @@
       host_pw = {
         owner = config.noodles.user;
       };
+      wallhaven_key = {
+        owner = config.noodles.user;
+      };
     };
   };
 

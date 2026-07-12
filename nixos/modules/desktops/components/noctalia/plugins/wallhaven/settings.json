@@ -1,0 +1,54 @@
+{
+  "apiKeyFile": "/run/secrets/wallhaven_key",
+  "blacklist": [
+    "o5qokp",
+    "vpxmjp",
+    "3l16yy",
+    "7pv8dy",
+    "x8lolo",
+    "gp6r3e",
+    "mdq36m"
+  ],
+  "activeProfile": 1,
+  "profiles": [
+    {
+      "name": "Profile 1",
+      "tags": "mecha",
+      "sfw": true,
+      "sketchy": false,
+      "nsfw": false,
+      "general": true,
+      "anime": true,
+      "people": true,
+      "localOnly": false,
+      "displayTimeMs": 300000,
+      "coverMode": true
+    },
+    {
+      "name": "Profile 2",
+      "tags": "woman women girl",
+      "sfw": false,
+      "sketchy": true,
+      "nsfw": true,
+      "general": true,
+      "anime": true,
+      "people": true,
+      "localOnly": false,
+      "displayTimeMs": 300000,
+      "coverMode": false
+    },
+    {
+      "name": "Profile 3",
+      "tags": "",
+      "sfw": true,
+      "sketchy": false,
+      "nsfw": false,
+      "general": true,
+      "anime": true,
+      "people": true,
+      "localOnly": false,
+      "displayTimeMs": 300000,
+      "coverMode": false
+    }
+  ]
+}

@@ -11,7 +11,7 @@ Item {
     property var pluginApi  // injected by PluginService
 
     // Settings shared across all profiles — everything else lives per-profile.
-    readonly property var sharedKeys: ["apikey", "blacklist"]
+    readonly property var sharedKeys: ["apiKeyFile", "blacklist"]
 
     // Profile plumbing
     function profiles()            { return pluginApi?.pluginSettings?.profiles ?? [] }
@@ -31,8 +31,21 @@ Item {
     function coverMode()     { return activeProfile().coverMode     ?? false }
 
     // Shared across all profiles
-    function apikey()    { return pluginApi?.pluginSettings?.apikey    ?? "" }
-    function blacklist() { return pluginApi?.pluginSettings?.blacklist ?? [] }
+    function apiKeyFile() { return pluginApi?.pluginSettings?.apiKeyFile ?? "" }
+    function apikey()      { return _apiKeyValue }
+    function blacklist()   { return pluginApi?.pluginSettings?.blacklist ?? [] }
+
+    // The API key itself is never stored in settings — only a path to the
+    // sops-managed secret file. Loaded once at startup since the path is
+    // static (nix-managed, requires a rebuild to change).
+    property string _apiKeyValue: ""
+    function _loadApiKey() {
+        var path = apiKeyFile()
+        if (!path) { _apiKeyValue = ""; return }
+        _run(["cat", path], function(code, stdout) {
+            _apiKeyValue = (code === 0) ? stdout.trim() : ""
+        })
+    }
 
     // Writes `key` to the active profile, unless it's a shared key (see sharedKeys above).
     function setConfig(key, value) {
@@ -114,6 +127,7 @@ Item {
         _run(["mkdir", "-p", wallpaperBase + "/sfw"],     null)
         _run(["mkdir", "-p", wallpaperBase + "/sketchy"], null)
         _run(["mkdir", "-p", wallpaperBase + "/nsfw"],    null)
+        _loadApiKey()
         Qt.callLater(_random)
     }
 

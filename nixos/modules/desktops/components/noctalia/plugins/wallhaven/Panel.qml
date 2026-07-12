@@ -15,7 +15,7 @@ Item {
     readonly property var svc: pluginApi?.mainInstance
 
     // Settings shared across all profiles — must match Main.qml's sharedKeys.
-    readonly property var sharedKeys: ["apikey", "blacklist"]
+    readonly property var sharedKeys: ["apiKeyFile", "blacklist"]
 
     readonly property var rawSettings: pluginApi?.pluginSettings ?? {}
     readonly property var profiles: rawSettings.profiles ?? []
@@ -24,7 +24,6 @@ Item {
     // Reactive config — active profile's settings merged with the shared keys.
     // Updates whenever pluginApi.saveSettings() replaces the object.
     readonly property var settings: Object.assign({}, profiles[activeProfileIndex] ?? {}, {
-        apikey: rawSettings.apikey,
         blacklist: rawSettings.blacklist
     })
 
@@ -452,33 +451,6 @@ Item {
                         textColor: Color.mError
                         onClicked: if (svc) svc.blacklistCurrent()
                     }
-                }
-            }
-
-            NDivider { Layout.fillWidth: true }
-
-            // ── API Key ────────────────────────────────────
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.margins: Style.marginL
-                Layout.bottomMargin: Style.marginL
-                spacing: Style.marginS
-
-                Text {
-                    text: "API Key (required for NSFW)"
-                    font.pixelSize: Style.fontSizeL
-                    font.weight: Style.fontWeightSemiBold
-                    color: Color.mOnSurfaceVariant
-                }
-
-                NTextInput {
-                    Layout.fillWidth: true
-                    label: ""
-                    fontSize: Style.fontSizeXXS
-                    placeholderText: "your-api-key"
-                    text: settings.apikey ?? ""
-                    onEditingFinished: updateSetting("apikey", text)
-                    onAccepted: updateSetting("apikey", text)
                 }
             }
 
