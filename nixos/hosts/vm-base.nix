@@ -30,6 +30,10 @@
     ];
     allowedTCPPortRanges = [
       {
+        from = 3000;
+        to = 3010;
+      }
+      {
         from = 3200;
         to = 3210;
       }
