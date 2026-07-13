@@ -7,7 +7,9 @@
     "7pv8dy",
     "x8lolo",
     "gp6r3e",
-    "mdq36m"
+    "mdq36m",
+    "gjv5y7",
+    "kwor27"
   ],
   "activeProfile": 1,
   "profiles": [
@@ -27,7 +29,7 @@
     {
       "name": "Profile 2",
       "tags": "woman women girl",
-      "sfw": false,
+      "sfw": true,
       "sketchy": true,
       "nsfw": true,
       "general": true,
