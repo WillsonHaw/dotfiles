@@ -110,6 +110,16 @@
     options = "--delete-older-than 10d";
   };
 
+  # catppuccin/nix is imported unconditionally by the hyprland/niri desktop
+  # modules (imports aren't gated by mkIf), so every host — including
+  # headless ones — picks up the module. Without an explicit autoEnable,
+  # it falls back to legacy behavior (enable = true) and warns. Desktop
+  # hosts override both back to true via mkIf on their environment.
+  catppuccin = {
+    enable = lib.mkDefault false;
+    autoEnable = lib.mkDefault false;
+  };
+
   # Headless-safe defaults — applied to every host.
   # GUI/desktop defaults live in ./desktop-base.nix and are opted into by
   # each desktop-class host.
