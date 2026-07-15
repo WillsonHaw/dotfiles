@@ -215,6 +215,10 @@ layout {
         // bottom 64
     }
 
+    // Transparent so the noctalia wallpaper on the backdrop layer shows through
+    // instead of a per-workspace background (see layer-rule below).
+    background-color "transparent"
+
 }
 
 // Add lines like this to spawn processes at startup.
@@ -310,6 +314,14 @@ match app-id=r#"^org\.keepassxc\.KeePassXC$"#
 window-rule {
     geometry-corner-radius 8
     clip-to-geometry true
+}
+
+// Pin the noctalia wallpaper to the backdrop layer (shared across all
+// workspaces) instead of per-workspace, so it doesn't disappear/reappear
+// when switching workspaces.
+layer-rule {
+    match namespace="^noctalia-wallpaper*"
+    place-within-backdrop true
 }
 
 // These apps ignore prefer-no-csd, so draw the focus ring around them
