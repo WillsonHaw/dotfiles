@@ -17,27 +17,32 @@
   system.stateVersion = "25.11";
 
   # Machine-specific services.
-  noodles.services = {
-    nginx.enable = true;
-    nfs = {
-      enable = true;
-      openFirewall = true;
-      shares = {
-        repos = {
-          path = "/home/${config.noodles.user}/repos";
-          hosts = [ "*" ];
+  noodles = {
+    development.node = true;
+
+    services = {
+      nginx.enable = true;
+
+      nfs = {
+        enable = true;
+        openFirewall = true;
+        shares = {
+          repos = {
+            path = "/home/${config.noodles.user}/repos";
+            hosts = [ "*" ];
+          };
         };
       };
-    };
-    samba = {
-      enable = true;
-      openFirewall = true;
-      wsdd.enable = true;
+      samba = {
+        enable = true;
+        openFirewall = true;
+        wsdd.enable = true;
 
-      shares = {
-        repos = {
-          path = "/home/${config.noodles.user}/repos";
-          validUsers = [ config.noodles.user ];
+        shares = {
+          repos = {
+            path = "/home/${config.noodles.user}/repos";
+            validUsers = [ config.noodles.user ];
+          };
         };
       };
     };

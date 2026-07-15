@@ -10,7 +10,8 @@
     "mdq36m",
     "gjv5y7",
     "kwor27",
-    "8ow19y"
+    "8ow19y",
+    "q2e8qd"
   ],
   "activeProfile": 1,
   "profiles": [
@@ -38,7 +39,7 @@
       "people": true,
       "localOnly": false,
       "displayTimeMs": 300000,
-      "coverMode": true
+      "coverMode": false
     },
     {
       "name": "Profile 3",

@@ -14,7 +14,7 @@
   config = lib.mkIf config.noodles.development.node.enable {
     environment.systemPackages = with pkgs; [
       nodejs_20
-      (pnpm.override { nodejs = null; })
+      pnpm
     ];
   };
 }
