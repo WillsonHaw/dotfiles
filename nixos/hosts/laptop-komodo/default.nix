@@ -11,7 +11,6 @@
     ../dev-base.nix
     ../desktop-base.nix
     ./hardware-configuration.nix
-    #    ./graphics.nix
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
@@ -89,6 +88,10 @@
   };
 
   noodles = {
+    development = {
+      node.enable = true;
+    };
+
     device = {
       is-laptop = true;
       # TODO: Confirm the GPU card path after install with

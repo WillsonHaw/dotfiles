@@ -18,7 +18,7 @@
 
   # Machine-specific services.
   noodles = {
-    development.node = true;
+    development.node.enable = true;
 
     services = {
       nginx.enable = true;

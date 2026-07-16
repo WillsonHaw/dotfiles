@@ -31,7 +31,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    claude-code
     inotify-tools
     nixfmt
     jq
@@ -138,5 +137,7 @@
       fastfetch.enable = true;
       vim.enable = true;
     };
+
+    development.claude.enable = true;
   };
 }

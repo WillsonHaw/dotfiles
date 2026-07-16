@@ -7,7 +7,8 @@
   "workbench.colorTheme": "Catppuccin Mocha",
   "remote.SSH.remotePlatform": {
     "NoodleFish_Dev": "linux",
-    "Komodo_Dev": "linux"
+    "Komodo_Dev": "linux",
+    "Komodo_Laptop": "linux"
   },
   "redhat.telemetry.enabled": false,
   "workbench.activityBar.location": "top",

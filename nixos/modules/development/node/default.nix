@@ -13,7 +13,7 @@
 
   config = lib.mkIf config.noodles.development.node.enable {
     environment.systemPackages = with pkgs; [
-      nodejs_20
+      nodejs_24
       pnpm
     ];
   };
