@@ -653,6 +653,26 @@
         "type": "github"
       }
     },
+    "nix-vscode-extensions": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784603886,
+        "narHash": "sha256-AwdtZq1mpXZCfn+C2NOBTO7i0H4eGIj6dH9XXkO3Kus=",
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "rev": "3bc93178a45e4327bdcf91f2c9158701937abdf3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "inputs": {
         "nixpkgs": "nixpkgs_2"
@@ -724,11 +744,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1784606323,
-        "narHash": "sha256-pL5KwDMe9QPDpOKSyKmet39tZoNCsWWyBwpjZfnL3LM=",
+        "lastModified": 1784644605,
+        "narHash": "sha256-G2rlvR1do37JPFKmHyOcemGGJbeY0V2Pm5iYBLcuuM0=",
         "owner": "nix-community",
         "repo": "nixpkgs-wayland",
-        "rev": "2c9566f526bbbcd72aa9c95013be48635194a58b",
+        "rev": "b64904b5500159ec33c43e07879a5f702045c268",
         "type": "github"
       },
       "original": {
@@ -858,6 +878,7 @@
         "hyprland-contrib": "hyprland-contrib",
         "hyprland-plugins": "hyprland-plugins",
         "nix-flatpak": "nix-flatpak",
+        "nix-vscode-extensions": "nix-vscode-extensions",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-wayland": "nixpkgs-wayland",

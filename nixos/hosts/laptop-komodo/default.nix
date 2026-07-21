@@ -129,7 +129,6 @@
 
     apps = {
       #antigravity.enable = true;
-      #cursor.enable = true;
       #godot.enable = true;
       waynergy.enable = true;
       browsers.edge.enable = true;

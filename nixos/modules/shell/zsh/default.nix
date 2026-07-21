@@ -55,6 +55,22 @@
             sudo mount -o loop $@
           }
 
+          function sync-vscode-extensions() {
+            local out=~/dotfiles/nixos/modules/apps/vscode/extensions.txt
+
+            {
+              if command -v code &> /dev/null; then
+                code --list-extensions
+              fi
+
+              if command -v antigravity &> /dev/null; then
+                antigravity --list-extensions
+              fi
+            } | sort -u > "$out"
+
+            echo "Synced $(wc -l < "$out") extensions to $out"
+          }
+
           if [[ -f "$HOME/.secrets" ]]; then
             source "$HOME/.secrets"
           fi

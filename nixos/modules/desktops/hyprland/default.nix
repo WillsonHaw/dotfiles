@@ -69,6 +69,12 @@
             kvantum.enable = true;
             # mako.enable = true;
             hyprland.enable = true;
+
+            # catppuccin/nix vendors its own build of these extensions, which conflicts
+            # with the marketplace build declared in programs.vscode/programs.antigravity's
+            # extensions list. Disable the auto-injected copy in favor of that one.
+            vscode.profiles.default.enable = false;
+            antigravity.profiles.default.enable = false;
           };
 
           wayland.windowManager.hyprland = {

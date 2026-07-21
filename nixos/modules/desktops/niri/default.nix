@@ -108,9 +108,10 @@
             kvantum.enable = true;
 
             # catppuccin/nix builds this extension from source with pnpm_10.override { inherit nodejs; }
-            # which triggers an evaluation warning. Disable the port to avoid it; the nixpkgs
-            # pre-built extension is added to programs.vscode below instead.
+            # which triggers an evaluation warning. Disable the port to avoid it; a marketplace
+            # build is added to programs.vscode/programs.antigravity's extensions list instead.
             vscode.profiles.default.enable = false;
+            antigravity.profiles.default.enable = false;
           };
 
           programs.zsh.initContent = lib.mkOrder 500 ''
