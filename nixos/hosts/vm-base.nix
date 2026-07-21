@@ -27,6 +27,7 @@
   networking.firewall = {
     allowedTCPPorts = [
       3333
+      5173
       5037
       5555
       5901

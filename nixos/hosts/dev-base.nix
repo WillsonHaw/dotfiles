@@ -32,6 +32,14 @@
     "kvm"
   ];
 
+  # Plenty of third-party build tooling (Unreal Engine, etc.) hardcodes
+  # #!/bin/bash shebangs and chain-execs sibling scripts directly, which
+  # breaks on NixOS since only /bin/sh is provisioned by default.
+  system.activationScripts.binbash.text = ''
+    mkdir -m 0755 -p /bin
+    ln -sf ${pkgs.bash}/bin/bash /bin/bash
+  '';
+
   environment.systemPackages = with pkgs; [
     gh
     ripgrep

@@ -92,6 +92,32 @@
       node.enable = true;
     };
 
+    services = {
+      nginx.enable = true;
+      nfs = {
+        enable = true;
+        openFirewall = true;
+        shares = {
+          repos = {
+            path = "/home/${config.noodles.user}/repos";
+            hosts = [ "*" ];
+          };
+        };
+      };
+      samba = {
+        enable = true;
+        openFirewall = true;
+        wsdd.enable = true;
+
+        shares = {
+          repos = {
+            path = "/home/${config.noodles.user}/repos";
+            validUsers = [ config.noodles.user ];
+          };
+        };
+      };
+    };
+
     device = {
       is-laptop = true;
       # TODO: Confirm the GPU card path after install with
@@ -107,6 +133,7 @@
       #godot.enable = true;
       waynergy.enable = true;
       browsers.edge.enable = true;
+      herdr.enable = true;
     };
 
     system.display.externalDisplays = [
