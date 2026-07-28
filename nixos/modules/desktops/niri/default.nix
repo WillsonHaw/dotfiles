@@ -28,6 +28,32 @@
         name = "app-launcher";
         text = launcherCmd;
       };
+
+      # The DP-1 HMD reports a physical size that makes niri's HiDPI heuristic pick
+      # scale 2.25 on connect. `niri msg action load-config-file` re-parses config.kdl
+      # (confirmed via repeated "loaded config" log lines) but does NOT reconcile scale
+      # for an output that's already connected - only the temporary
+      # `niri msg output <name> scale <value>` command actually changes it live. So
+      # this re-applies the same mode/scale as the "DP-1" block in config.kdl directly,
+      # rather than relying on reload, whenever a DRM connector actually changes state
+      # (real hotplug, not the initial boot coldplug).
+      niriHotplugReload = pkgs.writeShellScript "niri-reload-on-hotplug" ''
+        sleep 2
+        uid=$(${pkgs.coreutils}/bin/id -u ${config.noodles.user})
+        runtime_dir="/run/user/$uid"
+
+        # niri msg has no fallback discovery of its own; NIRI_SOCKET must be set
+        # explicitly here since this script runs outside any niri session.
+        sock=$(${pkgs.coreutils}/bin/ls "$runtime_dir"/niri.*.sock 2>/dev/null | ${pkgs.coreutils}/bin/head -n1)
+
+        if [ -z "$sock" ]; then
+          exit 0
+        fi
+
+        exec ${pkgs.util-linux}/bin/runuser -u ${config.noodles.user} -- \
+          ${pkgs.coreutils}/bin/env XDG_RUNTIME_DIR="$runtime_dir" NIRI_SOCKET="$sock" \
+          ${pkgs.niri}/bin/niri msg output "DP-1" scale 1.0
+      '';
     in
     lib.mkIf (config.noodles.desktops.environment == "niri") {
       noodles.desktops.components = {
@@ -44,6 +70,10 @@
       programs.niri.enable = true;
 
       security.pam.services.hyprlock = { };
+
+      services.udev.extraRules = ''
+        SUBSYSTEM=="drm", ACTION=="change", RUN+="${pkgs.util-linux}/bin/flock -n /run/niri-hotplug-reload.lock ${niriHotplugReload}"
+      '';
 
       environment = {
         sessionVariables = {

@@ -14,13 +14,14 @@
     "q2e8qd",
     "3k3pyv",
     "l8xler",
-    "5d6l61"
+    "5d6l61",
+    "jxp26p"
   ],
   "activeProfile": 1,
   "profiles": [
     {
       "name": "Profile 1",
-      "tags": "mecha",
+      "tags": "game",
       "sfw": true,
       "sketchy": false,
       "nsfw": false,
@@ -33,8 +34,8 @@
     },
     {
       "name": "Profile 2",
-      "tags": "woman women",
-      "sfw": true,
+      "tags": "women",
+      "sfw": false,
       "sketchy": true,
       "nsfw": true,
       "general": true,

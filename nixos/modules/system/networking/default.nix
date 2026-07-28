@@ -15,6 +15,14 @@
   # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
+  networking.extraHosts = ''
+    127.0.0.1       localniuhi.dev
+    127.0.0.1       api.localniuhi.dev
+    127.0.0.1       kmc.localniuhi.dev
+    127.0.0.1       mobile.localniuhi.dev
+    127.0.0.1       partner.localniuhi.dev
+  '';
+
   networking.firewall.allowedTCPPortRanges = [
     # KDE Connect
     {

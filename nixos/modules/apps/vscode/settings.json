@@ -8,7 +8,8 @@
   "remote.SSH.remotePlatform": {
     "NoodleFish_Dev": "linux",
     "Komodo_Dev": "linux",
-    "Komodo_Laptop": "linux"
+    "Komodo_Laptop": "linux",
+    "OldNoodleFish_Dev": "linux"
   },
   "redhat.telemetry.enabled": false,
   "workbench.activityBar.location": "top",
@@ -64,7 +65,7 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
@@ -77,11 +78,11 @@
     "https://json-schema.org/": true,
     "https://biomejs.dev": true
   },
-  "chat.viewSessions.orientation": "stacked",
   "editor.fontFamily": "'Monaspace Neon', 'Symbols Nerd Font Mono', monospace",
   "editor.fontLigatures": "'calt', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09', 'ss10', 'liga'",
   "terminal.integrated.fontFamily": "Monaspace Neon",
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "chat.viewSessions.orientation": "stacked"
 }

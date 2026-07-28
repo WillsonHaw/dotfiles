@@ -23,36 +23,6 @@
 
   zramSwap.enable = true;
 
-  # Common dev ports
-  networking.firewall = {
-    allowedTCPPorts = [
-      3333
-      5173
-      5037
-      5555
-      5901
-      6080
-    ];
-    allowedTCPPortRanges = [
-      {
-        from = 3000;
-        to = 3010;
-      }
-      {
-        from = 3200;
-        to = 3210;
-      }
-      {
-        from = 8000;
-        to = 8010;
-      }
-      {
-        from = 8080;
-        to = 8090;
-      }
-    ];
-  };
-
   # Headless by default — VSCode Remote SSH connects to sshd. The vscode-server
   # module patches the binaries VSCode pushes to ~/.vscode-server so they
   # actually run on NixOS. Hosts that combine this role with a desktop env

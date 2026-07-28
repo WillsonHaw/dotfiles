@@ -32,6 +32,36 @@
     "kvm"
   ];
 
+  # Common dev ports
+  networking.firewall = {
+    allowedTCPPorts = [
+      3333
+      5173
+      5037
+      5555
+      5901
+      6080
+    ];
+    allowedTCPPortRanges = [
+      {
+        from = 3000;
+        to = 3010;
+      }
+      {
+        from = 3200;
+        to = 3210;
+      }
+      {
+        from = 8000;
+        to = 8010;
+      }
+      {
+        from = 8080;
+        to = 8090;
+      }
+    ];
+  };
+
   # Plenty of third-party build tooling (Unreal Engine, etc.) hardcodes
   # #!/bin/bash shebangs and chain-execs sibling scripts directly, which
   # breaks on NixOS since only /bin/sh is provisioned by default.
