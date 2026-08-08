@@ -126,16 +126,32 @@ if (!userId) {
 ### 6. Remove unnecessary comments
 
 - Delete WHAT-comments — they duplicate what good names already say.
-- KEEP WHY-comments — hidden constraints, subtle invariants, workarounds, rule-nuance explanations.
-- When in doubt, keep.
+- Delete WHY-comments too if the "why" is something a competent developer already knows (standard language/framework behavior) or would infer from reading the surrounding code for a few seconds. A comment has to earn its keep by saying something the code can't.
+- Delete comments that narrate the internals of a *different* file/module/library instead of explaining the code they actually sit next to. If removing the comment would only cost the reader knowledge about some other file, it doesn't belong here.
+- This applies to JSDoc too — being a doc block doesn't exempt it from the same test. Keep JSDoc that's functionally consumed by something (drives a generated UI, a type, a doc site) or documents a non-obvious contract; cut JSDoc that just restates the function's name/signature.
+- KEEP comments only for things that aren't otherwise discoverable: race conditions and concurrency invariants, a workaround for a specific external/third-party bug, a hidden constraint imposed by a spec or another system, or a cross-file convention unique to this codebase.
+- When in doubt, apply the test above rather than defaulting to keep — most borderline comments turn out to be safe to cut.
 
 ```ts
 // ❌ WHAT-comment
 // Increment counter
 counter++
 
-// ✅ WHY-comment
-// MCR spec §6.2: kong replacement draws from the dead wall, not the live wall.
+// ❌ WHY, but still delete — standard framework knowledge, not specific to this code
+// Keying on the id forces a fresh mount instead of a manual reset.
+<Item key={item.id} />
+
+// ❌ narrates another file's internals instead of explaining this code
+// so mount-controller's MutationObserver picks it up
+function renderHook() { /* ... */ }
+
+// ✅ WHY worth keeping — a real, non-obvious invariant local to this code
+// Two mutation records for the same insertion can land in one observer
+// callback, so the promise must be recorded synchronously, before any
+// `await`, so a second call in the same tick sees it.
+if (mountedParcels.has(hook)) return Promise.resolve()
+
+// ✅ WHY worth keeping — MCR spec §6.2, not derivable from reading the code
 const replacement = deadWall.pop()
 ```
 

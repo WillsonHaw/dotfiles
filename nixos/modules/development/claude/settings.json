@@ -1,4 +1,6 @@
 {
-  "defaultMode": "auto",
+  "permissions": {
+    "defaultMode": "auto"
+  },
   "theme": "dark"
 }

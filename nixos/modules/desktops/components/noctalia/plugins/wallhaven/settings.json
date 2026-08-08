@@ -15,13 +15,17 @@
     "3k3pyv",
     "l8xler",
     "5d6l61",
-    "jxp26p"
+    "jxp26p",
+    "ml1k3k",
+    "r77pm7",
+    "xl86gv",
+    "8o3v3y"
   ],
-  "activeProfile": 1,
+  "activeProfile": 0,
   "profiles": [
     {
       "name": "Profile 1",
-      "tags": "game",
+      "tags": "id:75437",
       "sfw": true,
       "sketchy": false,
       "nsfw": false,
@@ -34,9 +38,9 @@
     },
     {
       "name": "Profile 2",
-      "tags": "women",
+      "tags": "women woman",
       "sfw": false,
-      "sketchy": true,
+      "sketchy": false,
       "nsfw": true,
       "general": true,
       "anime": true,
