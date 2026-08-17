@@ -13,11 +13,7 @@
   },
   "redhat.telemetry.enabled": false,
   "workbench.activityBar.location": "top",
-  "cSpell.userWords": [
-    "callees",
-    "Pressable",
-    "Workerized"
-  ],
+  "cSpell.userWords": ["callees", "Pressable", "Workerized"],
   "security.workspace.trust.untrustedFiles": "open",
   "editor.formatOnSave": true,
   "files.trimTrailingWhitespace": true,
@@ -26,10 +22,7 @@
   "workbench.editor.enablePreview": true,
   "workbench.editor.wrapTabs": true,
   "window.density.editorTabHeight": "compact",
-  "security.allowedUNCHosts": [
-    "slumpy-vm-home",
-    "slumpy-vm-komodo"
-  ],
+  "security.allowedUNCHosts": ["slumpy-vm-home", "slumpy-vm-komodo"],
   "eslint.workingDirectories": [
     {
       "mode": "auto"
@@ -59,13 +52,12 @@
   },
   "workbench.startupEditor": "none",
   "explorer.confirmDragAndDrop": false,
-  "gitlens.ai.model": "vscode",
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "[javascript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
@@ -84,5 +76,7 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "chat.viewSessions.orientation": "stacked"
+  "chat.viewSessions.orientation": "stacked",
+  "uetools.unrealEngineInstallationSearchPath": "D:\\Apps",
+  "git.openRepositoryInParentFolders": "always"
 }

@@ -86,3 +86,9 @@ Home-manager is integrated at the NixOS module level in `users/slumpy.nix` with 
 - `extraSpecialArgs = { inherit inputs; }` — wrapped, not spread
 - `system.stateVersion` is set per-host, never in common.nix
 - Catppuccin theming via `inputs.catppuccin.{nixosModules,homeModules}.catppuccin`
+
+## Agent skills
+
+### Domain docs
+
+Single-context layout: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

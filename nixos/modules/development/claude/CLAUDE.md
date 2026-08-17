@@ -1,6 +1,6 @@
-# Global Code Style (Willson)
+# Global Code Style
 
-Formatting rules for all TypeScript/JavaScript code I generate for Willson, across every project. Apply on every edit — the goal is visual breathing room and explicit control flow.
+Formatting rules for all TypeScript/JavaScript code I generate, across every project. Apply on every edit — the goal is visual breathing room and explicit control flow.
 
 ---
 
@@ -12,16 +12,16 @@ No single-line control flow.
 
 ```ts
 // ❌
-if (x) return
-for (const t of list) doThing(t)
+if (x) return;
+for (const t of list) doThing(t);
 
 // ✅
 if (x) {
-  return
+  return;
 }
 
 for (const t of list) {
-  doThing(t)
+  doThing(t);
 }
 ```
 
@@ -38,16 +38,16 @@ Exceptions:
 ```ts
 // ✅
 if (x) {
-  doA()
+  doA();
 }
 
-doB()
+doB();
 
 // ✅ (chain — no blank)
 if (x) {
-  a()
+  a();
 } else {
-  b()
+  b();
 }
 ```
 
@@ -63,20 +63,22 @@ A "group" is any run of adjacent `const`/`let` lines (single-line or multi-line)
 
 ```ts
 // ❌
-const a = 1
+const a = 1;
 
-const b = 2
-const c = 3
+const b = 2;
+const c = 3;
 
 // ✅
-const a = 1
-const b = 2
-const c = 3
+const a = 1;
+const b = 2;
+const c = 3;
 
 // ✅ (multi-line declaration doesn't break the group)
-const db = getDb(env.DB)
-const users = await db.select({ id: schema.user.id, name: schema.user.name }).from(schema.user)
-const roles = await db.select().from(schema.role)
+const db = getDb(env.DB);
+const users = await db
+  .select({ id: schema.user.id, name: schema.user.name })
+  .from(schema.user);
+const roles = await db.select().from(schema.role);
 ```
 
 ### 4. Blank line before every `return` statement
@@ -86,19 +88,19 @@ UNLESS the `return` is the first/only statement inside its immediately-enclosing
 ```ts
 // ✅ solo return — fine as-is
 if (x) {
-  return
+  return;
 }
 
 if (x) {
-  return y
+  return y;
 }
 
 // ✅ return after other statements — blank before
 function f() {
-  doA()
-  doB()
+  doA();
+  doB();
 
-  return result
+  return result;
 }
 ```
 
@@ -110,16 +112,16 @@ This applies regardless of what precedes it — a declaration, function call, as
 
 ```ts
 // ❌
-const userId = req.headers.get('x-ws-user')
+const userId = req.headers.get("x-ws-user");
 if (!userId) {
-  throw new Error('missing')
+  throw new Error("missing");
 }
 
 // ✅
-const userId = req.headers.get('x-ws-user')
+const userId = req.headers.get("x-ws-user");
 
 if (!userId) {
-  throw new Error('missing')
+  throw new Error("missing");
 }
 ```
 
@@ -127,7 +129,7 @@ if (!userId) {
 
 - Delete WHAT-comments — they duplicate what good names already say.
 - Delete WHY-comments too if the "why" is something a competent developer already knows (standard language/framework behavior) or would infer from reading the surrounding code for a few seconds. A comment has to earn its keep by saying something the code can't.
-- Delete comments that narrate the internals of a *different* file/module/library instead of explaining the code they actually sit next to. If removing the comment would only cost the reader knowledge about some other file, it doesn't belong here.
+- Delete comments that narrate the internals of a _different_ file/module/library instead of explaining the code they actually sit next to. If removing the comment would only cost the reader knowledge about some other file, it doesn't belong here.
 - This applies to JSDoc too — being a doc block doesn't exempt it from the same test. Keep JSDoc that's functionally consumed by something (drives a generated UI, a type, a doc site) or documents a non-obvious contract; cut JSDoc that just restates the function's name/signature.
 - KEEP comments only for things that aren't otherwise discoverable: race conditions and concurrency invariants, a workaround for a specific external/third-party bug, a hidden constraint imposed by a spec or another system, or a cross-file convention unique to this codebase.
 - When in doubt, apply the test above rather than defaulting to keep — most borderline comments turn out to be safe to cut.
@@ -164,3 +166,54 @@ const replacement = deadWall.pop()
 - Any project may provide its own `docs/CODE_STYLE.md` that mirrors or extends these rules — read it first if present.
 - **Project formatters take precedence over these manual rules.** If a project's formatter (oxfmt, Prettier, Biome, etc.) reflows code in a way that conflicts with these rules, follow the formatter's output. Do not fight the project's toolchain.
 - Project lint and test suites should remain green after any cleanup.
+
+# Global Documentation Style
+
+Formatting and tone rules for documentation, proposals, and other long-form prose I write, across every project.
+
+---
+
+## Rules
+
+### 1. No em-dashes unless absolutely necessary
+
+Use commas, periods, colons, or parentheses instead.
+
+```md
+❌ The registry re-derives its answer from scratch — there's no cache layer.
+✅ The registry re-derives its answer from scratch. There's no cache layer.
+```
+
+### 2. No "Section #.#" style backreferences
+
+Link the descriptive text in context instead of naming the section number.
+
+```md
+❌ See Section 4.2 for the scoped-token design.
+✅ See [the scoped-token design](#42-open-problem-end-user-identity-and-scoped-access).
+```
+
+### 3. Keep prose concise and to the point
+
+Avoid restating caveats or padding paragraphs with redundant hedging. Say a thing once, clearly, and move on.
+
+### 4. Describe the current state directly, don't narrate revision history
+
+When rewriting a doc to reflect a new or current design, write it as if it's the first version. Don't contrast against an earlier version of the same document ("the original proposal said...", "this used to work differently") unless the user explicitly asks for that framing. It's fine, and often necessary, to be honest that something isn't built yet or is an open question; just state it plainly rather than as a comparison to the document's own past.
+
+### 5. No semicolons where a period would suffice
+
+Split into two sentences instead of joining independent clauses with a semicolon. Where a period would genuinely read awkwardly (a short parenthetical aside, a list of brief examples), restructure with a comma and a conjunction instead of reaching for a semicolon.
+
+```md
+❌ The Registry never scans the filesystem in production; it queries a database instead.
+✅ The Registry never scans the filesystem in production. It queries a database instead.
+```
+
+---
+
+## How to apply
+
+- Apply all five rules on every edit to documentation or prose — don't wait to be asked.
+- On a rewrite or cleanup pass, treat all five rules as strict.
+- These rules apply to markdown docs, proposals, READMEs, and other long-form written content. They don't apply to code comments (see the code-comment rules above) or to short conversational replies.

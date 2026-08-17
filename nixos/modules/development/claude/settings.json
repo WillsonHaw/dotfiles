@@ -2,5 +2,16 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "theme": "dark"
+  "theme": "dark",
+  "extraKnownMarketplaces": {
+    "mattpocock": {
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "mattpocock-skills@mattpocock": true
+  }
 }
