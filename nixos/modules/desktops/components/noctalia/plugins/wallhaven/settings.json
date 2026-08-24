@@ -21,7 +21,7 @@
     "xl86gv",
     "8o3v3y"
   ],
-  "activeProfile": 0,
+  "activeProfile": 1,
   "profiles": [
     {
       "name": "Profile 1",
@@ -38,9 +38,9 @@
     },
     {
       "name": "Profile 2",
-      "tags": "women woman",
+      "tags": "sexy",
       "sfw": false,
-      "sketchy": false,
+      "sketchy": true,
       "nsfw": true,
       "general": true,
       "anime": true,

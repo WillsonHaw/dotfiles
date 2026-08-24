@@ -11,6 +11,8 @@
     ../dev-base.nix
     ../desktop-base.nix
     ./hardware-configuration.nix
+    ./komodo-dev-wordpress.nix
+    ./webcam.nix
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
@@ -28,6 +30,7 @@
     systemd-boot.enable = true;
     systemd-boot.configurationLimit = 10;
     efi.canTouchEfiVariables = true;
+    timeout = 5;
   };
 
   boot.resumeDevice = "/dev/disk/by-uuid/2527fdc0-04be-4c92-80e9-bc6784e70bfa";

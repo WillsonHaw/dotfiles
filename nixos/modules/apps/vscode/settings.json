@@ -78,5 +78,6 @@
   },
   "chat.viewSessions.orientation": "stacked",
   "uetools.unrealEngineInstallationSearchPath": "D:\\Apps",
-  "git.openRepositoryInParentFolders": "always"
+  "git.openRepositoryInParentFolders": "always",
+  "claudeCode.preferredLocation": "panel"
 }

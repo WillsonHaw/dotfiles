@@ -127,34 +127,50 @@ if (!userId) {
 
 ### 6. Remove unnecessary comments
 
-- Delete WHAT-comments — they duplicate what good names already say.
-- Delete WHY-comments too if the "why" is something a competent developer already knows (standard language/framework behavior) or would infer from reading the surrounding code for a few seconds. A comment has to earn its keep by saying something the code can't.
-- Delete comments that narrate the internals of a _different_ file/module/library instead of explaining the code they actually sit next to. If removing the comment would only cost the reader knowledge about some other file, it doesn't belong here.
-- This applies to JSDoc too — being a doc block doesn't exempt it from the same test. Keep JSDoc that's functionally consumed by something (drives a generated UI, a type, a doc site) or documents a non-obvious contract; cut JSDoc that just restates the function's name/signature.
-- KEEP comments only for things that aren't otherwise discoverable: race conditions and concurrency invariants, a workaround for a specific external/third-party bug, a hidden constraint imposed by a spec or another system, or a cross-file convention unique to this codebase.
-- When in doubt, apply the test above rather than defaulting to keep — most borderline comments turn out to be safe to cut.
+Strict bar: a comment earns its place only if the code directly beneath it would still be hard to parse *as code* with the comment covered up. Test it literally: hide the comment, read only the code. If the code is still confusing purely as code (a dense regex, a concurrency race, a timing-attack-safe comparison, non-obvious bitwise or geometric logic), keep the comment. If the code reads cleanly once the comment is gone, and all the comment was doing was explaining a decision, a bug's history, an invariant, or a cross-file convention, delete it, even when that explanation is true and genuinely useful to know.
+
+This is stricter than "does the comment add information the code can't say." A comment can be accurate, non-obvious, and still worth deleting, if what it explains is *why this exists* rather than *what makes this code hard to read*.
+
+Delete, even when instinct says keep:
+
+- WHAT-comments that just restate what a good name already says.
+- Architecture or design-rationale comments ("why this hook runs here", "why this is split into two files", security-design explanations).
+- Comments explaining a historical bug or a workaround, unless the workaround code itself is genuinely intricate, not just a simple line with a confusing backstory.
+- A hidden constraint imposed by a spec, another system, or a cross-file convention, unless the surrounding code is also hard to parse without it.
+- JSDoc restating a contract, an invariant, or a design tradeoff.
+- Comments that narrate the internals of a _different_ file or library instead of the code they sit next to.
+
+KEEP only:
+
+- Comments sitting directly above code a competent reader would still find hard to parse on its own: tricky regexes, concurrent cache-eviction races, timing-attack-safe comparisons, non-obvious bitwise, geometric, or algorithmic logic.
+- JSDoc and pragmas actually consumed by tooling, not just descriptive (`@vitest-environment`, a type a codegen step reads, prop metadata a build step extracts into a schema). Deleting these breaks real behavior, not just prose.
+
+Applies equally to config files (`.env`, `.dev.vars`, `wrangler.toml`, and similar), not only source code. A `KEY=value` line is never "intricate code" no matter how non-obvious the variable's purpose is, so explanatory comments there get the same treatment: a bare copy-instruction if genuinely needed, nothing more. Let the README carry the "what is this for" and "how do I get one" explanation instead of duplicating it above every variable.
 
 ```ts
 // ❌ WHAT-comment
 // Increment counter
 counter++
 
-// ❌ WHY, but still delete — standard framework knowledge, not specific to this code
+// ❌ WHY, but still delete — explains a design decision, not confusing code
 // Keying on the id forces a fresh mount instead of a manual reset.
 <Item key={item.id} />
 
-// ❌ narrates another file's internals instead of explaining this code
-// so mount-controller's MutationObserver picks it up
-function renderHook() { /* ... */ }
-
-// ✅ WHY worth keeping — a real, non-obvious invariant local to this code
+// ❌ WHY, but still delete — a real, true, non-obvious invariant, but the
+// code below reads fine once you know it; the comment covers a *decision*,
+// not untangled *code*
 // Two mutation records for the same insertion can land in one observer
 // callback, so the promise must be recorded synchronously, before any
 // `await`, so a second call in the same tick sees it.
 if (mountedParcels.has(hook)) return Promise.resolve()
 
-// ✅ WHY worth keeping — MCR spec §6.2, not derivable from reading the code
+// ❌ WHY, but still delete — MCR spec §6.2, true and non-obvious, but the
+// line itself isn't hard to parse once you know that fact
 const replacement = deadWall.pop()
+
+// ✅ keep — the regex itself is what's hard to parse, not a design choice
+// MAJOR.MINOR.PATCH, optional -prerelease and +build metadata
+const SEMVER_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-.+)?$/
 ```
 
 ---
