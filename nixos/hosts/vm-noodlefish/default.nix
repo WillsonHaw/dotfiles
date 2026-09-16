@@ -15,4 +15,10 @@
 
   # Set during first install — adjust to match the NixOS release you install from.
   system.stateVersion = "25.11";
+
+  noodles = {
+    development = {
+      free-claude-code.enable = true;
+    };
+  };
 }
