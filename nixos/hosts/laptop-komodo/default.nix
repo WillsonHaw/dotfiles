@@ -90,6 +90,12 @@
     ];
   };
 
+  home-manager.users.${config.noodles.user} = {
+    programs.zsh.shellAliases = {
+      ue = "~/libs/UnrealEngine/RunEditor.sh";
+    };
+  };
+
   noodles = {
     development = {
       node.enable = true;
@@ -97,6 +103,7 @@
 
     services = {
       nginx.enable = true;
+      git.lfs.enable = true;
       nfs = {
         enable = true;
         openFirewall = true;
@@ -136,6 +143,7 @@
       waynergy.enable = true;
       browsers.edge.enable = true;
       herdr.enable = true;
+      obsidian.enable = true;
     };
 
     system.display.externalDisplays = [
@@ -168,6 +176,7 @@
     development = {
       adb.enable = true;
       volta.enable = true;
+      free-claude-code.enable = true;
     };
   };
 }

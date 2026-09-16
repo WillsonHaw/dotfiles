@@ -21,44 +21,54 @@ let
   };
 in
 {
-  home-manager.users.${config.noodles.user} = {
-    home.packages = [ git-init-keys ];
+  options.noodles.services.git.lfs.enable = lib.mkEnableOption "Git LFS support";
 
-    programs.git = {
-      enable = true;
-      # signingkey is per-host (depends on the generated GPG fingerprint), so
-      # git-init-keys writes it to ~/.config/git/config.local instead.
-      includes = [ { path = "~/.config/git/config.local"; } ];
-      settings = {
-        init.defaultBranch = "main";
-        pull.rebase = true;
-        push.autoSetupRemote = true;
-        column.ui = "auto";
-        branch.sort = "-committerdate";
+  config = lib.mkMerge [
+    {
+      home-manager.users.${config.noodles.user} = {
+        home.packages = [ git-init-keys ];
 
-        commit.gpgsign = true;
-        tag.gpgsign = true;
+        programs.git = {
+          enable = true;
+          # signingkey is per-host (depends on the generated GPG fingerprint), so
+          # git-init-keys writes it to ~/.config/git/config.local instead.
+          includes = [ { path = "~/.config/git/config.local"; } ];
+          settings = {
+            init.defaultBranch = "main";
+            pull.rebase = true;
+            push.autoSetupRemote = true;
+            column.ui = "auto";
+            branch.sort = "-committerdate";
 
-        user = {
-          name = "WillsonHaw";
-          email = "willsonhaw@gmail.com";
-        };
+            commit.gpgsign = true;
+            tag.gpgsign = true;
 
-        alias = {
-          st = "status";
-          wc = "log --raw --no-merges";
-          cp = "cherry-pick";
-          co = "checkout";
-          pu = "pull -r";
-          rc = "rebase --continue";
-          pd = "fetch origin develop:develop";
-          pm = "fetch origin main:main";
-          undo-ci = "reset --soft HEAD~";
-          fixup = "!sh -c 'REV=$(git rev-parse $1) && git commit --fixup $@ && git rebase -i --autostash --autosquash $REV^' -";
-          cleanup = "!git branch --merged | grep -v -P '^\\*|master|main|develop|staging' | xargs -n1 -r git branch -d";
-          l = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit --no-merges";
+            user = {
+              name = "WillsonHaw";
+              email = "willsonhaw@gmail.com";
+            };
+
+            alias = {
+              st = "status";
+              wc = "log --raw --no-merges";
+              cp = "cherry-pick";
+              co = "checkout";
+              pu = "pull -r";
+              rc = "rebase --continue";
+              pd = "fetch origin develop:develop";
+              pm = "fetch origin main:main";
+              undo-ci = "reset --soft HEAD~";
+              fixup = "!sh -c 'REV=$(git rev-parse $1) && git commit --fixup $@ && git rebase -i --autostash --autosquash $REV^' -";
+              cleanup = "!git branch --merged | grep -v -P '^\\*|master|main|develop|staging' | xargs -n1 -r git branch -d";
+              l = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit --no-merges";
+            };
+          };
         };
       };
-    };
-  };
+    }
+
+    (lib.mkIf config.noodles.services.git.lfs.enable {
+      home-manager.users.${config.noodles.user}.programs.git.lfs.enable = true;
+    })
+  ];
 }

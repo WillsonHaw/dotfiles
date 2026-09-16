@@ -21,7 +21,7 @@
     "xl86gv",
     "8o3v3y"
   ],
-  "activeProfile": 1,
+  "activeProfile": 0,
   "profiles": [
     {
       "name": "Profile 1",
@@ -45,7 +45,7 @@
       "general": true,
       "anime": true,
       "people": true,
-      "localOnly": false,
+      "localOnly": true,
       "displayTimeMs": 300000,
       "coverMode": false
     },

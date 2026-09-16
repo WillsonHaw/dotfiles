@@ -100,6 +100,7 @@
           bright-down = "brillo -q -U 5";
           pp = "pnpm";
           gp = "git push";
+          gl = "git log";
 
           # VPN
           wg-up = "sudo systemctl start wg-quick-wg0.service";

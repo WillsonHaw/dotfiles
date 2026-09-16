@@ -226,10 +226,43 @@ Split into two sentences instead of joining independent clauses with a semicolon
 ✅ The Registry never scans the filesystem in production. It queries a database instead.
 ```
 
+### 6. Match implementation detail to the doc's purpose, and never duplicate a fact across documents or sections
+
+A README documents how to install, run, and call a package: quick start, its public API/CLI surface, configuration, scripts, and pointers to related packages. It is not the place to explain *why* an internal mechanism works the way it does, or to walk through its internal request/data flow, unless the package's own README is the only spec that mechanism has. Where a project has a dedicated architecture or spec doc, internal design and rationale belong there instead.
+
+Within any single doc, state a given fact, mechanism, or list (an API's routes, a data model, a rule) in exactly one place, in the section that owns it. When another section needs it, link to the owning section instead of restating it, even partially or in summary. If restating starts to feel necessary to keep a section readable on its own, that's a sign the fact belongs at a higher, shared level both sections can link to, not that it should be copied.
+
+```md
+❌ (a package's README) Resolves components via a KV-shaped lookup: `GET /components/:pkg/:name`
+   returns `{name, serviceUrl}`, `PUT /components/:pkg/:name` publishes a version and rejects
+   overwriting one that already has content because published versions are immutable...
+✅ (that same README) Resolves components from Cloudflare KV. See [the API section](#api) for routes.
+
+❌ (an architecture doc's overview section) restates the exact route list and status codes a later
+   section already spells out in full.
+✅ (that overview section) "The read routes and what they return are described under
+   [component discovery](#5-...). How a version is published or rolled back is described under
+   [versioning](#...)."
+```
+
+### 7. Colons only where they set up what follows
+
+A colon should signal that what directly follows it completes it: a list, an example, a direct quote, or a short label's definition. Don't reach for a colon as a softer period to glue two independent clauses together, the way `;` sometimes gets misused. If the clause after the colon is a full sentence that doesn't itemize, exemplify, or directly define what came before, split it into its own sentence instead.
+
+```md
+❌ The registry has no in-process cache: every request reads KV directly.
+✅ The registry has no in-process cache. Every request reads KV directly.
+
+✅ The registry exposes three read routes: a listing, a single-component summary, and a manifest.
+✅ `tagName`: the custom element the rendered markup hydrates through.
+```
+
 ---
 
 ## How to apply
 
-- Apply all five rules on every edit to documentation or prose — don't wait to be asked.
-- On a rewrite or cleanup pass, treat all five rules as strict.
-- These rules apply to markdown docs, proposals, READMEs, and other long-form written content. They don't apply to code comments (see the code-comment rules above) or to short conversational replies.
+- Apply all seven rules on every edit to documentation or prose — don't wait to be asked.
+- On a rewrite or cleanup pass, treat all seven rules as strict.
+- These rules apply to markdown docs, proposals, READMEs, and other long-form written content, and to the prose inside code comments (the words themselves, not the code they document). They don't apply to short conversational replies.
+
+@RTK.md

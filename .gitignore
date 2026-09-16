@@ -13,3 +13,6 @@ id_ecdsa*
 .env.*
 config.local
 *.local
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
