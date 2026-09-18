@@ -58,7 +58,7 @@ in
 
       preStart = ''
         if [ ! -x "${venvDir}/bin/invokeai-web" ]; then
-          uv venv --relocatable --prompt invoke --python 3.12 --python-preference only-managed "${venvDir}"
+          uv venv --clear --relocatable --prompt invoke --python 3.12 --python-preference only-managed "${venvDir}"
           uv pip install --python "${venvDir}/bin/python" "invokeai==${version}" --torch-backend=cu128
         fi
 
@@ -79,6 +79,8 @@ in
         ExecStart = "${venvDir}/bin/invokeai-web --root ${rootDir}";
         Restart = "always";
         RestartSec = "5s";
+        # First run downloads several GB of CUDA/PyTorch wheels, well past systemd's default 90s.
+        TimeoutStartSec = "infinity";
 
         NoNewPrivileges = true;
         DevicePolicy = "closed";
