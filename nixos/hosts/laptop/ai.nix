@@ -5,6 +5,7 @@
     ollama.enable = true;
     open-webui.enable = true;
     invokeai.enable = true;
+    comfyui.enable = true;
 
     # Traefik (10.0.0.9 plus its known LAN addresses) and Tailscale's CGNAT range.
     allowedSources = [
