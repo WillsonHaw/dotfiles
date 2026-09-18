@@ -31,6 +31,16 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # opencv-python (an InvokeAI dependency) is a prebuilt wheel expecting
+    # standard FHS shared libraries nix-ld doesn't provide by default.
+    programs.nix-ld.libraries = with pkgs; [
+      libGL
+      glib
+      libSM
+      libXext
+      libXrender
+    ];
+
     users.groups.invokeai = { };
     users.users.invokeai = {
       isSystemUser = true;
