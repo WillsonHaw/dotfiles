@@ -67,9 +67,10 @@ in
       };
 
       preStart = ''
-        if [ ! -x "${venvDir}/bin/invokeai-web" ]; then
+        if [ ! -f "${venvDir}/.install-complete" ]; then
           uv venv --clear --relocatable --prompt invoke --python 3.12 --python-preference only-managed "${venvDir}"
           uv pip install --python "${venvDir}/bin/python" "invokeai==${version}" --torch-backend=cu128
+          touch "${venvDir}/.install-complete"
         fi
 
         if [ ! -f "${rootDir}/invokeai.yaml" ]; then

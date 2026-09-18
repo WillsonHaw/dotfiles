@@ -77,10 +77,11 @@ in
       };
 
       preStart = ''
-        if [ ! -x "${venvDir}/bin/python" ]; then
+        if [ ! -f "${venvDir}/.install-complete" ]; then
           uv venv --clear --relocatable --prompt comfyui --python 3.13 --python-preference only-managed "${venvDir}"
           uv pip install --python "${venvDir}/bin/python" torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130
           uv pip install --python "${venvDir}/bin/python" -r ${comfyuiSrc}/requirements.txt
+          touch "${venvDir}/.install-complete"
         fi
       '';
 
