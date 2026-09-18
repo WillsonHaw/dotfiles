@@ -34,6 +34,7 @@
   };
 
   imports = [
+    ./ai
     ./apps
     ./desktops
     ./development

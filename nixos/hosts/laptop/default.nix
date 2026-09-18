@@ -11,6 +11,7 @@
     ../desktop-base.nix
     ./hardware-configuration.nix
     ./graphics.nix
+    ./ai.nix
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;

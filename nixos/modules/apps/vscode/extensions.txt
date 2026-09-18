@@ -31,6 +31,7 @@ prisma.prisma
 redhat.vscode-xml
 redhat.vscode-yaml
 rentalhost.npm-outdated-plus
+saoudrizwan.claude-dev
 serverpod.serverpod
 seyyedkhandon.firacode
 stylelint.vscode-stylelint
