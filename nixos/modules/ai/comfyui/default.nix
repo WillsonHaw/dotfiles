@@ -74,6 +74,10 @@ in
       environment = {
         HOME = dataDir;
         XDG_CACHE_HOME = "${dataDir}/.cache";
+        # torch's pip wheel bundles CUDA's math libraries but not the driver's
+        # userspace libs (libcuda.so, libnvidia-ml.so) - on NixOS those live
+        # under /run/opengl-driver/lib instead of a standard FHS path.
+        LD_LIBRARY_PATH = "/run/opengl-driver/lib";
       };
 
       preStart = ''
