@@ -20,7 +20,7 @@ in
       description = "TCP port wayvnc listens on.";
     };
 
-    openFirewall = lib.mkEnableOption "Open the wayvnc port on the Tailscale interface";
+    openFirewall = lib.mkEnableOption "Open the wayvnc port in the firewall";
   };
 
   config = lib.mkIf cfg.enable (
@@ -28,9 +28,7 @@ in
       rootConfig = config;
     in
     {
-      networking.firewall.interfaces."tailscale0".allowedTCPPorts = lib.mkIf cfg.openFirewall [
-        cfg.port
-      ];
+      networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.port ];
 
       home-manager.users.${rootConfig.noodles.user} =
         { config, ... }:
