@@ -27,6 +27,9 @@
       wallhaven_key = {
         owner = config.noodles.user;
       };
+      wayvnc_pw = {
+        owner = config.noodles.user;
+      };
     };
   };
 

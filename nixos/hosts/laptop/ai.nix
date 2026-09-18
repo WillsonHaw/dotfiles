@@ -16,4 +16,8 @@
       "100.64.0.0/10"
     ];
   };
+
+  # Lets InvokeAI read (not write) ComfyUI's models/ folder, so both tools can
+  # reference the same downloaded checkpoints instead of duplicating them.
+  users.users.invokeai.extraGroups = [ "comfyui" ];
 }

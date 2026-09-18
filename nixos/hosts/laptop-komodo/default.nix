@@ -104,6 +104,10 @@
     services = {
       nginx.enable = true;
       git.lfs.enable = true;
+      wayvnc = {
+        enable = true;
+        openFirewall = true;
+      };
       nfs = {
         enable = true;
         openFirewall = true;
