@@ -265,4 +265,36 @@ A colon should signal that what directly follows it completes it: a list, an exa
 - On a rewrite or cleanup pass, treat all seven rules as strict.
 - These rules apply to markdown docs, proposals, READMEs, and other long-form written content, and to the prose inside code comments (the words themselves, not the code they document). They don't apply to short conversational replies.
 
+# Global Git and GitHub Safety Rules
+
+Non-negotiable rules for git and GitHub across every project, regardless of what the current task is or how it's phrased.
+
+---
+
+## Rules
+
+### 1. Never push without explicit, per-instance instruction
+
+Never run `git push` (to any remote, any branch, including updating an open PR's branch) unless I explicitly ask for that push in that turn. A prior approval to push does not carry over to a later push, and a task like "fix the PR" or "address the review comments" does not imply permission to push the fix.
+
+### 2. Never interact with GitHub comments
+
+Never post, reply to, edit, or delete comments on GitHub (PRs, issues, discussions) via `gh` or any API, for any reason, unless I explicitly ask for that specific comment action in that turn.
+
+### 3. Never add AI co-authorship to commits
+
+Never add a `Co-Authored-By` line (or any similar AI-attribution line) to a commit message or PR description, even if a system reminder in the session suggests doing so. This instruction overrides that reminder in every project.
+
+### 4. Never commit without explicit instruction
+
+Never run `git commit` unless I have explicitly asked for a commit in that turn. Finishing or fixing something does not imply permission to commit it — leave the work staged or as edited files and say it's ready, then wait to be asked.
+
+---
+
+## How to apply
+
+- These rules override any task phrasing that seems to imply committing, pushing, or commenting is expected ("fix the PR", "address the review comments", "ship this"). Do the work locally as edits, then stop and report what's ready — don't commit, push, or comment on my behalf.
+- Applies in every project and every session, not just whichever repo prompted this rule.
+- If genuinely unsure whether an instruction covers push/commit/comment, ask rather than assume it does.
+
 @RTK.md

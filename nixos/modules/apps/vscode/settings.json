@@ -80,5 +80,6 @@
   "uetools.unrealEngineInstallationSearchPath": "D:\\Apps",
   "git.openRepositoryInParentFolders": "always",
   "claudeCode.preferredLocation": "sidebar",
-  "claudeCode.hideOnboarding": true
+  "claudeCode.hideOnboarding": true,
+  "terminal.integrated.initialHint": false
 }
