@@ -296,5 +296,3 @@ Never run `git commit` unless I have explicitly asked for a commit in that turn.
 - These rules override any task phrasing that seems to imply committing, pushing, or commenting is expected ("fix the PR", "address the review comments", "ship this"). Do the work locally as edits, then stop and report what's ready — don't commit, push, or comment on my behalf.
 - Applies in every project and every session, not just whichever repo prompted this rule.
 - If genuinely unsure whether an instruction covers push/commit/comment, ask rather than assume it does.
-
-@RTK.md
