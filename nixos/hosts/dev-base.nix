@@ -68,6 +68,7 @@
         to = 5250;
       }
     ];
+    trustedInterfaces = [ "docker0" ];
   };
 
   # Plenty of third-party build tooling (Unreal Engine, etc.) hardcodes

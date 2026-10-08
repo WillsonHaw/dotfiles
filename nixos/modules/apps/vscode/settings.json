@@ -81,5 +81,6 @@
   "git.openRepositoryInParentFolders": "always",
   "claudeCode.preferredLocation": "sidebar",
   "claudeCode.hideOnboarding": true,
-  "terminal.integrated.initialHint": false
+  "terminal.integrated.initialHint": false,
+  "clangd.detectExtensionConflicts": false
 }
