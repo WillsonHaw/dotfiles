@@ -19,9 +19,11 @@
     "ml1k3k",
     "r77pm7",
     "xl86gv",
-    "8o3v3y"
+    "8o3v3y",
+    "5wjjr7",
+    "85jd2k"
   ],
-  "activeProfile": 2,
+  "activeProfile": 0,
   "profiles": [
     {
       "name": "Profile 1",
@@ -38,14 +40,14 @@
     },
     {
       "name": "Profile 2",
-      "tags": "sexy",
+      "tags": "",
       "sfw": false,
       "sketchy": true,
       "nsfw": true,
       "general": true,
       "anime": true,
       "people": true,
-      "localOnly": true,
+      "localOnly": false,
       "displayTimeMs": 300000,
       "coverMode": false
     },

@@ -92,7 +92,7 @@
 
   home-manager.users.${config.noodles.user} = {
     programs.zsh.shellAliases = {
-      ue = "~/libs/UnrealEngine/RunEditor.sh";
+      ue = "~/libs/UnrealEngine_5.8/RunEditor.sh";
     };
   };
 
@@ -148,6 +148,7 @@
       browsers.edge.enable = true;
       herdr.enable = true;
       obsidian.enable = true;
+      capture.wf-recorder.enable = true;
     };
 
     system.display.externalDisplays = [

@@ -82,5 +82,9 @@
   "claudeCode.preferredLocation": "sidebar",
   "claudeCode.hideOnboarding": true,
   "terminal.integrated.initialHint": false,
-  "clangd.detectExtensionConflicts": false
+  "clangd.detectExtensionConflicts": false,
+  "[markdown]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "js/ts.experimental.useTsgo": true
 }
