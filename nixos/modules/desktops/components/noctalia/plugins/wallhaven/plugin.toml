@@ -1,0 +1,39 @@
+id           = "slumpy/wallhaven"
+name         = "Wallhaven"
+version      = "2.0.0"
+plugin_api   = 43
+author       = "slumpy"
+icon         = "photo"
+description  = "Wallhaven wallpaper search and rotation"
+tags         = ["wallpaper"]
+
+[[setting]]
+key             = "api_key_file"
+type            = "file"
+label_key       = "settings.api_key_file.label"
+description_key = "settings.api_key_file.description"
+default         = "/run/secrets/wallhaven_key"
+
+[[setting]]
+key             = "wallpaper_dir"
+type            = "folder"
+label_key       = "settings.wallpaper_dir.label"
+description_key = "settings.wallpaper_dir.description"
+default         = "~/Wallpapers"
+
+[[service]]
+id    = "service"
+entry = "service.luau"
+
+[[widget]]
+id    = "wallhaven"
+entry = "widget.luau"
+
+[[panel]]
+id              = "panel"
+entry           = "panel.luau"
+width           = 440
+height          = 640
+placement       = "attached"
+position        = "auto"
+open_near_click = true

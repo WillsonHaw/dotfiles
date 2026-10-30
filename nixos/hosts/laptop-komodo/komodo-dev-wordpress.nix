@@ -29,8 +29,8 @@ in
     gnumake
     # Matches the PHP version CI lints and tests against (.github/workflows,
     # composer.json "require".php).
-    php82
-    php82Packages.composer
+    php83
+    php83Packages.composer
     # scripts/update-lando-global-config.py (KMC proxy port setup, Makefile kmc-set-lando-global).
     python3
     # tests/load/*.ts (Makefile loadtest, loadtest-auth-cart targets).

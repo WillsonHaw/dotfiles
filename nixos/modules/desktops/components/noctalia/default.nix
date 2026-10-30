@@ -2,7 +2,6 @@
 {
   config,
   lib,
-  pkgs,
   inputs,
   ...
 }:
@@ -18,27 +17,28 @@
       ];
     };
 
-    environment.systemPackages = [
-      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-    ];
-
     home-manager.users.${config.noodles.user} =
       { config, ... }:
       {
         imports = [ inputs.noctalia.homeModules.default ];
 
-        programs.noctalia-shell = {
+        programs.noctalia = {
           enable = true;
-          settings = { };
-        };
-
-        xdg.configFile = {
-          "noctalia/plugins/waynergy".source =
-            config.lib.file.mkOutOfStoreSymlink
-              "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/components/noctalia/plugins/waynergy";
-          "noctalia/plugins/wallhaven".source =
-            config.lib.file.mkOutOfStoreSymlink
-              "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/components/noctalia/plugins/wallhaven";
+          settings.widget.tray.hide_passive = false;
+          settings.plugins = {
+            enabled = [
+              "slumpy/waynergy"
+              "slumpy/wallhaven"
+            ];
+            source = [
+              {
+                name = "dotfiles";
+                kind = "path";
+                location = "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/components/noctalia/plugins";
+                enabled = true;
+              }
+            ];
+          };
         };
       };
   };

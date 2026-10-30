@@ -18,7 +18,7 @@
 
       launcherCmd =
         if config.noodles.desktops.components.noctalia.enable then
-          "noctalia-shell ipc call launcher toggle"
+          "noctalia msg panel-toggle launcher"
         else if config.noodles.desktops.components.rofi.enable then
           "rofi -show drun"
         else

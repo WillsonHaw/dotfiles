@@ -93,6 +93,7 @@
   home-manager.users.${config.noodles.user} = {
     programs.zsh.shellAliases = {
       ue = "~/libs/UnrealEngine_5.8/RunEditor.sh";
+      nanos = "ue ~/repos/NanosUnreal/Nanos/Nanos.uproject";
     };
   };
 
@@ -127,6 +128,9 @@
           repos = {
             path = "/home/${config.noodles.user}/repos";
             validUsers = [ config.noodles.user ];
+            extraSettings = {
+              "acl allow execute always" = "yes";
+            };
           };
         };
       };

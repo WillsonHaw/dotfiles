@@ -1,9 +1,7 @@
 { config, lib, ... }:
 
 let
-  dirs = lib.attrNames (
-    lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./.)
-  );
+  dirs = lib.attrNames (lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./.));
 in
 {
   options.noodles.desktops.environment = lib.mkOption {

@@ -1,5 +1,4 @@
 {
-  "apiKeyFile": "/run/secrets/wallhaven_key",
   "blacklist": [
     "o5qokp",
     "vpxmjp",
@@ -23,7 +22,7 @@
     "5wjjr7",
     "85jd2k"
   ],
-  "activeProfile": 0,
+  "activeProfile": 1,
   "profiles": [
     {
       "name": "Profile 1",

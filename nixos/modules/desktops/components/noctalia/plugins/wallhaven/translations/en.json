@@ -1,0 +1,6 @@
+{
+  "settings.api_key_file.label": "API key file",
+  "settings.api_key_file.description": "File containing the Wallhaven API key. Leave empty to search without a key.",
+  "settings.wallpaper_dir.label": "Saved wallpapers folder",
+  "settings.wallpaper_dir.description": "Saved wallpapers live in its sfw, sketchy, and nsfw subfolders."
+}

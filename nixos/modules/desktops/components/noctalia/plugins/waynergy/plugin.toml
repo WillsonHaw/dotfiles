@@ -1,0 +1,12 @@
+id           = "slumpy/waynergy"
+name         = "Waynergy"
+version      = "1.0.0"
+plugin_api   = 24
+author       = "slumpy"
+icon         = "cast"
+description  = "Waynergy KVM status and toggle"
+dependencies = ["waynergy", "pgrep"]
+
+[[widget]]
+id    = "waynergy"
+entry = "widget.luau"

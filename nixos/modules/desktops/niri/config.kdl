@@ -226,7 +226,7 @@ layout {
 // which may be more convenient to use.
 // See the binds section below for more spawn examples.
 
-spawn-at-startup "noctalia-shell"
+spawn-at-startup "noctalia"
 
 debug {
     honor-xdg-activation-with-invalid-serial
@@ -369,11 +369,11 @@ binds {
     Mod+Space repeat=false hotkey-overlay-title="Open Launcher" { spawn "app-launcher"; }
     Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
     Mod+P hotkey-overlay-title="Presentation Mode: display switcher" { spawn "presentation-mode"; }
-    Mod+N repeat=false hotkey-overlay-title="Next Wallpaper" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "next"; }
-    Alt+Escape repeat=false allow-inhibiting=false { spawn "noctalia-shell" "ipc" "call" "wallhaven" "panic"; }
-    Mod+F1 repeat=false hotkey-overlay-title="Wallpaper Profile 1" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "setProfile" "1"; }
-    Mod+F2 repeat=false hotkey-overlay-title="Wallpaper Profile 2" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "setProfile" "2"; }
-    Mod+F3 repeat=false hotkey-overlay-title="Wallpaper Profile 3" { spawn "noctalia-shell" "ipc" "call" "wallhaven" "setProfile" "3"; }
+    Mod+N repeat=false hotkey-overlay-title="Next Wallpaper" { spawn "noctalia" "msg" "plugin" "slumpy/wallhaven:service" "all" "next"; }
+    Alt+Escape repeat=false allow-inhibiting=false { spawn "noctalia" "msg" "plugin" "slumpy/wallhaven:service" "all" "panic"; }
+    Mod+F1 repeat=false hotkey-overlay-title="Wallpaper Profile 1" { spawn "noctalia" "msg" "plugin" "slumpy/wallhaven:service" "all" "setProfile" "1"; }
+    Mod+F2 repeat=false hotkey-overlay-title="Wallpaper Profile 2" { spawn "noctalia" "msg" "plugin" "slumpy/wallhaven:service" "all" "setProfile" "2"; }
+    Mod+F3 repeat=false hotkey-overlay-title="Wallpaper Profile 3" { spawn "noctalia" "msg" "plugin" "slumpy/wallhaven:service" "all" "setProfile" "3"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
@@ -614,6 +614,7 @@ binds {
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
+    Mod+Shift+Print repeat=false hotkey-overlay-title="Toggle Screen Recording" { spawn "screen-record"; }
 
     // Applications such as remote-desktop clients and software KVM switches may
     // request that niri stops processing the keyboard shortcuts defined here
