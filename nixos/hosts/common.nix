@@ -30,6 +30,9 @@
       wayvnc_pw = {
         owner = config.noodles.user;
       };
+      npm_komodojp_rw_token = {
+        owner = config.noodles.user;
+      };
     };
   };
 

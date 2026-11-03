@@ -75,6 +75,10 @@
             source "$HOME/.secrets"
           fi
 
+          if [[ -r "${config.sops.secrets.npm_komodojp_rw_token.path}" ]]; then
+            export NPM_KOMODOJP_RW_TOKEN="$(< "${config.sops.secrets.npm_komodojp_rw_token.path}")"
+          fi
+
           if command -v direnv &> /dev/null; then
             eval "$(direnv hook zsh)"
           fi
