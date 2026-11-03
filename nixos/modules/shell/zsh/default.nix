@@ -63,8 +63,8 @@
                 code --list-extensions
               fi
 
-              if command -v antigravity &> /dev/null; then
-                antigravity --list-extensions
+              if command -v antigravity-ide &> /dev/null; then
+                antigravity-ide --list-extensions
               fi
             } | sort -u > "$out"
 

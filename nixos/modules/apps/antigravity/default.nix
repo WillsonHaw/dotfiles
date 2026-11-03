@@ -18,20 +18,34 @@
     home-manager.users.${config.noodles.user} =
       { config, ... }:
       {
-        programs.antigravity = {
+        imports = [
+          (import "${inputs.home-manager}/modules/programs/vscode/mkVscodeModule.nix" {
+            modulePath = [
+              "programs"
+              "antigravity-ide"
+            ];
+            name = "Antigravity IDE";
+            packageName = "antigravity-ide";
+            nameShort = "Antigravity IDE";
+            dataFolderName = ".antigravity-ide";
+            skipVersionCheck = true;
+          })
+        ];
+
+        programs.antigravity-ide = {
           enable = true;
           profiles.default.extensions = import ../vscode/extensions.nix { inherit lib pkgs; };
         };
 
-        home.file."${config.xdg.configHome}/Antigravity/User/settings.json".source = lib.mkForce (
+        home.file."${config.xdg.configHome}/Antigravity IDE/User/settings.json".source = lib.mkForce (
           config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/apps/vscode/settings.json"
         );
 
-        home.file."${config.xdg.configHome}/Antigravity/User/keybindings.json".source = lib.mkForce (
+        home.file."${config.xdg.configHome}/Antigravity IDE/User/keybindings.json".source = lib.mkForce (
           config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/apps/vscode/keybindings.json"
         );
 
-        home.file."${config.xdg.configHome}/Antigravity/User/snippets".source = lib.mkForce (
+        home.file."${config.xdg.configHome}/Antigravity IDE/User/snippets".source = lib.mkForce (
           config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/apps/vscode/snippets"
         );
       };
