@@ -132,16 +132,16 @@ source = "wallpaper"
 fill_mode = "fit"
 
     [wallpaper.default]
-    path = "/tmp/noctalia-wallpapers/1p6dq3.png"
+    path = "/tmp/noctalia-wallpapers/8582do.png"
 
     [wallpaper.last]
-    path = "/tmp/noctalia-wallpapers/1p6dq3.png"
+    path = "/tmp/noctalia-wallpapers/8582do.png"
 
     [wallpaper.monitors.DP-8]
     path = "/tmp/noctalia-wallpapers/q68d77.png"
 
     [wallpaper.monitors.DP-9]
-    path = "/tmp/noctalia-wallpapers/1p6dq3.png"
+    path = "/tmp/noctalia-wallpapers/8582do.png"
 
     [wallpaper.monitors.eDP-1]
     path = "/tmp/noctalia-wallpapers/rrj7pq.png"
