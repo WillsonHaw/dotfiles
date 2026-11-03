@@ -1,0 +1,166 @@
+config_version = 16
+
+[bar.default]
+background_opacity = 0.79999998211860657
+capsule = true
+center = [ "tray", "active_window" ]
+compositor_blur = false
+contact_shadow = true
+end = [ "media", "wallhaven", "waynergy", "clipboard", "group:g1", "notifications", "clock" ]
+margin_ends = 0
+padding = 8
+radius_top_left = 0
+radius_top_right = 0
+start = [ "session", "control-center", "launcher", "workspaces" ]
+widget_spacing = 4
+
+    [[bar.default.capsule_group]]
+    accordion = false
+    accordion_direction = "end"
+    border_width = 1.0
+    enabled = true
+    fill = "surface_container"
+    id = "g1"
+    members = [ "network", "bluetooth", "volume", "brightness", "battery" ]
+    opacity = 1.0
+    padding = 6.0
+
+[location]
+auto_locate = true
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@DP-8", "lockscreen-login-box@DP-9", "lockscreen-login-box@eDP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-8"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 840.0
+    cy = 1258.0
+    output = "DP-8"
+    placement_height = 1440.0
+    placement_width = 1680.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-8".settings]
+        background_color = "surface_container"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-9"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 840.0
+    cy = 1258.0
+    output = "DP-9"
+    placement_height = 1440.0
+    placement_width = 1680.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-9".settings]
+        background_color = "surface_container"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1067.0
+    cy = 1151.0
+    output = "eDP-1"
+    placement_height = 1333.0
+    placement_width = 2133.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_color = "surface_container"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[shell.panel]
+transparency_mode = "glass"
+
+[theme]
+source = "wallpaper"
+
+[wallpaper]
+fill_mode = "fit"
+
+    [wallpaper.default]
+    path = "/tmp/noctalia-wallpapers/1p6dq3.png"
+
+    [wallpaper.last]
+    path = "/tmp/noctalia-wallpapers/1p6dq3.png"
+
+    [wallpaper.monitors.DP-8]
+    path = "/tmp/noctalia-wallpapers/q68d77.png"
+
+    [wallpaper.monitors.DP-9]
+    path = "/tmp/noctalia-wallpapers/1p6dq3.png"
+
+    [wallpaper.monitors.eDP-1]
+    path = "/tmp/noctalia-wallpapers/rrj7pq.png"
+
+[widget.battery]
+hide_when_plugged = true
+
+[widget.network]
+show_label = false
+
+[widget.tray]
+anchor = true
+hide_passive = false
+
+[widget.volume]
+show_label = false
+
+[widget.wallhaven]
+type = "slumpy/wallhaven:wallhaven"
+
+[widget.waynergy]
+type = "slumpy/waynergy:waynergy"

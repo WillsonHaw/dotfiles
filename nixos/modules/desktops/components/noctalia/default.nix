@@ -40,6 +40,11 @@
             ];
           };
         };
+
+        xdg.stateFile."noctalia/settings.toml" = {
+          force = true;
+          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nixos/modules/desktops/components/noctalia/settings.toml";
+        };
       };
   };
 }
