@@ -150,6 +150,7 @@
       #godot.enable = true;
       waynergy.enable = true;
       browsers.edge.enable = true;
+      browsers.zen.profilePath = "/home/${config.noodles.user}/.config/zen/jngt20cx.Default Profile";
       herdr.enable = true;
       obsidian.enable = true;
       capture.wf-recorder.enable = true;

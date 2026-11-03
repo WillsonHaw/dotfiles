@@ -51,6 +51,7 @@
       antigravity.enable = true;
       godot.enable = true;
       waynergy.enable = true;
+      browsers.zen.profilePath = "/home/${config.noodles.user}/.zen/jxeowbm3.Default Profile";
     };
 
     desktops.environment = "niri";

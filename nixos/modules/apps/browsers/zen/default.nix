@@ -7,26 +7,36 @@
   ...
 }:
 
+let
+  cfg = config.noodles.apps.browsers.zen;
+in
 {
   options = {
-    noodles.apps.browsers.zen.enable = lib.mkEnableOption "Enable Zen Browser.";
+    noodles.apps.browsers.zen = {
+      enable = lib.mkEnableOption "Enable Zen Browser.";
+
+      profilePath = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        example = "/home/slumpy/.zen/abcd1234.Default Profile";
+        description = "Absolute path of the profile ~/.zen/profiles.ini points at. Null leaves profiles.ini unmanaged.";
+      };
+    };
   };
 
-  config = lib.mkIf config.noodles.apps.browsers.zen.enable {
+  config = lib.mkIf cfg.enable {
     environment.systemPackages = [
       inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
     ];
 
-    # The zen-browser-flake changed the profile directory from ~/.config/zen to ~/.zen.
-    # Point ~/.zen/profiles.ini at the original profile to survive future flake updates.
-    home-manager.users.${config.noodles.user} = { ... }: {
+    home-manager.users.${config.noodles.user} = lib.mkIf (cfg.profilePath != null) {
       home.file.".zen/profiles.ini" = {
         force = true;
         text = ''
           [Profile0]
           Name=Default Profile
           IsRelative=0
-          Path=/home/${config.noodles.user}/.config/zen/jngt20cx.Default Profile
+          Path=${cfg.profilePath}
           Default=1
 
           [General]
