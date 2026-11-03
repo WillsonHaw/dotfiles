@@ -12,6 +12,8 @@
   };
 
   config = lib.mkIf config.noodles.apps.steam.enable {
+    nixpkgs.config.problems.handlers."gtk+".broken = "warn";
+
     environment.systemPackages = with pkgs; [
       lutris
       bottles
