@@ -4,21 +4,26 @@ NixOS flake for my machines, plus home-manager config. Single flake at `nixos/` 
 
 ## Hosts
 
-| Host                   | Use                                         | DE       | Notes                                         |
-| ---------------------- | ------------------------------------------- | -------- | --------------------------------------------- |
-| `slumpy-laptop`        | Daily-driver laptop (MSI GS60)              | Niri     | TLP, mcontrolcenter, hibernate-on-sleep       |
-| `slumpy-laptop-komodo` | KOMODO laptop (Intel Arc)                   | Niri     | hibernate-on-sleep, NFS mount to vm-komodo    |
-| `slumpy-desktop`       | Workstation                                 | Hyprland | Godot, OBS, Razer                             |
-| `slumpy-gaming`        | Gaming box                                  | Hyprland | Steam, OBS                                    |
-| `slumpy-vm-home`       | Home VM, personal projects and scripts      | none     | Shares the `vm` role + nginx                  |
-| `slumpy-vm-komodo`     | KOMODO VM                                   | none     | Shares the `vm` role + nginx, NFS/Samba share |
-| `slumpy-vm-noodlefish` | Noodlefish VM                               | none     | Shares the `vm` role                          |
+| Host                   | Use                                    | DE       | Notes                                   |
+| ---------------------- | -------------------------------------- | -------- | --------------------------------------- |
+| `slumpy-laptop`        | Daily-driver laptop (MSI GS60)         | Niri     | TLP, mcontrolcenter, hibernate-on-sleep |
+| `slumpy-laptop-komodo` | KOMODO laptop (Intel Arc)              | Niri     | hibernate-on-sleep, NFS mounts of VMs   |
+| `slumpy-desktop`       | Workstation                            | Hyprland | Godot, OBS, Razer                       |
+| `slumpy-gaming`        | Gaming box                             | Hyprland | Steam, OBS                              |
+| `slumpy-vm-home`       | Home VM, personal projects and scripts | none     | Shares the `vm` role + nginx            |
+| `slumpy-vm-komodo`     | KOMODO VM                              | none     | Shares the `vm` role + nginx            |
+| `slumpy-vm-noodlefish` | Noodlefish VM                          | none     | Shares the `vm` role                    |
+| `slumpy-vm-nf-dev`     | Noodlefish dev VM                      | none     | Shares the `vm` role                    |
 
-Desktop and laptop hosts inherit from [`hosts/desktop-base.nix`](nixos/hosts/desktop-base.nix) (GUI app bundle, Avahi mDNS resolver). The `vm-*` hosts inherit from [`hosts/vm-base.nix`](nixos/hosts/vm-base.nix) (docker, gh, direnv, ripgrep/fd/fzf/bat/eza, headless, Avahi host announcement). Each machine's own `default.nix` picks the hostname, hardware config, and any opt-in services.
+Desktop and laptop hosts inherit from [`hosts/desktop-base.nix`](nixos/hosts/desktop-base.nix) (GUI app bundle, Avahi mDNS resolver). The `vm-*` hosts inherit from [`hosts/vm-base.nix`](nixos/hosts/vm-base.nix) (docker, gh, direnv, ripgrep/fd/fzf/bat/eza, headless, Avahi host announcement, `~/repos` shared over NFS and Samba). Each machine's own `default.nix` picks the hostname, hardware config, and any opt-in services.
 
 Pick the one that matches the machine you're installing.
 
 ## Quickstart — fresh install
+
+> **Installing a VM?** Create it with UEFI firmware and Secure Boot off before booting the ISO. [`install.sh`](nixos/install.sh) only creates a GPT disk with an EFI system partition, and the hosts boot with systemd-boot, which is unsigned.
+>
+> Firmware can't be changed after install without reinstalling, so check both before the first boot.
 
 Boot the [NixOS minimal installer ISO](https://nixos.org/download.html) (wired networking comes up automatically; wifi → `nmtui`). Then:
 
@@ -63,19 +68,8 @@ git push
 
 > **No password on first boot.** The user account is created with a locked password (`!`). Login via SSH using any of the authorized keys already declared in [`nixos/users/slumpy.nix`](nixos/users/slumpy.nix). `sudo` works without a password (wheel is passwordless) so you can rebuild once SOPS is set up. The password from the encrypted secret is applied automatically after the rebuild.
 
-> **BIOS, LUKS, btrfs, or multi-disk setups?** The script assumes a single-disk UEFI install with no encryption. For anything else, partition/mount manually and run the latter half of the script by hand (or see the [NixOS manual](https://nixos.org/manual/nixos/stable/#sec-installation)). The `vm-*` hosts enable `zramSwap` so an on-disk swap partition is only needed for hibernation.
+> **Legacy BIOS, LUKS, btrfs, or multi-disk setups?** The script assumes a single-disk UEFI install with no encryption. For anything else, partition/mount manually and run the latter half of the script by hand (or see the [NixOS manual](https://nixos.org/manual/nixos/stable/#sec-installation)). The `vm-*` hosts enable `zramSwap` so an on-disk swap partition is only needed for hibernation.
 
-## After install
-
-```bash
-# Generate ed25519 SSH + GPG keys and register them with GitHub
-git init-keys
-# (paste the printed SSH + GPG public keys into github.com/settings/keys)
-```
-
-Signed commits and tags are on by default ([`commit.gpgsign`](nixos/modules/services/git/default.nix), `tag.gpgsign`). The dynamic `user.signingkey` is written by `git-init-keys` to `~/.config/git/config.local`.
-
-Then follow the SOPS key setup below to unlock the password for local login.
 
 ## Day-to-day
 
@@ -107,24 +101,28 @@ For another VM/headless machine:
 1. `mkdir nixos/hosts/vm-<name>` with a `default.nix` importing `../vm-base.nix` and `./hardware-configuration.nix`.
 2. Register `slumpy-vm-<name> = mkHost "vm-<name>" { };` in the flake.
 3. Toggle the optional `noodles.*` services this machine needs (e.g. `noodles.services.nginx.enable = true;`).
+4. Add its IP and hostname to `networking.hosts` in [`nixos/hosts/common.nix`](nixos/hosts/common.nix). Hosts with `noodles.services.nfs-client.enable` then mount its `~/repos` at `/mnt/<hostname>` after their next rebuild.
+5. After installing, add its key with [Update sops keys](#update-sops-keys).
 
 ### Update sops keys
 
-This is required after a fresh install to unlock the user password for local login. Run on the new machine after `git init-keys`:
+This is required after a fresh install to unlock the user password for local login. Run on the new machine after `git init-keys`.
+
+The repo's [`.envrc`](.envrc) puts `sops`, `age`, and `ssh-to-age` on the PATH inside `~/dotfiles`. Run `direnv allow` there once. On hosts without direnv (desktop-only hosts), use `nix shell nixpkgs#sops nixpkgs#age nixpkgs#ssh-to-age` instead.
 
 1. Derive an age key from the new SSH key:
    ```bash
    mkdir -p ~/.config/sops/age
-   nix-shell -p ssh-to-age --run 'ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt'
+   ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt
    ```
 2. Get the age public key to add to `.sops.yaml`:
    ```bash
-   nix-shell -p age --run 'age-keygen -y ~/.config/sops/age/keys.txt'
+   age-keygen -y ~/.config/sops/age/keys.txt
    ```
 3. On an existing machine that can decrypt secrets, add the new public key to `nixos/.sops.yaml` and re-encrypt:
    ```bash
    cd nixos
-   nix-shell -p sops --run 'sops updatekeys secrets/secrets.yaml'
+   sops updatekeys secrets/secrets.yaml
    git commit -am "sops: add <hostname> age key" && git push
    ```
 4. Back on the new machine, pull and rebuild:
