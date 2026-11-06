@@ -54,6 +54,7 @@
     nixd
     direnv
     nix-direnv
+    kitty.terminfo
   ];
 
   home-manager.users.${config.noodles.user} = {
