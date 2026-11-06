@@ -75,21 +75,6 @@
 
   system.stateVersion = "25.11";
 
-  boot.supportedFilesystems = [ "nfs" ];
-
-  fileSystems."/mnt/komodo" = {
-    device = "slumpy-vm-komodo:/home/${config.noodles.user}/repos";
-    fsType = "nfs";
-    options = [
-      "x-systemd.automount"
-      "noauto"
-      "x-systemd.idle-timeout=600"
-      "nfsvers=4.1"
-      "soft"
-      "timeo=15"
-    ];
-  };
-
   home-manager.users.${config.noodles.user} = {
     programs.zsh.shellAliases = {
       ue = "~/libs/UnrealEngine_5.8/RunEditor.sh";
@@ -105,6 +90,7 @@
     services = {
       nginx.enable = true;
       git.lfs.enable = true;
+      nfs-client.enable = true;
       wayvnc = {
         enable = true;
         openFirewall = true;

@@ -26,6 +26,15 @@
   noodles.desktops.environment = lib.mkDefault null;
   noodles.services.vscode-server.enable = true;
 
+  noodles.services.nfs = {
+    enable = true;
+    openFirewall = true;
+    shares.repos = {
+      path = "/home/${config.noodles.user}/repos";
+      hosts = [ "*" ];
+    };
+  };
+
   # Advertise hostname on the LAN so other machines can reach this VM by name.
   services.avahi = {
     enable = true;

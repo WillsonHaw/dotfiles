@@ -23,16 +23,6 @@
     services = {
       nginx.enable = true;
 
-      nfs = {
-        enable = true;
-        openFirewall = true;
-        shares = {
-          repos = {
-            path = "/home/${config.noodles.user}/repos";
-            hosts = [ "*" ];
-          };
-        };
-      };
       samba = {
         enable = true;
         openFirewall = true;
