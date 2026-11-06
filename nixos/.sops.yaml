@@ -4,6 +4,7 @@ keys:
   - &noodlefish_vm age1m3txgg7u4f9quuv52yr9dv0f9zr0mdnjzmv80fcl9ev24m6c4pkshv454j
   - &msi_laptop age1xlrfxj3lfgm0k5fd26q8xw89wyk3gtcue30m7jtjpkvt0hhs4gssjlemhu
   - &komodo_laptop age1zr0ka8lzxamy00qj5aka0knymtc6vzazqx3snn0fxnkzjse5lf7q7v054a
+  - &nf_dev_vm age1yyl6c6tmrdtu4ae6e8ez834l59735v7gjh8y8lpj9hpa0ymfkymq464d3f
 creation_rules:
 - path_regex: secrets/secrets.yaml$
   key_groups:
@@ -13,3 +14,4 @@ creation_rules:
     - *noodlefish_vm
     - *msi_laptop
     - *komodo_laptop
+    - *nf_dev_vm

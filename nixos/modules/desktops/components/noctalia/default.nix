@@ -29,6 +29,7 @@
             enabled = [
               "slumpy/waynergy"
               "slumpy/wallhaven"
+              "slumpy/tailscale"
             ];
             source = [
               {

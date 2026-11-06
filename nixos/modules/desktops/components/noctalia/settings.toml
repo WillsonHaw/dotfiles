@@ -6,7 +6,7 @@ capsule = true
 center = [ "tray", "active_window" ]
 compositor_blur = false
 contact_shadow = true
-end = [ "media", "wallhaven", "waynergy", "clipboard", "group:g1", "notifications", "clock" ]
+end = [ "media", "wallhaven", "waynergy", "tailscale", "clipboard", "group:g1", "notifications", "clock" ]
 margin_ends = 0
 padding = 8
 radius_top_left = 0
@@ -129,28 +129,31 @@ transparency_mode = "glass"
 source = "wallpaper"
 
 [wallpaper]
-fill_mode = "fit"
+fill_mode = "crop"
 
     [wallpaper.default]
-    path = "/tmp/noctalia-wallpapers/8582do.png"
+    path = "/tmp/noctalia-wallpapers/l81vk2.png"
 
     [wallpaper.last]
-    path = "/tmp/noctalia-wallpapers/8582do.png"
+    path = "/tmp/noctalia-wallpapers/l81vk2.png"
 
     [wallpaper.monitors.DP-8]
     path = "/tmp/noctalia-wallpapers/q68d77.png"
 
     [wallpaper.monitors.DP-9]
-    path = "/tmp/noctalia-wallpapers/8582do.png"
+    path = "/tmp/noctalia-wallpapers/4dj2qo.png"
 
     [wallpaper.monitors.eDP-1]
-    path = "/tmp/noctalia-wallpapers/rrj7pq.png"
+    path = "/tmp/noctalia-wallpapers/l81vk2.png"
 
 [widget.battery]
 hide_when_plugged = true
 
 [widget.network]
 show_label = false
+
+[widget.tailscale]
+type = "slumpy/tailscale:tailscale"
 
 [widget.tray]
 anchor = true

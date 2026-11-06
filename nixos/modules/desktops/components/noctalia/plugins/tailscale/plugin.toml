@@ -1,0 +1,12 @@
+id           = "slumpy/tailscale"
+name         = "Tailscale"
+version      = "1.0.0"
+plugin_api   = 43
+author       = "slumpy"
+icon         = "shield-lock"
+description  = "Tailscale status and toggle"
+dependencies = ["tailscale"]
+
+[[widget]]
+id    = "tailscale"
+entry = "widget.luau"
