@@ -48,9 +48,9 @@
   # Advertise hostname on the LAN so other machines can reach this VM by name.
   services.avahi = {
     enable = true;
-    publish = {
-      enable = true;
-      addresses = true;
+    settings.publish = {
+      disable-publishing = false;
+      publish-addresses = true;
     };
     openFirewall = true;
   };
