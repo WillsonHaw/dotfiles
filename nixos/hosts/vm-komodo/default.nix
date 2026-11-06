@@ -20,22 +20,7 @@
   noodles = {
     development.node.enable = true;
 
-    services = {
-      nginx.enable = true;
-
-      samba = {
-        enable = true;
-        openFirewall = true;
-        wsdd.enable = true;
-
-        shares = {
-          repos = {
-            path = "/home/${config.noodles.user}/repos";
-            validUsers = [ config.noodles.user ];
-          };
-        };
-      };
-    };
+    services.nginx.enable = true;
   };
 
   noodles.development = {

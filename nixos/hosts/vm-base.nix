@@ -35,6 +35,16 @@
     };
   };
 
+  noodles.services.samba = {
+    enable = true;
+    openFirewall = true;
+    wsdd.enable = true;
+    shares.repos = {
+      path = "/home/${config.noodles.user}/repos";
+      validUsers = [ config.noodles.user ];
+    };
+  };
+
   # Advertise hostname on the LAN so other machines can reach this VM by name.
   services.avahi = {
     enable = true;
