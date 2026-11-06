@@ -171,6 +171,7 @@ in
       deps = [
         "users"
         "groups"
+        "setupSecrets"
       ];
       text = ''
         if [ -f "${config.sops.secrets.host_pw.path}" ]; then
