@@ -99,6 +99,7 @@
         slumpy-vm-komodo = mkHost "vm-komodo" { };
         slumpy-laptop-komodo = mkHost "laptop-komodo" { };
         slumpy-vm-noodlefish = mkHost "vm-noodlefish" { };
+        slumpy-vm-nf-dev = mkHost "vm-nf-dev" { };
       };
     };
 }
