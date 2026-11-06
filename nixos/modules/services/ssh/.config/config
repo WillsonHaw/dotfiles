@@ -19,3 +19,9 @@ Host NoodleFish_Dev
   HostName 10.0.0.202
   User user
   IdentityFile ~/.ssh/id_ed25519
+
+Host NF_Dev
+  User slumpy
+  HostName 10.0.0.103
+  User user
+  IdentityFile ~/.ssh/id_ed25519
