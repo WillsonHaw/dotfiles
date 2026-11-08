@@ -1,5 +1,10 @@
 # Read more about SSH config files: https://linux.die.net/man/5/ssh_config
 
+Host MSI_Laptop
+  HostName 10.0.33.103
+  User slumpy
+  IdentityFile ~/.ssh/id_ed25519
+
 Host OldNoodleFish_Dev
   User slumpy
   HostName 10.0.0.100
