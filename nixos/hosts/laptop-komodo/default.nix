@@ -80,6 +80,14 @@
       ue = "~/libs/UnrealEngine_5.8/RunEditor.sh";
       nanos = "ue ~/repos/NanosUnreal/Nanos/Nanos.uproject";
     };
+
+    xdg.desktopEntries.nanos = {
+      name = "Nanos";
+      genericName = "Unreal Editor";
+      exec = "/home/${config.noodles.user}/libs/UnrealEngine_5.8/RunEditor.sh /home/${config.noodles.user}/repos/NanosUnreal/Nanos/Nanos.uproject";
+      icon = "/home/${config.noodles.user}/libs/UnrealEngine_5.8/Engine/Content/Slate/Starship/Common/UELogo.png";
+      categories = [ "Development" ];
+    };
   };
 
   noodles = {
@@ -139,6 +147,7 @@
       browsers.zen.profilePath = "/home/${config.noodles.user}/.config/zen/jngt20cx.Default Profile";
       herdr.enable = true;
       obsidian.enable = true;
+      p4v.enable = true;
       capture.wf-recorder.enable = true;
     };
 
