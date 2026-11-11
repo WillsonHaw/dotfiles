@@ -22,8 +22,11 @@ let
   };
 
   p4v = pkgs.runCommand "p4v-wrapped" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
+    plugins="$(dirname "$(readlink -f ${pkgs.p4v}/bin/p4v)")/../lib/plugins"
+
     for f in p4admin p4merge p4v p4vc; do
       makeWrapper ${pkgs.p4v}/bin/$f $out/bin/$f \
+        --set P4VHOST "env QT_PLUGIN_PATH=$plugins:${pkgs.qt6Packages.qtsvg}/lib/qt-6/plugins" \
         --set QTWEBENGINE_RESOURCES_PATH ${qtwebengine}/resources \
         --set QTWEBENGINE_LOCALES_PATH ${qtwebengine}/qtwebengine_locales \
         --set QTWEBENGINE_PROCESS_PATH ${qtwebengine}/libexec/QtWebEngineProcess
@@ -40,6 +43,9 @@ in
   };
 
   config = lib.mkIf config.noodles.apps.p4v.enable {
-    environment.systemPackages = [ p4v ];
+    environment.systemPackages = [
+      p4v
+      pkgs.p4
+    ];
   };
 }

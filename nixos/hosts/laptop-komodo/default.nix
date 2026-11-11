@@ -78,13 +78,13 @@
   home-manager.users.${config.noodles.user} = {
     programs.zsh.shellAliases = {
       ue = "~/libs/UnrealEngine_5.8/RunEditor.sh";
-      nanos = "ue ~/repos/NanosUnreal/Nanos/Nanos.uproject";
+      nanos = "ue ~/repos/willson_haw_komodolaptop_nanos-main/Nanos/Nanos.uproject";
     };
 
     xdg.desktopEntries.nanos = {
       name = "Nanos";
       genericName = "Unreal Editor";
-      exec = "/home/${config.noodles.user}/libs/UnrealEngine_5.8/RunEditor.sh /home/${config.noodles.user}/repos/NanosUnreal/Nanos/Nanos.uproject";
+      exec = "/home/${config.noodles.user}/libs/UnrealEngine_5.8/RunEditor.sh /home/${config.noodles.user}/repos/willson_haw_komodolaptop_nanos-main/Nanos/Nanos.uproject";
       icon = "/home/${config.noodles.user}/libs/UnrealEngine_5.8/Engine/Content/Slate/Starship/Common/UELogo.png";
       categories = [ "Development" ];
     };
@@ -98,6 +98,10 @@
     services = {
       nginx.enable = true;
       git.lfs.enable = true;
+      p4-tunnel = {
+        enable = true;
+        server = "komodo.helixcore.io";
+      };
       nfs-client.enable = true;
       wayvnc = {
         enable = true;

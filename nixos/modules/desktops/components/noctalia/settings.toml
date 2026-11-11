@@ -1,4 +1,4 @@
-config_version = 16
+config_version = 19
 
 [bar.default]
 background_opacity = 0.79999998211860657
@@ -132,19 +132,19 @@ source = "wallpaper"
 fill_mode = "crop"
 
     [wallpaper.default]
-    path = "/tmp/noctalia-wallpapers/l81vk2.png"
+    path = "/tmp/noctalia-wallpapers/q265xq.png"
 
     [wallpaper.last]
-    path = "/tmp/noctalia-wallpapers/l81vk2.png"
+    path = "/tmp/noctalia-wallpapers/q265xq.png"
 
     [wallpaper.monitors.DP-8]
-    path = "/tmp/noctalia-wallpapers/q68d77.png"
+    path = "/tmp/noctalia-wallpapers/8gdo51.png"
 
     [wallpaper.monitors.DP-9]
-    path = "/tmp/noctalia-wallpapers/4dj2qo.png"
+    path = "/tmp/noctalia-wallpapers/q265xq.png"
 
     [wallpaper.monitors.eDP-1]
-    path = "/tmp/noctalia-wallpapers/l81vk2.png"
+    path = "/home/slumpy/Wallpapers/sfw/oxljkp.jpg"
 
 [widget.battery]
 hide_when_plugged = true
