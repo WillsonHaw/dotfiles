@@ -1,4 +1,4 @@
-config_version = 19
+config_version = 20
 
 [bar.default]
 background_opacity = 0.79999998211860657
