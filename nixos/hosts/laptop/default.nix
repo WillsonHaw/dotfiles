@@ -42,6 +42,8 @@
   system.stateVersion = "23.11";
 
   noodles = {
+    development.node.enable = true;
+
     device = {
       is-laptop = true;
       gpu.card = "/dev/dri/by-path/pci-0000:00:02.0-card";

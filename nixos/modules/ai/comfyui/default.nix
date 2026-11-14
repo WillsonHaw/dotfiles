@@ -37,15 +37,27 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # opencv-python (a ComfyUI dependency) is a prebuilt wheel expecting
-    # standard FHS shared libraries nix-ld doesn't provide by default.
-    programs.nix-ld.libraries = with pkgs; [
-      libGL
-      glib
-      libSM
-      libXext
-      libXrender
-    ];
+    programs.nix-ld.libraries = map lib.getLib (
+      with pkgs;
+      [
+        libGL
+        glib
+        libSM
+        libXext
+        libXrender
+        libX11
+        libxcb
+        e2fsprogs
+        gmp
+        expat
+        p11-kit
+        libusb1
+        libidn2
+        libgpg-error
+        freetype
+        fontconfig
+      ]
+    );
 
     users.groups.comfyui = { };
     users.users.comfyui = {
@@ -78,6 +90,8 @@ in
         # userspace libs (libcuda.so, libnvidia-ml.so) - on NixOS those live
         # under /run/opengl-driver/lib instead of a standard FHS path.
         LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+        DIFFUSERS_DISABLE_REMOTE_CODE = "1";
+        HF_HUB_DISABLE_TELEMETRY = "1";
       };
 
       preStart = ''
