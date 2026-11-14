@@ -160,6 +160,9 @@
       vim.enable = true;
     };
 
-    development.claude.enable = true;
+    development = {
+      claude.enable = true;
+      openCode.enable = true;
+    };
   };
 }
