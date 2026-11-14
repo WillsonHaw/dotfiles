@@ -40,7 +40,10 @@ in
     services.open-webui = {
       enable = true;
       host = "0.0.0.0";
-      environment.OLLAMA_API_BASE_URL = "http://127.0.0.1:${toString config.services.ollama.port}";
+      environment = {
+        AIOHTTP_CLIENT_TIMEOUT = "1800";
+        OLLAMA_API_BASE_URL = "http://127.0.0.1:${toString config.services.ollama.port}";
+      };
     };
 
     networking.firewall.extraCommands = lib.concatMapStrings (src: ''
