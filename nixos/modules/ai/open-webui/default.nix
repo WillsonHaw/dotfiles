@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -32,6 +33,31 @@ in
                 "test_prepare_tool_result_delivers_into_call_tool_result_models"
               ];
             });
+            primp = pyPrev.primp.overridePythonAttrs (old: {
+              nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+                pkgs.pkg-config
+                pkgs.sqlite
+              ];
+              buildInputs = (old.buildInputs or [ ]) ++ [
+                pkgs.zstd
+                pkgs.aws-lc
+                pkgs.sqlite
+              ];
+            });
+            chromadb = pyPrev.chromadb.overridePythonAttrs (old: {
+              nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+                pkgs.pkg-config
+                pkgs.sqlite
+              ];
+              buildInputs = (old.buildInputs or [ ]) ++ [
+                pkgs.sqlite
+                pkgs.jemalloc
+              ];
+              env = (old.env or { }) // {
+                RUSTFLAGS = "-L ${pkgs.sqlite.out}/lib";
+                JEMALLOC_OVERRIDE = "${pkgs.jemalloc}/lib/libjemalloc.so";
+              };
+            });
           })
         ];
       })
@@ -41,7 +67,8 @@ in
       enable = true;
       host = "0.0.0.0";
       environment = {
-        AIOHTTP_CLIENT_TIMEOUT = "1800";
+        AIOHTTP_CLIENT_TIMEOUT = "3386400";
+        AIOHTTP_CLIENT_STREAM_IDLE_TIMEOUT = "3386400";
         OLLAMA_API_BASE_URL = "http://127.0.0.1:${toString config.services.ollama.port}";
       };
     };

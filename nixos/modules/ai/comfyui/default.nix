@@ -56,6 +56,7 @@ in
         libgpg-error
         freetype
         fontconfig
+        zstd
       ]
     );
 
