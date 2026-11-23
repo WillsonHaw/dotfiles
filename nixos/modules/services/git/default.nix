@@ -60,6 +60,8 @@ in
               undo-ci = "reset --soft HEAD~";
               fixup = "!sh -c 'REV=$(git rev-parse $1) && git commit --fixup $@ && git rebase -i --autostash --autosquash $REV^' -";
               cleanup = "!git branch --merged | grep -v -P '^\\*|master|main|develop|staging' | xargs -n1 -r git branch -d";
+              gone = "!f() { git fetch --prune && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | awk '$2 == \"[gone]\" { print $1 }' | xargs -r git branch -D; }; f";
+              gone-dry = "!f() { git fetch --prune && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | awk '$2 == \"[gone]\" { print $1 }'; }; f";
               l = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit --no-merges";
             };
           };

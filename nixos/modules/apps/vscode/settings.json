@@ -9,7 +9,8 @@
     "NoodleFish_Dev": "linux",
     "Komodo_Dev": "linux",
     "Komodo_Laptop": "linux",
-    "OldNoodleFish_Dev": "linux"
+    "OldNoodleFish_Dev": "linux",
+    "NoodleFish_Dev_NewOld": "linux"
   },
   "redhat.telemetry.enabled": false,
   "workbench.activityBar.location": "top",
@@ -86,5 +87,6 @@
   "[markdown]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  "js/ts.experimental.useTsgo": true
+  "js/ts.experimental.useTsgo": true,
+  "workbench.iconTheme": "catppuccin-perfect-mocha"
 }
