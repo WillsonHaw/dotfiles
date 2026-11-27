@@ -88,5 +88,6 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "js/ts.experimental.useTsgo": true,
-  "workbench.iconTheme": "catppuccin-perfect-mocha"
+  "workbench.iconTheme": "catppuccin-perfect-mocha",
+  "perforce.hideShelvedFiles": true
 }

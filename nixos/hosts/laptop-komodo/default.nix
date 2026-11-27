@@ -77,15 +77,15 @@
 
   home-manager.users.${config.noodles.user} = {
     programs.zsh.shellAliases = {
-      ue = "~/libs/UnrealEngine_5.8/RunEditor.sh";
+      ue = "UE_ROOT=~/repos/willson_haw_komodolaptop_nanos-main ~/libs/UnrealEngine_5.8/RunEditor.sh";
       nanos = "ue ~/repos/willson_haw_komodolaptop_nanos-main/Nanos/Nanos.uproject";
     };
 
     xdg.desktopEntries.nanos = {
       name = "Nanos";
       genericName = "Unreal Editor";
-      exec = "/home/${config.noodles.user}/libs/UnrealEngine_5.8/RunEditor.sh /home/${config.noodles.user}/repos/willson_haw_komodolaptop_nanos-main/Nanos/Nanos.uproject";
-      icon = "/home/${config.noodles.user}/libs/UnrealEngine_5.8/Engine/Content/Slate/Starship/Common/UELogo.png";
+      exec = "env UE_ROOT=/home/${config.noodles.user}/repos/willson_haw_komodolaptop_nanos-main /home/${config.noodles.user}/libs/UnrealEngine_5.8/RunEditor.sh /home/${config.noodles.user}/repos/willson_haw_komodolaptop_nanos-main/Nanos/Nanos.uproject";
+      icon = "/home/${config.noodles.user}/repos/willson_haw_komodolaptop_nanos-main/Engine/Content/Slate/Starship/Common/UELogo.png";
       categories = [ "Development" ];
     };
   };
@@ -151,6 +151,7 @@
       browsers.zen.profilePath = "/home/${config.noodles.user}/.config/zen/jngt20cx.Default Profile";
       herdr.enable = true;
       obsidian.enable = true;
+      poedit.enable = true;
       p4v.enable = true;
       capture.wf-recorder.enable = true;
     };
